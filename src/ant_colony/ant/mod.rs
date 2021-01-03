@@ -1,15 +1,15 @@
 use super::graph::NodeId;
 
 pub struct Ant {
-    pub currentNode: NodeId,
+    pub current_node: NodeId,
     visited: Vec<NodeId>,
 }
 
 impl Ant {
-    pub fn new(currentNode: NodeId) -> Self {
+    pub fn new(current_node: NodeId) -> Self {
         Ant {
-            currentNode,
-            visited: vec![currentNode],
+            current_node,
+            visited: vec![current_node],
         }
     }
 

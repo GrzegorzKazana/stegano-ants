@@ -9,9 +9,9 @@ use super::graph::{AdjacencyListEntry, Graph};
 use super::pheromone::Pheromone;
 
 pub struct Config {
-    ant_count: u32,
-    num_of_steps_per_cycle: u32,
-    random: ThreadRng,
+    pub ant_count: u32,
+    pub num_of_steps_per_cycle: u32,
+    pub random: ThreadRng,
 }
 
 pub struct Colony {
@@ -26,7 +26,7 @@ impl Colony {
         Colony {
             ants: Vec::new(),
             graph,
-            pheromone: Pheromone::new(0.0),
+            pheromone: Pheromone::new(1.0),
             config,
         }
     }
@@ -54,17 +54,27 @@ impl Colony {
         }
     }
 
+    pub fn initialize_pheromone(self) -> Self {
+        let edges = self.graph.get_all_edges();
+        let pheromone = edges.iter().fold(self.pheromone, |pheromone, edge| {
+            pheromone.initialize_pheromone_for_edge(edge.from, edge.to)
+        });
+
+        Colony { pheromone, ..self }
+    }
+
     pub fn execute_n_cycles(self, n_cycles: u32) -> Self {
-        let initialized_colony = self.initialize_ants();
+        let initialized_colony = self.initialize_pheromone();
         let cycles = 0..n_cycles;
 
         cycles.fold(initialized_colony, Colony::execute_cycle)
     }
 
     pub fn execute_cycle(self, _cycle: u32) -> Self {
-        let steps = 0..self.config.num_of_steps_per_cycle;
+        let initialized_colony = self.initialize_ants();
+        let steps = 0..initialized_colony.config.num_of_steps_per_cycle;
 
-        steps.fold(self, Colony::execute_step_for_all_ants)
+        steps.fold(initialized_colony, Colony::execute_step_for_all_ants)
     }
 
     pub fn execute_step_for_all_ants(self, _step: u32) -> Self {
@@ -105,7 +115,7 @@ impl Colony {
         random: &mut ThreadRng,
     ) -> (Ant, &'a AdjacencyListEntry) {
         let possible_next_edges: Vec<&AdjacencyListEntry> = graph
-            .get_adjacent_edges(&ant.currentNode)
+            .get_adjacent_edges(&ant.current_node)
             .iter()
             .filter(|edge| !ant.has_visited(&edge.to))
             .collect();
