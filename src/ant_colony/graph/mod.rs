@@ -10,8 +10,9 @@ pub struct Node {
 }
 
 pub struct AdjacencyListEntry {
-    adjacent: NodeId,
-    distance: f32,
+    pub from: NodeId,
+    pub to: NodeId,
+    pub distance: f32,
 }
 
 pub struct Graph {
@@ -30,7 +31,11 @@ impl Graph {
         Graph { nodes }
     }
 
-    pub fn get_adjacent_edges(&self, node: &Node) -> &[AdjacencyListEntry] {
-        self.nodes.get(&node.id).map_or(&[], |n| &n.adjacency_list)
+    pub fn get_adjacent_edges(&self, node_id: &NodeId) -> &[AdjacencyListEntry] {
+        self.nodes.get(node_id).map_or(&[], |n| &n.adjacency_list)
+    }
+
+    pub fn get_node_ids(&self) -> Vec<NodeId> {
+        self.nodes.keys().map(|k| k.clone()).collect()
     }
 }
