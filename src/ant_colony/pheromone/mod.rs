@@ -1,16 +1,55 @@
 mod _tests;
 
+use std::collections::HashMap;
+
 use super::graph::NodeId;
 
-pub struct Pheromone {}
+pub type EdgeKey = u64;
+pub type PheromoneLevel = f32;
+
+pub struct Pheromone {
+    initial_value: PheromoneLevel,
+    values: HashMap<EdgeKey, PheromoneLevel>,
+}
 
 impl Pheromone {
-    pub fn new() -> Self {
-        Pheromone {}
+    pub fn new(initial_value: PheromoneLevel) -> Self {
+        Pheromone {
+            initial_value,
+            values: HashMap::new(),
+        }
     }
 
-    pub fn get_pheromone_for_edge(from: NodeId, to: NodeId) -> f32 {
-        0.0
+    pub fn initialize_pheromone_for_edge(mut self, from: NodeId, to: NodeId) -> Self {
+        let key = Pheromone::generate_edge_key(from, to);
+
+        self.values.insert(key, self.initial_value);
+
+        self
+    }
+
+    pub fn get_pheromone_for_edge(&self, from: NodeId, to: NodeId) -> PheromoneLevel {
+        let key = Pheromone::generate_edge_key(from, to);
+
+        self.values.get(&key).unwrap_or(&self.initial_value).clone()
+    }
+
+    pub fn increase_pheromone_value(mut self, from: NodeId, to: NodeId, increment: f32) -> Self {
+        let key = Pheromone::generate_edge_key(from, to);
+
+        if let Some(val) = self.values.get_mut(&key) {
+            *val += increment;
+        }
+
+        self
+    }
+
+    pub fn scale_all_pheromone_values(mut self, scaler: f32) -> Self {
+        for val in self.values.values_mut() {
+            *val *= scaler;
+        }
+
+        self
     }
 
     /*
