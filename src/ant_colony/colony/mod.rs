@@ -6,28 +6,29 @@ use rand::prelude::*;
 
 use super::ant::Ant;
 use super::graph::{AdjacencyListEntry, Graph};
-use super::pheromone::Pheromone;
+use super::pheromone::{Pheromone, PheromoneUpdater};
 
-pub struct Config {
+pub struct Config<U: PheromoneUpdater> {
     pub ant_count: u32,
     pub num_of_steps_per_cycle: u32,
     pub random: ThreadRng,
+    pub pheromone_updater: U,
 }
 
-pub struct Colony {
+pub struct Colony<U: PheromoneUpdater> {
     ants: Vec<Ant>,
     graph: Graph,
     pheromone: Pheromone,
-    config: Config,
+    config: Config<U>,
 }
 
-impl Colony {
-    pub fn new(config: Config, graph: Graph) -> Self {
+impl<U: PheromoneUpdater> Colony<U> {
+    pub fn new(config: Config<U>, graph: Graph) -> Self {
         Colony {
-            ants: Vec::new(),
             graph,
-            pheromone: Pheromone::new(1.0),
             config,
+            ants: Vec::new(),
+            pheromone: Pheromone::new(),
         }
     }
 
@@ -56,9 +57,10 @@ impl Colony {
 
     pub fn initialize_pheromone(self) -> Self {
         let edges = self.graph.get_all_edges();
-        let pheromone = edges.iter().fold(self.pheromone, |pheromone, edge| {
-            pheromone.initialize_pheromone_for_edge(edge.from, edge.to)
-        });
+        let pheromone = self
+            .config
+            .pheromone_updater
+            .initialize(self.pheromone, edges);
 
         Colony { pheromone, ..self }
     }
@@ -74,7 +76,23 @@ impl Colony {
         let initialized_colony = self.initialize_ants();
         let steps = 0..initialized_colony.config.num_of_steps_per_cycle;
 
-        steps.fold(initialized_colony, Colony::execute_step_for_all_ants)
+        let Colony {
+            ants,
+            config,
+            graph,
+            pheromone,
+        } = steps.fold(initialized_colony, Colony::execute_step_for_all_ants);
+
+        let new_pheromone = config
+            .pheromone_updater
+            .on_after_cycle(pheromone, &ants, &graph);
+
+        Colony {
+            ants,
+            config,
+            graph,
+            pheromone: new_pheromone,
+        }
     }
 
     pub fn execute_step_for_all_ants(self, _step: u32) -> Self {
@@ -85,20 +103,21 @@ impl Colony {
             mut config,
         } = self;
 
-        let (new_ants, taken_edges): (Vec<_>, Vec<_>) = ants
+        let (new_ants, taken_edges) = ants
             .into_iter()
             .map(|ant| {
-                Colony::execute_step_for_single_ant(ant, &graph, &pheromone, &mut config.random)
+                Colony::<U>::execute_step_for_single_ant(
+                    ant,
+                    &graph,
+                    &pheromone,
+                    &mut config.random,
+                )
             })
             .unzip();
 
-        let new_pheromone = taken_edges
-            .iter()
-            .fold(pheromone, |updated_pheromone, taken_edge| {
-                updated_pheromone
-                    .scale_all_pheromone_values(0.8)
-                    .increase_pheromone_value(taken_edge.from, taken_edge.to, 0.2)
-            });
+        let new_pheromone = config
+            .pheromone_updater
+            .on_after_step(pheromone, taken_edges);
 
         Colony {
             ants: new_ants,

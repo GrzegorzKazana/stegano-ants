@@ -17,7 +17,7 @@ mod pheromone_tests {
         let to = 1;
         let initial_value = 1.0;
 
-        let pheromone = Pheromone::new(initial_value).initialize_pheromone_for_edge(from, to);
+        let pheromone = Pheromone::new().initialize_pheromone_for_edge(from, to, initial_value);
 
         assert_eq!(pheromone.get_pheromone_for_edge(from, to), initial_value);
     }
@@ -29,9 +29,9 @@ mod pheromone_tests {
         let initial_value = 1.0;
         let increment = 0.5;
 
-        let pheromone = Pheromone::new(initial_value)
-            .initialize_pheromone_for_edge(edge_a.0, edge_a.1)
-            .initialize_pheromone_for_edge(edge_b.0, edge_b.1)
+        let pheromone = Pheromone::new()
+            .initialize_pheromone_for_edge(edge_a.0, edge_a.1, initial_value)
+            .initialize_pheromone_for_edge(edge_b.0, edge_b.1, initial_value)
             .increase_pheromone_value(edge_a.0, edge_a.1, increment);
 
         assert_eq!(
@@ -51,9 +51,9 @@ mod pheromone_tests {
         let initial_value = 1.0;
         let scaler = 0.5;
 
-        let pheromone = Pheromone::new(initial_value)
-            .initialize_pheromone_for_edge(edge_a.0, edge_a.1)
-            .initialize_pheromone_for_edge(edge_b.0, edge_b.1)
+        let pheromone = Pheromone::new()
+            .initialize_pheromone_for_edge(edge_a.0, edge_a.1, initial_value)
+            .initialize_pheromone_for_edge(edge_b.0, edge_b.1, initial_value)
             .scale_all_pheromone_values(scaler);
 
         assert_eq!(

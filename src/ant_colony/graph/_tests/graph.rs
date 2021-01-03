@@ -5,7 +5,7 @@ mod graph_tests {
 
     #[test]
     fn it_returns_correct_node_ids() {
-        let graph = Graph::from_vector(mock_graph_vector());
+        let graph = Graph::from_node_vector(mock_graph_vector());
         let expected_ids: Vec<_> = mock_graph_vector().iter().map(|node| node.id).collect();
 
         let mut result = graph.get_node_ids();
@@ -16,7 +16,7 @@ mod graph_tests {
 
     #[test]
     fn it_returns_correct_adjacent_nodes() {
-        let graph = Graph::from_vector(mock_graph_vector());
+        let graph = Graph::from_node_vector(mock_graph_vector());
         let expected_edges: Vec<_> = mock_graph_vector()[0]
             .adjacency_list
             .iter()
@@ -31,8 +31,8 @@ mod graph_tests {
     #[test]
     fn it_supports_initialization_from_tuples() {
         assert_eq!(
-            Graph::from_vector(mock_graph_vector()).nodes,
-            Graph::from_tuples(mock_graph_tuple()).nodes
+            Graph::from_node_vector(mock_graph_vector()),
+            Graph::from_neighbour_tuples(mock_graph_tuple())
         )
     }
 }
