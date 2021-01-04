@@ -44,11 +44,15 @@ impl Graph {
     pub fn get_node_ids(&self) -> Vec<NodeId> {
         self.nodes.keys().map(|k| k.clone()).collect()
     }
+
+    pub fn get_amount_of_nodes(&self) -> u32 {
+        self.nodes.len() as u32
+    }
 }
 
 impl Display for Graph {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let node_count = self.nodes.len();
+        let node_count = self.get_amount_of_nodes();
         let edge_count = self.get_all_edges().len();
 
         write!(

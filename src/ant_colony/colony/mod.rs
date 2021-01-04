@@ -28,6 +28,7 @@ impl<U: PheromoneUpdater, D: AntDispatcher> Colony<U, D> {
         }
     }
 
+    #[cfg_attr(feature = "profiler", flame)]
     pub fn initialize_ants(self) -> Self {
         let Colony {
             graph, mut config, ..
@@ -45,6 +46,7 @@ impl<U: PheromoneUpdater, D: AntDispatcher> Colony<U, D> {
         }
     }
 
+    #[cfg_attr(feature = "profiler", flame)]
     pub fn initialize_pheromone(self) -> Self {
         let edges = self.graph.get_all_edges();
         let pheromone = self
@@ -62,6 +64,7 @@ impl<U: PheromoneUpdater, D: AntDispatcher> Colony<U, D> {
         cycles.fold(initialized_colony, Colony::execute_cycle)
     }
 
+    #[cfg_attr(feature = "profiler", flame)]
     pub fn execute_cycle(self, _cycle: u32) -> Self {
         let initialized_colony = self.initialize_ants();
         let steps = 0..initialized_colony.config.num_of_steps_per_cycle;
@@ -85,6 +88,7 @@ impl<U: PheromoneUpdater, D: AntDispatcher> Colony<U, D> {
         }
     }
 
+    #[cfg_attr(feature = "profiler", flame)]
     pub fn execute_step_for_all_ants(self, _step: u32) -> Self {
         let Colony {
             ants,

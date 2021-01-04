@@ -9,4 +9,15 @@ edition = "2018"
 [dependencies]
 rand = "0.8.0"
 itertools = "0.10.0"
+cfg-if = "1.0.0"
+
+flame = { version = "0.2.2", optional = true }
+flamer = { version = "0.3", optional = true }
+
+[dev-dependencies]
 proptest = "0.10.1"
+
+[features]
+default = []
+# run by `cargo run --release --features profiler`
+profiler = ["flame", "flamer"]

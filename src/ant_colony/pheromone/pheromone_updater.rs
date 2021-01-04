@@ -50,20 +50,28 @@ impl PheromoneUpdater for BasicPheromoneUpdater {
         })
     }
 
+    #[cfg_attr(feature = "profiler", flame)]
     fn on_after_step(
         &self,
         pheromone: Pheromone,
         taken_edges: Vec<&AdjacencyListEntry>,
     ) -> Pheromone {
+        let n_steps = taken_edges.len() as i32;
+
         let decay = 1.0 - self.evaporation_rate;
         let increment = self.evaporation_rate * self.initial_value;
 
+        let accumulated_decay = decay.powi(n_steps);
+        let decayed_pheromone = pheromone.scale_all_pheromone_values(accumulated_decay);
+
         taken_edges
             .iter()
-            .fold(pheromone, |updated_pheromone, taken_edge| {
-                updated_pheromone
-                    .scale_all_pheromone_values(decay)
-                    .increase_pheromone_value(taken_edge.from, taken_edge.to, increment)
+            .fold(decayed_pheromone, |updated_pheromone, taken_edge| {
+                updated_pheromone.increase_pheromone_value(
+                    taken_edge.from,
+                    taken_edge.to,
+                    increment,
+                )
             })
     }
 
