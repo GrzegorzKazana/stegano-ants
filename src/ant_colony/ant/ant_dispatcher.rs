@@ -1,4 +1,3 @@
-use rand::rngs::ThreadRng;
 use rand::Rng;
 
 use rand::distributions::WeightedIndex;
@@ -28,17 +27,17 @@ pub trait AntDispatcher {
     ) -> &'a AdjacencyListEntry;
 }
 
-pub struct BasicAntDispatcher {
-    random: ThreadRng,
+pub struct BasicAntDispatcher<R: Rng> {
+    random: R,
 }
 
-impl BasicAntDispatcher {
-    pub fn new(random: ThreadRng) -> Self {
+impl<R: Rng> BasicAntDispatcher<R> {
+    pub fn new(random: R) -> Self {
         BasicAntDispatcher { random }
     }
 }
 
-impl AntDispatcher for BasicAntDispatcher {
+impl<R: Rng> AntDispatcher for BasicAntDispatcher<R> {
     fn select_random_node(&mut self, node_ids: &Vec<NodeId>) -> NodeId {
         let idx = self.random.gen_range(0..node_ids.len());
 
@@ -58,6 +57,7 @@ impl AntDispatcher for BasicAntDispatcher {
             .collect();
 
         // node_likelihood is not normalized - does not sum up to one
+        // this is fine, since WeightedIndex takes care of it
         let node_likelihood = possible_next_edges.iter().map(|edge| {
             let visibility = 1.0 / edge.distance;
             let pheromone_level = pheromone.get_pheromone_for_edge(edge.from, edge.to);

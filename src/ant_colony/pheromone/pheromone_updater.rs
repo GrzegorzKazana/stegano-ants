@@ -1,9 +1,11 @@
+use std::fmt::Display;
+
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 
 use super::pheromone::Pheromone;
 
-pub trait PheromoneUpdater {
+pub trait PheromoneUpdater: Display {
     fn initialize(&self, pheromone: Pheromone, edges: Vec<&AdjacencyListEntry>) -> Pheromone;
 
     fn on_after_step(
@@ -26,6 +28,18 @@ impl BasicPheromoneUpdater {
             initial_value,
             evaporation_rate,
         }
+    }
+}
+
+impl Display for BasicPheromoneUpdater {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Pheromone updater (Basic)\n\t\
+            initial_value: {:>5}\n\t\
+            evaporation:   {:>5.3}",
+            self.initial_value, self.evaporation_rate
+        )
     }
 }
 

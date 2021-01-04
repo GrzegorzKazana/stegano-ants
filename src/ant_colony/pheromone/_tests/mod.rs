@@ -12,6 +12,15 @@ mod pheromone_tests {
     }
 
     #[test]
+    fn it_does_decode_edge_key() {
+        let (from, to) = (2, 1);
+        let key = Pheromone::generate_edge_key(from, to);
+        let result = Pheromone::decode_edge_key(key);
+
+        assert!((from, to) == result || (to, from) == result);
+    }
+
+    #[test]
     fn it_allows_for_initializing_pheromone_trace() {
         let from = 2;
         let to = 1;
@@ -68,7 +77,7 @@ mod pheromone_tests {
 
     proptest! {
         #[test]
-        fn it_does_care_for_node_order_when_generating_key(a: NodeId, b: NodeId) {
+        fn it_does_not_care_for_node_order_when_generating_key(a: NodeId, b: NodeId) {
             let key_a = Pheromone::generate_edge_key(a, b);
             let key_b = Pheromone::generate_edge_key(b, a);
 
@@ -84,6 +93,23 @@ mod pheromone_tests {
             let inputs_are_same = (a == c && b == d) || (a == d && b == c);
 
             assert!(inputs_are_same || !keys_are_same);
+        }
+
+        #[test]
+        fn it_correctly_decodes_generated_key(a: NodeId, b: NodeId) {
+            let key = Pheromone::generate_edge_key(a, b);
+            let result = Pheromone::decode_edge_key(key);
+
+            assert!((a, b) == result || (b, a) == result);
+        }
+
+        #[test]
+        fn it_decodes_generated_key_in_smaller_first_order(a: NodeId, b: NodeId) {
+            let key = Pheromone::generate_edge_key(a, b);
+            let result = Pheromone::decode_edge_key(key);
+            let expected = (std::cmp::min(a, b), std::cmp::max(a, b));
+
+            assert!(expected == result);
         }
     }
 }

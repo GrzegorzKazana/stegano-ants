@@ -2,6 +2,7 @@ mod _tests;
 mod construct;
 
 use std::collections::HashMap;
+use std::fmt::Display;
 
 pub type NodeId = u32;
 
@@ -37,5 +38,20 @@ impl Graph {
 
     pub fn get_node_ids(&self) -> Vec<NodeId> {
         self.nodes.keys().map(|k| k.clone()).collect()
+    }
+}
+
+impl Display for Graph {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let node_count = self.nodes.len();
+        let edge_count = self.get_all_edges().len();
+
+        write!(
+            f,
+            "Graph\n\t\
+            nodes: {:>10}\n\t\
+            edges: {:>10}",
+            node_count, edge_count
+        )
     }
 }

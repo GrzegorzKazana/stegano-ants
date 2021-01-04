@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use super::ant::{Ant, AntDispatcher};
 use super::graph::Graph;
 use super::pheromone::{Pheromone, PheromoneUpdater};
@@ -112,5 +114,21 @@ impl<U: PheromoneUpdater, D: AntDispatcher> Colony<U, D> {
             pheromone: new_pheromone,
             config,
         }
+    }
+}
+
+impl<U: PheromoneUpdater, D: AntDispatcher> Display for Colony<U, D> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "----------\n\
+            Ant colony\n\t\
+            {} ants\n\
+            {}\n\
+            {}\n\
+            {}\n\
+            ----------\n",
+            self.config.ant_count, self.config.pheromone_updater, self.graph, self.pheromone
+        )
     }
 }
