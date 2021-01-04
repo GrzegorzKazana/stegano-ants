@@ -23,18 +23,25 @@ use ant_colony::pheromone_updater::ConstantPheromoneUpdater;
 use common::utils::measure;
 
 fn main() {
-    let mut rng = StdRng::seed_from_u64(42);
+    let rng = StdRng::seed_from_u64(42);
 
-    let graph = Graph::random_tsp_graph(&mut rng, 100);
+    let graph = Graph::from_neighbour_tuples(vec![
+        (0, 1, 1.0),
+        (0, 2, 2.0),
+        (0, 3, 10.0),
+        (1, 2, 2.0),
+        (1, 3, 5.0),
+        (2, 3, 6.0),
+    ]);
 
     let config = Config {
-        ant_count: 100,
-        num_of_steps_per_cycle: graph.get_amount_of_nodes() - 1,
+        ant_count: graph.get_amount_of_nodes(),
+        num_of_steps_per_cycle: graph.get_amount_of_nodes(),
         pheromone_updater: ConstantPheromoneUpdater::new(1.0, 0.1),
         ant_dispatcher: BasicAntDispatcher::new(rng),
     };
 
-    let (colony, duration_ms) = measure(|| Colony::new(config, graph).execute_n_cycles(1));
+    let (colony, duration_ms) = measure(|| Colony::new(config, graph).execute_n_cycles(20));
 
     println!("{}", colony);
     println!("execution time: {:>8}ms", duration_ms);

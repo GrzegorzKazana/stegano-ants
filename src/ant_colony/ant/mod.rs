@@ -13,13 +13,9 @@ pub struct Ant {
 
 impl Ant {
     pub fn new(current_node: NodeId) -> Self {
-        let mut visited = BTreeSet::new();
-
-        visited.insert(current_node);
-
         Ant {
             current_node,
-            visited,
+            visited: BTreeSet::new(),
         }
     }
 

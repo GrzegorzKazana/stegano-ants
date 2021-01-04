@@ -49,8 +49,11 @@ impl Pheromone {
 
 impl Display for Pheromone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let (non_zero_edges, zero_edges): (Vec<_>, Vec<_>) =
-            self.values.iter().partition(|(_, value)| **value >= 1e-3);
+        let non_zero_edges = self
+            .values
+            .iter()
+            .filter(|(_, value)| **value >= 1e-3)
+            .collect::<Vec<_>>();
 
         let non_empty_edge_ratio = non_zero_edges.len() as f32 / self.values.len() as f32;
 
@@ -78,7 +81,7 @@ impl Display for Pheromone {
             "Pheromone\n\t\
             edges with trail >= 0.001: {} / {} ({:>4.2}%) {}",
             non_zero_edges.len(),
-            zero_edges.len(),
+            self.values.len(),
             100.0 * non_empty_edge_ratio,
             text,
         )
