@@ -8,7 +8,7 @@ use ant_colony::graph::Graph;
 use ant_colony::pheromone::BasicPheromoneUpdater;
 
 fn main() {
-    let rng = StdRng::seed_from_u64(1337);
+    let rng = StdRng::seed_from_u64(42);
 
     let graph = Graph::from_neighbour_tuples(vec![
         (0, 1, 1.0),
@@ -28,7 +28,5 @@ fn main() {
 
     let colony = Colony::new(config, graph);
 
-    println!("{}\n", colony);
-
-    println!("{}", colony.execute_n_cycles(100));
+    println!("{}", colony.execute_n_cycles(10));
 }

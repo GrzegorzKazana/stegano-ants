@@ -1,7 +1,7 @@
 mod _tests;
 mod construct;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fmt::Display;
 
 pub type NodeId = u32;
@@ -21,7 +21,12 @@ pub struct AdjacencyListEntry {
 
 #[derive(Debug, PartialEq)]
 pub struct Graph {
-    nodes: HashMap<NodeId, Node>,
+    /*
+     * using BTreeMap for stable iteration order
+     * (which HashMap does not have)
+     * TODO: compare performance against indexmap (https://github.com/bluss/indexmap)
+     */
+    nodes: BTreeMap<NodeId, Node>,
 }
 
 impl Graph {

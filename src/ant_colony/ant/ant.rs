@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::ant_colony::graph::NodeId;
 
+#[derive(Debug)]
 pub struct Ant {
     pub current_node: NodeId,
     visited: Vec<NodeId>,

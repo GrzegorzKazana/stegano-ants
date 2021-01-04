@@ -1,12 +1,12 @@
 use super::{AdjacencyListEntry, Graph, Node, NodeId};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 impl Graph {
     #[allow(dead_code)]
     pub fn from_node_vector(nodes_vec: Vec<Node>) -> Self {
         let nodes = nodes_vec
             .into_iter()
-            .fold(HashMap::new(), |mut nodes, node| {
+            .fold(BTreeMap::new(), |mut nodes, node| {
                 nodes.insert(node.id, node);
                 nodes
             });
@@ -29,7 +29,7 @@ impl Graph {
                 id: node_id,
                 adjacency_list: Graph::parse_adjacency_list_from_tuple(node_id, &tuple_vec),
             })
-            .fold(HashMap::new(), |mut nodes, node| {
+            .fold(BTreeMap::new(), |mut nodes, node| {
                 nodes.insert(node.id, node);
                 nodes
             });
