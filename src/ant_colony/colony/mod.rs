@@ -1,29 +1,23 @@
-use rand::rngs::ThreadRng;
-use rand::Rng;
-
-use rand::distributions::WeightedIndex;
-use rand::prelude::*;
-
-use super::ant::Ant;
-use super::graph::{AdjacencyListEntry, Graph};
+use super::ant::{Ant, AntDispatcher};
+use super::graph::Graph;
 use super::pheromone::{Pheromone, PheromoneUpdater};
 
-pub struct Config<U: PheromoneUpdater> {
+pub struct Config<U: PheromoneUpdater, D: AntDispatcher> {
     pub ant_count: u32,
     pub num_of_steps_per_cycle: u32,
-    pub random: ThreadRng,
     pub pheromone_updater: U,
+    pub ant_dispatcher: D,
 }
 
-pub struct Colony<U: PheromoneUpdater> {
+pub struct Colony<U: PheromoneUpdater, D: AntDispatcher> {
     ants: Vec<Ant>,
     graph: Graph,
     pheromone: Pheromone,
-    config: Config<U>,
+    config: Config<U, D>,
 }
 
-impl<U: PheromoneUpdater> Colony<U> {
-    pub fn new(config: Config<U>, graph: Graph) -> Self {
+impl<U: PheromoneUpdater, D: AntDispatcher> Colony<U, D> {
+    pub fn new(config: Config<U, D>, graph: Graph) -> Self {
         Colony {
             graph,
             config,
@@ -37,15 +31,9 @@ impl<U: PheromoneUpdater> Colony<U> {
             graph, mut config, ..
         } = self;
 
-        let node_ids = graph.get_node_ids();
-        let ants = (0..config.ant_count)
-            .map(|_| {
-                let idx = config.random.gen_range(0..node_ids.len());
-                let initial_node = node_ids[idx];
-
-                Ant::new(initial_node)
-            })
-            .collect();
+        let ants = config
+            .ant_dispatcher
+            .place_ants_on_graph(config.ant_count, &graph);
 
         Colony {
             ants,
@@ -106,12 +94,11 @@ impl<U: PheromoneUpdater> Colony<U> {
         let (new_ants, taken_edges) = ants
             .into_iter()
             .map(|ant| {
-                Colony::<U>::execute_step_for_single_ant(
-                    ant,
-                    &graph,
-                    &pheromone,
-                    &mut config.random,
-                )
+                let next_edge = config
+                    .ant_dispatcher
+                    .select_next_edge(&ant, &graph, &pheromone);
+
+                (ant.move_to_node(next_edge.to), next_edge)
             })
             .unzip();
 
@@ -125,33 +112,5 @@ impl<U: PheromoneUpdater> Colony<U> {
             pheromone: new_pheromone,
             config,
         }
-    }
-
-    fn execute_step_for_single_ant<'a>(
-        ant: Ant,
-        graph: &'a Graph,
-        pheromone: &Pheromone,
-        random: &mut ThreadRng,
-    ) -> (Ant, &'a AdjacencyListEntry) {
-        let possible_next_edges: Vec<&AdjacencyListEntry> = graph
-            .get_adjacent_edges(&ant.current_node)
-            .iter()
-            .filter(|edge| !ant.has_visited(&edge.to))
-            .collect();
-
-        // node_likelihood is not normalized - does not sum up to one
-        let node_likelihood = possible_next_edges.iter().map(|edge| {
-            let visibility = 1.0 / edge.distance;
-            let pheromone_level = pheromone.get_pheromone_for_edge(edge.from, edge.to);
-
-            visibility * pheromone_level
-        });
-
-        let dist = WeightedIndex::new(node_likelihood).unwrap();
-
-        let next_edge = possible_next_edges[dist.sample(random)];
-        let next_node = next_edge.to;
-
-        (ant.move_to_node(next_node), next_edge)
     }
 }
