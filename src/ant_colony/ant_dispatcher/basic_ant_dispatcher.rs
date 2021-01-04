@@ -1,31 +1,14 @@
 use rand::Rng;
+use std::fmt::Display;
 
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 
+use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph, NodeId};
 use crate::ant_colony::pheromone::Pheromone;
 
-use super::ant::Ant;
-
-pub trait AntDispatcher {
-    fn place_ants_on_graph(&mut self, num_of_ants: u32, graph: &Graph) -> Vec<Ant> {
-        let node_ids = graph.get_node_ids();
-
-        (0..num_of_ants)
-            .map(|_| Ant::new(self.select_random_node(&node_ids)))
-            .collect()
-    }
-
-    fn select_random_node(&mut self, node_ids: &Vec<NodeId>) -> NodeId;
-
-    fn select_next_edge<'a>(
-        &mut self,
-        ant: &Ant,
-        graph: &'a Graph,
-        pheromone: &Pheromone,
-    ) -> &'a AdjacencyListEntry;
-}
+use super::AntDispatcher;
 
 pub struct BasicAntDispatcher<R: Rng> {
     random: R,
@@ -34,6 +17,12 @@ pub struct BasicAntDispatcher<R: Rng> {
 impl<R: Rng> BasicAntDispatcher<R> {
     pub fn new(random: R) -> Self {
         BasicAntDispatcher { random }
+    }
+}
+
+impl<R: Rng> Display for BasicAntDispatcher<R> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Ant dispatcher (Basic)",)
     }
 }
 

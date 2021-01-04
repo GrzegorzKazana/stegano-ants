@@ -1,8 +1,10 @@
 use std::fmt::Display;
 
-use super::ant::{Ant, AntDispatcher};
-use super::graph::Graph;
-use super::pheromone::{Pheromone, PheromoneUpdater};
+use crate::ant_colony::ant::Ant;
+use crate::ant_colony::ant_dispatcher::AntDispatcher;
+use crate::ant_colony::graph::Graph;
+use crate::ant_colony::pheromone::Pheromone;
+use crate::ant_colony::pheromone_updater::PheromoneUpdater;
 
 pub struct Config<U: PheromoneUpdater, D: AntDispatcher> {
     pub ant_count: u32,
@@ -131,8 +133,13 @@ impl<U: PheromoneUpdater, D: AntDispatcher> Display for Colony<U, D> {
             {}\n\
             {}\n\
             {}\n\
+            {}\n\
             ----------\n",
-            self.config.ant_count, self.config.pheromone_updater, self.graph, self.pheromone
+            self.config.ant_count,
+            self.config.pheromone_updater,
+            self.config.ant_dispatcher,
+            self.graph,
+            self.pheromone
         )
     }
 }

@@ -2,36 +2,25 @@ use std::fmt::Display;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
+use crate::ant_colony::pheromone::Pheromone;
 
-use super::pheromone::Pheromone;
+use super::PheromoneUpdater;
 
-pub trait PheromoneUpdater: Display {
-    fn initialize(&self, pheromone: Pheromone, edges: Vec<&AdjacencyListEntry>) -> Pheromone;
-
-    fn on_after_step(
-        &self,
-        pheromone: Pheromone,
-        taken_edges: Vec<&AdjacencyListEntry>,
-    ) -> Pheromone;
-
-    fn on_after_cycle(&self, pheromone: Pheromone, ants: &Vec<Ant>, graph: &Graph) -> Pheromone;
-}
-
-pub struct BasicPheromoneUpdater {
+pub struct ConstantPheromoneUpdater {
     initial_value: f32,
     evaporation_rate: f32,
 }
 
-impl BasicPheromoneUpdater {
+impl ConstantPheromoneUpdater {
     pub fn new(initial_value: f32, evaporation_rate: f32) -> Self {
-        BasicPheromoneUpdater {
+        ConstantPheromoneUpdater {
             initial_value,
             evaporation_rate,
         }
     }
 }
 
-impl Display for BasicPheromoneUpdater {
+impl Display for ConstantPheromoneUpdater {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -43,7 +32,7 @@ impl Display for BasicPheromoneUpdater {
     }
 }
 
-impl PheromoneUpdater for BasicPheromoneUpdater {
+impl PheromoneUpdater for ConstantPheromoneUpdater {
     fn initialize(&self, init_pheromone: Pheromone, edges: Vec<&AdjacencyListEntry>) -> Pheromone {
         edges.iter().fold(init_pheromone, |pheromone, edge| {
             pheromone.initialize_pheromone_for_edge(edge.key, self.initial_value)

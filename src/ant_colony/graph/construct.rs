@@ -1,5 +1,7 @@
-use super::{AdjacencyListEntry, Graph, Node, NodeId};
+use rand::{distributions::Uniform, Rng};
 use std::collections::BTreeMap;
+
+use super::{AdjacencyListEntry, Graph, Node, NodeId};
 
 impl Graph {
     #[allow(dead_code)]
@@ -35,6 +37,18 @@ impl Graph {
             });
 
         Graph { nodes }
+    }
+
+    pub fn random_tsp_graph<R: Rng>(rng: &mut R, nodes: u32) -> Self {
+        let distances = rng.sample_iter(Uniform::from(0.1..9.9));
+
+        let tuples = (0..nodes - 1)
+            .flat_map(|from| (from + 1..nodes).map(move |to| (from, to)))
+            .zip(distances)
+            .map(|((from, to), distance)| (from, to, distance))
+            .collect();
+
+        Graph::from_neighbour_tuples(tuples)
     }
 
     fn parse_adjacency_list_from_tuple(

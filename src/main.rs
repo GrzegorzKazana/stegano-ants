@@ -10,58 +10,34 @@ cfg_if! {
     }
 }
 
-use rand::{distributions::Uniform, prelude::StdRng, Rng, SeedableRng};
-use std::time::Instant;
+use rand::{prelude::StdRng, SeedableRng};
 
 mod ant_colony;
 mod common;
 
-use ant_colony::ant::BasicAntDispatcher;
+use ant_colony::ant_dispatcher::BasicAntDispatcher;
 use ant_colony::colony::{Colony, Config};
 use ant_colony::graph::Graph;
-use ant_colony::pheromone::BasicPheromoneUpdater;
+use ant_colony::pheromone_updater::ConstantPheromoneUpdater;
 
-fn random_tsp_graph(nodes: u32) -> Graph {
-    let rng = StdRng::seed_from_u64(42);
-
-    let distances = rng.sample_iter(Uniform::from(0.1..9.9));
-
-    let tuples = (0..nodes - 1)
-        .flat_map(|from| (from + 1..nodes).map(move |to| (from, to)))
-        .zip(distances)
-        .map(|((from, to), distance)| (from, to, distance))
-        .collect();
-
-    Graph::from_neighbour_tuples(tuples)
-}
+use common::utils::measure;
 
 fn main() {
-    let rng = StdRng::seed_from_u64(42);
+    let mut rng = StdRng::seed_from_u64(42);
 
-    let graph = random_tsp_graph(100);
-
-    // let graph = Graph::from_neighbour_tuples(vec![
-    //     (0, 1, 1.0),
-    //     (0, 2, 2.0),
-    //     (0, 3, 10.0),
-    //     (1, 2, 2.0),
-    //     (1, 3, 5.0),
-    //     (2, 3, 6.0),
-    // ]);
+    let graph = Graph::random_tsp_graph(&mut rng, 100);
 
     let config = Config {
-        ant_count: 10,
+        ant_count: 100,
         num_of_steps_per_cycle: graph.get_amount_of_nodes() - 1,
-        pheromone_updater: BasicPheromoneUpdater::new(1.0, 0.1),
+        pheromone_updater: ConstantPheromoneUpdater::new(1.0, 0.1),
         ant_dispatcher: BasicAntDispatcher::new(rng),
     };
 
-    let start = Instant::now();
-    let colony = Colony::new(config, graph).execute_n_cycles(1);
-    let duration = start.elapsed().as_millis();
+    let (colony, duration_ms) = measure(|| Colony::new(config, graph).execute_n_cycles(1));
 
     println!("{}", colony);
-    println!("execution time: {:>8}ms", duration);
+    println!("execution time: {:>8}ms", duration_ms);
 
     cfg_if! {
         if #[cfg(feature = "profiler")] {
