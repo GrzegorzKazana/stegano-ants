@@ -14,6 +14,7 @@ use rand::{distributions::Uniform, prelude::StdRng, Rng, SeedableRng};
 use std::time::Instant;
 
 mod ant_colony;
+mod common;
 
 use ant_colony::ant::BasicAntDispatcher;
 use ant_colony::colony::{Colony, Config};

@@ -2,9 +2,9 @@ use itertools::Itertools;
 use std::collections::HashMap;
 use std::fmt::Display;
 
-use crate::ant_colony::graph::NodeId;
+use crate::ant_colony::graph::EdgeKey;
+use crate::common::utils::UniquePair;
 
-pub type EdgeKey = u64;
 pub type PheromoneLevel = f32;
 
 pub struct Pheromone {
@@ -18,24 +18,18 @@ impl Pheromone {
         }
     }
 
-    pub fn initialize_pheromone_for_edge(mut self, from: NodeId, to: NodeId, value: f32) -> Self {
-        let key = Pheromone::generate_edge_key(from, to);
-
-        self.values.insert(key, value);
+    pub fn initialize_pheromone_for_edge(mut self, edge_key: EdgeKey, value: f32) -> Self {
+        self.values.insert(edge_key, value);
 
         self
     }
 
-    pub fn get_pheromone_for_edge(&self, from: NodeId, to: NodeId) -> PheromoneLevel {
-        let key = Pheromone::generate_edge_key(from, to);
-
-        self.values.get(&key).unwrap_or(&0.0).clone()
+    pub fn get_pheromone_for_edge(&self, edge_key: EdgeKey) -> PheromoneLevel {
+        self.values.get(&edge_key).unwrap_or(&0.0).clone()
     }
 
-    pub fn increase_pheromone_value(mut self, from: NodeId, to: NodeId, increment: f32) -> Self {
-        let key = Pheromone::generate_edge_key(from, to);
-
-        if let Some(val) = self.values.get_mut(&key) {
+    pub fn increase_pheromone_value(mut self, edge_key: EdgeKey, increment: f32) -> Self {
+        if let Some(val) = self.values.get_mut(&edge_key) {
             *val += increment;
         }
 
@@ -49,40 +43,21 @@ impl Pheromone {
 
         self
     }
-
-    /*
-     * generates deterministic an unique integer for pairs of integers
-     * loosely based on Szudzik's pairing function http://szudzik.com/ElegantPairing.pdf
-     * with the difference that input order does not matter
-     */
-    pub fn generate_edge_key(from: NodeId, to: NodeId) -> u64 {
-        let smaller = std::cmp::min(from, to) as u64;
-        let bigger = std::cmp::max(from, to) as u64;
-
-        bigger * bigger + smaller
-    }
-
-    /*
-     * reverse function to generate_edge_key
-     * result order is not respected smaller id first
-     * do not use for performance ciritical sections
-     */
-    pub fn decode_edge_key(key: u64) -> (NodeId, NodeId) {
-        let floor = (key as f64).sqrt().floor() as u64;
-
-        ((key - floor * floor) as NodeId, floor as NodeId)
-    }
 }
 
 impl Display for Pheromone {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let text = self
-            .values
+        let (non_zero_edges, zero_edges): (Vec<_>, Vec<_>) =
+            self.values.iter().partition(|(_, value)| **value >= 1e-3);
+
+        let non_empty_edge_ratio = non_zero_edges.len() as f32 / self.values.len() as f32;
+
+        let text = non_zero_edges
             .iter()
             .sorted_by(|(key_a, _), (key_b, _)| {
                 Ord::cmp(
-                    &Pheromone::decode_edge_key(**key_a),
-                    &Pheromone::decode_edge_key(**key_b),
+                    &UniquePair::decode_key(**key_a),
+                    &UniquePair::decode_key(**key_b),
                 )
             })
             .collect::<Vec<_>>()
@@ -91,11 +66,19 @@ impl Display for Pheromone {
                 chunks
                     .iter()
                     .fold(text + "\n\t| ", |chunk_text, (key, value)| {
-                        let (from, to) = Pheromone::decode_edge_key(**key);
+                        let (from, to) = UniquePair::decode_key(**key);
                         format!("{}({:^5},{:^5}):{:>6.3} | ", chunk_text, from, to, value)
                     })
             });
 
-        write!(f, "Pheromone {}", text)
+        write!(
+            f,
+            "Pheromone\n\t\
+            edges with trail >= 0.001: {} / {} ({:>4.2}%) {}",
+            non_zero_edges.len(),
+            zero_edges.len(),
+            100.0 * non_empty_edge_ratio,
+            text,
+        )
     }
 }

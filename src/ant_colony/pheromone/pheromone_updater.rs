@@ -46,7 +46,7 @@ impl Display for BasicPheromoneUpdater {
 impl PheromoneUpdater for BasicPheromoneUpdater {
     fn initialize(&self, init_pheromone: Pheromone, edges: Vec<&AdjacencyListEntry>) -> Pheromone {
         edges.iter().fold(init_pheromone, |pheromone, edge| {
-            pheromone.initialize_pheromone_for_edge(edge.from, edge.to, self.initial_value)
+            pheromone.initialize_pheromone_for_edge(edge.key, self.initial_value)
         })
     }
 
@@ -67,11 +67,7 @@ impl PheromoneUpdater for BasicPheromoneUpdater {
         taken_edges
             .iter()
             .fold(decayed_pheromone, |updated_pheromone, taken_edge| {
-                updated_pheromone.increase_pheromone_value(
-                    taken_edge.from,
-                    taken_edge.to,
-                    increment,
-                )
+                updated_pheromone.increase_pheromone_value(taken_edge.key, increment)
             })
     }
 

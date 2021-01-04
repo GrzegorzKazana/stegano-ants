@@ -6,81 +6,33 @@ pub fn mock_graph_vector() -> Vec<Node> {
         Node {
             id: 0,
             adjacency_list: vec![
-                AdjacencyListEntry {
-                    from: 0,
-                    to: 1,
-                    distance: 1.0,
-                },
-                AdjacencyListEntry {
-                    from: 0,
-                    to: 2,
-                    distance: 2.0,
-                },
-                AdjacencyListEntry {
-                    from: 0,
-                    to: 3,
-                    distance: 10.0,
-                },
+                AdjacencyListEntry::new(0, 1, 1.0),
+                AdjacencyListEntry::new(0, 2, 2.0),
+                AdjacencyListEntry::new(0, 3, 10.0),
             ],
         },
         Node {
             id: 1,
             adjacency_list: vec![
-                AdjacencyListEntry {
-                    from: 1,
-                    to: 0,
-                    distance: 1.0,
-                },
-                AdjacencyListEntry {
-                    from: 1,
-                    to: 2,
-                    distance: 2.0,
-                },
-                AdjacencyListEntry {
-                    from: 1,
-                    to: 3,
-                    distance: 5.0,
-                },
+                AdjacencyListEntry::new(1, 0, 1.0),
+                AdjacencyListEntry::new(1, 2, 2.0),
+                AdjacencyListEntry::new(1, 3, 5.0),
             ],
         },
         Node {
             id: 2,
             adjacency_list: vec![
-                AdjacencyListEntry {
-                    from: 2,
-                    to: 0,
-                    distance: 2.0,
-                },
-                AdjacencyListEntry {
-                    from: 2,
-                    to: 1,
-                    distance: 2.0,
-                },
-                AdjacencyListEntry {
-                    from: 2,
-                    to: 3,
-                    distance: 6.0,
-                },
+                AdjacencyListEntry::new(2, 0, 2.0),
+                AdjacencyListEntry::new(2, 1, 2.0),
+                AdjacencyListEntry::new(2, 3, 6.0),
             ],
         },
         Node {
             id: 3,
             adjacency_list: vec![
-                AdjacencyListEntry {
-                    from: 3,
-                    to: 0,
-                    distance: 10.0,
-                },
-                AdjacencyListEntry {
-                    from: 3,
-                    to: 1,
-                    distance: 5.0,
-                },
-                AdjacencyListEntry {
-                    from: 3,
-                    to: 2,
-                    distance: 6.0,
-                },
+                AdjacencyListEntry::new(3, 0, 10.0),
+                AdjacencyListEntry::new(3, 1, 5.0),
+                AdjacencyListEntry::new(3, 2, 6.0),
             ],
         },
     ]

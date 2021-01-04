@@ -4,7 +4,10 @@ mod construct;
 use std::collections::BTreeMap;
 use std::fmt::Display;
 
+use crate::common::utils::UniquePair;
+
 pub type NodeId = u32;
+pub type EdgeKey = u64;
 
 #[derive(Debug, PartialEq)]
 pub struct Node {
@@ -14,9 +17,21 @@ pub struct Node {
 
 #[derive(Debug, PartialEq)]
 pub struct AdjacencyListEntry {
+    pub key: u64,
     pub from: NodeId,
     pub to: NodeId,
     pub distance: f32,
+}
+
+impl AdjacencyListEntry {
+    pub fn new(from: NodeId, to: NodeId, distance: f32) -> Self {
+        AdjacencyListEntry {
+            key: UniquePair::generate_key(from, to),
+            from,
+            to,
+            distance,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]

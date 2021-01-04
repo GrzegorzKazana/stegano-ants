@@ -45,17 +45,17 @@ impl Graph {
             .iter()
             .filter_map(|(from, to, distance)| {
                 if node_id == *from {
-                    Option::Some(AdjacencyListEntry {
-                        from: from.clone(),
-                        to: to.clone(),
-                        distance: distance.clone(),
-                    })
+                    Option::Some(AdjacencyListEntry::new(
+                        from.clone(),
+                        to.clone(),
+                        distance.clone(),
+                    ))
                 } else if node_id == *to {
-                    Option::Some(AdjacencyListEntry {
-                        from: to.clone(),
-                        to: from.clone(),
-                        distance: distance.clone(),
-                    })
+                    Option::Some(AdjacencyListEntry::new(
+                        to.clone(),
+                        from.clone(),
+                        distance.clone(),
+                    ))
                 } else {
                     Option::None
                 }

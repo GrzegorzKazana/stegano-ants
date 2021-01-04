@@ -60,9 +60,9 @@ impl<R: Rng> AntDispatcher for BasicAntDispatcher<R> {
         // this is fine, since WeightedIndex takes care of it
         let node_likelihood = possible_next_edges.iter().map(|edge| {
             let visibility = 1.0 / edge.distance;
-            let pheromone_level = pheromone.get_pheromone_for_edge(edge.from, edge.to);
+            let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-            visibility * pheromone_level
+            visibility * pheromone_level + 1e-5
         });
 
         let dist = WeightedIndex::new(node_likelihood).unwrap();
