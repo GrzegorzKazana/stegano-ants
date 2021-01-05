@@ -46,6 +46,10 @@ impl Pheromone {
 
         self
     }
+
+    pub fn get_values(&self) -> &HashMap<EdgeKey, PheromoneLevel> {
+        &self.values
+    }
 }
 
 impl Display for Pheromone {

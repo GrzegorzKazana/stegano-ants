@@ -42,13 +42,9 @@ impl Display for Ant {
         let path = self.visited.iter().collect::<Vec<_>>();
         let path_length = path.len();
         let exceeds_display_length = path_length > 15;
-        let ellispis = if exceeds_display_length { "..." } else { "" };
+        let ellispis = iif!(exceeds_display_length, "...", "");
 
-        let vector_to_display = if exceeds_display_length {
-            &path[0..15]
-        } else {
-            &path[..]
-        };
+        let vector_to_display = iif!(exceeds_display_length, &path[0..15], &path[..]);
 
         write!(
             f,

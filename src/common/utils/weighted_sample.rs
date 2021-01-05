@@ -17,12 +17,6 @@ pub fn weighted_sample<'a, T>(data: &[&'a T], weights: &[f32], random_seed: f32)
 
     data.iter()
         .zip(cumulative_weigts)
-        .find_map(|(item, weight_sum)| {
-            if guess <= weight_sum {
-                Option::Some(*item)
-            } else {
-                Option::None
-            }
-        })
+        .find_map(|(item, weight_sum)| iif!(guess <= weight_sum, Option::Some(*item), Option::None))
         .unwrap()
 }

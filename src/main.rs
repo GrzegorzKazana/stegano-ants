@@ -12,6 +12,9 @@ cfg_if! {
 
 use rand::{prelude::StdRng, SeedableRng};
 
+#[macro_use]
+mod macros;
+
 mod ant_colony;
 mod common;
 
@@ -23,6 +26,8 @@ use ant_colony::pheromone_updater::ConstantPheromoneUpdater;
 use common::utils::measure;
 
 fn main() {
+    iif!(true, 0, 1);
+
     let mut rng = StdRng::seed_from_u64(42);
 
     // let graph = Graph::from_neighbour_tuples(vec![

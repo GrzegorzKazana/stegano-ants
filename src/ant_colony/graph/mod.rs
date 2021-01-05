@@ -17,7 +17,7 @@ pub struct Node {
 
 #[derive(Debug, PartialEq)]
 pub struct AdjacencyListEntry {
-    pub key: u64,
+    pub key: EdgeKey,
     pub from: NodeId,
     pub to: NodeId,
     pub distance: f32,
@@ -53,6 +53,21 @@ impl Graph {
         self.nodes
             .values()
             .flat_map(|node| &node.adjacency_list)
+            .collect()
+    }
+
+    pub fn get_edge(&self, key: EdgeKey) -> Option<&AdjacencyListEntry> {
+        self.nodes
+            .values()
+            .flat_map(|node| &node.adjacency_list)
+            .find(|edge| edge.key == key)
+    }
+
+    pub fn get_edges(&self, keys: &[EdgeKey]) -> Vec<&AdjacencyListEntry> {
+        self.nodes
+            .values()
+            .flat_map(|node| &node.adjacency_list)
+            .filter(|edge| keys.contains(&edge.key))
             .collect()
     }
 
