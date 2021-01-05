@@ -60,8 +60,8 @@ impl Graph {
         self.nodes.keys().map(|k| k.clone()).collect()
     }
 
-    pub fn get_amount_of_nodes(&self) -> u32 {
-        self.nodes.len() as u32
+    pub fn get_amount_of_nodes(&self) -> usize {
+        self.nodes.len()
     }
 }
 

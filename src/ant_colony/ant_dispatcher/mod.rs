@@ -12,7 +12,7 @@ pub use basic_ant_dispatcher::BasicAntDispatcher;
 pub trait AntDispatcher: Display + Send + Sync {
     fn place_ants_on_graph<R: Rng>(
         &self,
-        num_of_ants: u32,
+        num_of_ants: usize,
         graph: &Graph,
         rng: &mut R,
     ) -> Vec<Ant> {

@@ -43,7 +43,7 @@ fn main() {
         rng,
     };
 
-    let (colony, duration_ms) = measure(|| Colony::new(config, graph).execute_n_cycles(1));
+    let (colony, duration_ms) = measure(|| Colony::new(config, &graph).execute_n_cycles(10));
 
     println!("{}", colony);
     println!("execution time: {:>8}ms", duration_ms);
@@ -63,6 +63,6 @@ fn main() {
 // 2. implement dispatchers: BiasedAntDispatcher, SystemAntDispatcher
 // 3. way to measure/track learning progress
 // 4. module for solving tsp
-// 5. research parallelization
+// X. research parallelization
 //    5.1. Adapt colony to handle parallel cycle for each ant
-// 6. optimize weighted sampling in ant_dispatcher
+// X. optimize weighted sampling in ant_dispatcher

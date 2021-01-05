@@ -1,7 +1,6 @@
 use std::fmt::Display;
 
-use crate::ant_colony::ant::Ant;
-use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
+use crate::ant_colony::graph::AdjacencyListEntry;
 use crate::ant_colony::pheromone::Pheromone;
 
 use super::PheromoneUpdater;
@@ -43,7 +42,7 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
     fn on_after_step(
         &self,
         pheromone: Pheromone,
-        taken_edges: Vec<&AdjacencyListEntry>,
+        taken_edges: &[&AdjacencyListEntry],
     ) -> Pheromone {
         let n_steps = taken_edges.len() as i32;
 
@@ -60,7 +59,11 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
             })
     }
 
-    fn on_after_cycle(&self, pheromone: Pheromone, _ants: &Vec<Ant>, _graph: &Graph) -> Pheromone {
+    fn on_after_cycle(
+        &self,
+        pheromone: Pheromone,
+        _taken_edges: &Vec<Vec<&AdjacencyListEntry>>,
+    ) -> Pheromone {
         pheromone
     }
 }
