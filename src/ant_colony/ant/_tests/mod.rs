@@ -13,9 +13,15 @@ mod graph_tests {
 
     #[test]
     fn it_transitions_ant_to_next_node() {
-        let ant = Ant::new(42).move_to_node(43);
+        let ant = Ant::new(42)
+            .move_to_node(43)
+            .move_to_node(44)
+            .move_to_node(45);
 
-        assert_eq!(ant.current_node, 43);
+        assert_eq!(ant.current_node, 45);
+        assert!(!ant.has_visited(&42));
         assert!(ant.has_visited(&43));
+        assert!(ant.has_visited(&44));
+        assert!(ant.has_visited(&45));
     }
 }

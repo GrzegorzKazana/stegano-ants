@@ -1,6 +1,6 @@
 mod _tests;
 
-use std::collections::BTreeSet;
+use std::collections::HashSet;
 use std::fmt::Display;
 
 use crate::ant_colony::graph::NodeId;
@@ -8,14 +8,14 @@ use crate::ant_colony::graph::NodeId;
 #[derive(Debug)]
 pub struct Ant {
     pub current_node: NodeId,
-    visited: BTreeSet<NodeId>,
+    visited: HashSet<NodeId>,
 }
 
 impl Ant {
     pub fn new(current_node: NodeId) -> Self {
         Ant {
             current_node,
-            visited: BTreeSet::new(),
+            visited: HashSet::new(),
         }
     }
 
@@ -30,6 +30,10 @@ impl Ant {
 
     pub fn has_visited(&self, node_id: &NodeId) -> bool {
         self.visited.contains(node_id)
+    }
+
+    pub fn get_visited(&self) -> HashSet<NodeId> {
+        self.visited.clone()
     }
 }
 

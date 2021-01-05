@@ -18,10 +18,8 @@ pub trait AntDispatcher: Display + Send + Sync {
     ) -> Vec<Ant> {
         let node_ids = graph.get_node_ids();
 
-        node_ids
-            .into_iter()
-            .choose_multiple(rng, num_of_ants as usize)
-            .into_iter()
+        (0..num_of_ants)
+            .map(|_| node_ids.iter().choose(rng).unwrap().clone())
             .map(Ant::new)
             .collect()
     }

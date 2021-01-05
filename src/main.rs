@@ -66,3 +66,4 @@ fn main() {
 // X. research parallelization
 //    5.1. Adapt colony to handle parallel cycle for each ant
 // X. optimize weighted sampling in ant_dispatcher
+// 7. Get rid of few unwraps

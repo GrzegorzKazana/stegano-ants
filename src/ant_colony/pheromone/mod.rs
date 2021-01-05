@@ -9,6 +9,7 @@ use crate::common::utils::UniquePair;
 
 pub type PheromoneLevel = f32;
 
+#[derive(Debug, PartialEq)]
 pub struct Pheromone {
     values: HashMap<EdgeKey, PheromoneLevel>,
 }

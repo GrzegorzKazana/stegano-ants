@@ -41,11 +41,12 @@ impl Graph {
     }
 
     #[allow(dead_code)]
-    pub fn random_tsp_graph<R: Rng>(rng: &mut R, nodes: u32) -> Self {
+    pub fn random_tsp_graph<R: Rng>(rng: &mut R, nodes: usize) -> Self {
         let distances = rng.sample_iter(Uniform::from(0.1..9.9));
 
-        let tuples = (0..nodes - 1)
-            .flat_map(|from| (from + 1..nodes).map(move |to| (from, to)))
+        let nodes_32 = nodes as u32;
+        let tuples = (0..nodes_32)
+            .flat_map(|from| (from + 1..nodes_32).map(move |to| (from, to)))
             .zip(distances)
             .map(|((from, to), distance)| (from, to, distance))
             .collect();

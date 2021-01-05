@@ -1,3 +1,5 @@
+mod _tests;
+
 use rand::{distributions::Uniform, Rng};
 use rayon::prelude::*;
 use std::fmt::Display;
@@ -18,12 +20,24 @@ pub struct Config<U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     pub rng: R,
 }
 
+#[derive(Clone)]
+pub struct Stats {
+    pub num_cycles: usize,
+}
+
+impl Default for Stats {
+    fn default() -> Self {
+        Stats { num_cycles: 0 }
+    }
+}
+
 pub struct Colony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     ants: Vec<Ant>,
     graph: &'a Graph,
     pheromone: Pheromone,
     routes: Vec<Vec<&'a AdjacencyListEntry>>,
     config: Config<U, D, R>,
+    stats: Stats,
 }
 
 impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
@@ -34,18 +48,17 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
             routes: Vec::new(),
             ants: Vec::new(),
             pheromone: Pheromone::new(),
+            stats: Stats::default(),
         }
+        .initialize_pheromone()
     }
 
     pub fn execute_n_cycles(self, n_cycles: u32) -> Self {
-        let colony = self.initialize_pheromone();
-        let cycles = 0..n_cycles;
-
-        cycles.fold(colony, Colony::execute_cycle)
+        (0..n_cycles).fold(self, Colony::execute_cycle)
     }
 
     #[cfg_attr(feature = "profiler", flame)]
-    pub fn execute_cycle(self, _cycle: u32) -> Self {
+    fn execute_cycle(self, _cycle: u32) -> Self {
         let steps = 0..self.config.num_of_steps_per_cycle;
         let init_colony = self.initialize_ants().initialize_routes();
 
@@ -56,20 +69,26 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
             .pheromone_updater
             .on_after_cycle(colony.pheromone, &colony.routes);
 
+        let stats = Stats {
+            num_cycles: colony.stats.num_cycles + 1,
+        };
+
         Colony {
             pheromone,
+            stats,
             ..colony
         }
     }
 
     #[cfg_attr(feature = "profiler", flame)]
-    pub fn execute_step_for_all_ants(self, _step: usize) -> Self {
+    fn execute_step_for_all_ants(self, _step: usize) -> Self {
         let Colony {
             ants: init_ants,
             graph,
             pheromone: init_pheromone,
             routes: init_routes,
             config,
+            ..
         } = self;
 
         let Config {
