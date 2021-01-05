@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod common_utils_tests {
+mod common_utils_unique_pair_tests {
     use super::super::super::UniquePair;
     use proptest::prelude::*;
 

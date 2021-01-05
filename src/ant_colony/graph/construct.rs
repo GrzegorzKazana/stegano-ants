@@ -16,6 +16,7 @@ impl Graph {
         Graph { nodes }
     }
 
+    #[allow(dead_code)]
     pub fn from_neighbour_tuples(tuple_vec: Vec<(NodeId, NodeId, f32)>) -> Self {
         let mut node_ids: Vec<_> = tuple_vec
             .iter()
@@ -39,6 +40,7 @@ impl Graph {
         Graph { nodes }
     }
 
+    #[allow(dead_code)]
     pub fn random_tsp_graph<R: Rng>(rng: &mut R, nodes: u32) -> Self {
         let distances = rng.sample_iter(Uniform::from(0.1..9.9));
 
