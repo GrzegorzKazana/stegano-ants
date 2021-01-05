@@ -4,7 +4,6 @@ use std::collections::BTreeMap;
 use super::{AdjacencyListEntry, Graph, Node, NodeId};
 
 impl Graph {
-    #[allow(dead_code)]
     pub fn from_node_vector(nodes_vec: Vec<Node>) -> Self {
         let nodes = nodes_vec
             .into_iter()
@@ -16,7 +15,6 @@ impl Graph {
         Graph { nodes }
     }
 
-    #[allow(dead_code)]
     pub fn from_neighbour_tuples(tuple_vec: Vec<(NodeId, NodeId, f32)>) -> Self {
         let mut node_ids: Vec<_> = tuple_vec
             .iter()
@@ -40,7 +38,6 @@ impl Graph {
         Graph { nodes }
     }
 
-    #[allow(dead_code)]
     pub fn random_tsp_graph<R: Rng>(rng: &mut R, nodes: usize) -> Self {
         let distances = rng.sample_iter(Uniform::from(0.1..9.9));
 

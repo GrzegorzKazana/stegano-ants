@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::ant_colony::graph::AdjacencyListEntry;
+use crate::ant_colony::graph::{RouteBatch, RouteCollection};
 use crate::ant_colony::pheromone::Pheromone;
 
 use super::PheromoneUpdater;
@@ -32,18 +32,13 @@ impl Display for ConstantPheromoneUpdater {
 }
 
 impl PheromoneUpdater for ConstantPheromoneUpdater {
-    fn initialize(&self, init_pheromone: Pheromone, edges: Vec<&AdjacencyListEntry>) -> Pheromone {
+    fn initialize(&self, init_pheromone: Pheromone, edges: &RouteBatch) -> Pheromone {
         edges.iter().fold(init_pheromone, |pheromone, edge| {
             pheromone.initialize_pheromone_for_edge(edge.key, self.initial_value)
         })
     }
 
-    #[cfg_attr(feature = "profiler", flame)]
-    fn on_after_step(
-        &self,
-        pheromone: Pheromone,
-        taken_edges: &[&AdjacencyListEntry],
-    ) -> Pheromone {
+    fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatch) -> Pheromone {
         let n_steps = taken_edges.len() as i32;
 
         let decay = 1.0 - self.evaporation_rate;
@@ -59,11 +54,7 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
             })
     }
 
-    fn on_after_cycle(
-        &self,
-        pheromone: Pheromone,
-        _taken_edges: &Vec<Vec<&AdjacencyListEntry>>,
-    ) -> Pheromone {
+    fn on_after_cycle(&self, pheromone: Pheromone, _taken_edges: &RouteCollection) -> Pheromone {
         pheromone
     }
 }

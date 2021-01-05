@@ -1,6 +1,5 @@
 use crate::ant_colony::graph::{AdjacencyListEntry, Node, NodeId};
 
-#[allow(dead_code)]
 pub fn mock_graph_vector() -> Vec<Node> {
     vec![
         Node {
@@ -38,7 +37,6 @@ pub fn mock_graph_vector() -> Vec<Node> {
     ]
 }
 
-#[allow(dead_code)]
 pub fn mock_graph_tuple() -> Vec<(NodeId, NodeId, f32)> {
     vec![
         (0, 1, 1.0),

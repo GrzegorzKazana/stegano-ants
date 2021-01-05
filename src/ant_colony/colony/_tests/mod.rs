@@ -32,7 +32,7 @@ mod colony_tests {
         let colony_b = get_sample_colony(42, 20, 5, &graph).execute_n_cycles(2);
 
         assert_eq!(colony_a.pheromone, colony_b.pheromone);
-        assert_eq!(colony_a.routes, colony_b.routes);
+        assert_eq!(colony_a.routes.get_routes(), colony_b.routes.get_routes());
     }
 
     #[test]
@@ -41,8 +41,12 @@ mod colony_tests {
 
         let colony = get_sample_colony(42, 20, 5, &graph).execute_n_cycles(2);
 
-        assert_eq!(colony.routes.len(), 20);
-        assert!(colony.routes.iter().all(|route| route.len() == 5))
+        assert_eq!(colony.routes.get_routes().len(), 20);
+        assert!(colony
+            .routes
+            .get_routes()
+            .iter()
+            .all(|route| route.get_length() == 5))
     }
 
     #[test]
@@ -53,31 +57,20 @@ mod colony_tests {
 
         let Colony { ants, routes, .. } = colony;
 
-        for (ant, route) in ants.iter().zip(routes.iter()) {
-            print!("{:?}", ant.get_visited());
-            println!("{:?}", route.iter().map(|edge| edge.to).collect::<Vec<_>>());
-        }
+        assert_eq!(ants.len(), routes.get_routes().len());
+        ants.iter()
+            .zip(routes.get_routes())
+            .for_each(|(ant, route)| {
+                let ant_node_ids = ant.get_visited();
+                let route_nodes = route.get_nodes();
+                // skipping 1, since route also keeps track of initial node
+                // whereas, ant only stores it has transitioned to
+                let route_node_ids = route_nodes.iter().skip(1).collect::<Vec<_>>();
 
-        assert_eq!(ants.len(), routes.len());
-        ants.iter().zip(routes).for_each(|(ant, route)| {
-            let ant_node_ids = ant.get_visited();
-            let route_node_ids = route.iter().map(|edge| edge.to).collect::<Vec<_>>();
-
-            assert_eq!(ant_node_ids.len(), route_node_ids.len());
-            assert!(route_node_ids
-                .iter()
-                .all(|node_id| ant_node_ids.contains(node_id)));
-        })
-    }
-
-    #[test]
-    fn it_updates_stats() {
-        let graph = Graph::random_tsp_graph(&mut StdRng::seed_from_u64(42), 10);
-
-        let colony = get_sample_colony(42, 20, 5, &graph)
-            .execute_n_cycles(2)
-            .execute_n_cycles(2);
-
-        assert_eq!(colony.stats.num_cycles, 4);
+                assert_eq!(ant_node_ids.len(), route_node_ids.len());
+                assert!(route_node_ids
+                    .iter()
+                    .all(|node_id| ant_node_ids.contains(node_id)));
+            })
     }
 }

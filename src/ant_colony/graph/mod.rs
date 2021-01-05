@@ -1,46 +1,24 @@
 mod _tests;
+mod adjacency_list_entry;
 mod construct;
+mod node;
+mod route;
+mod route_batch;
+mod route_collection;
 
 use std::collections::BTreeMap;
 use std::fmt::Display;
 
-use crate::common::utils::UniquePair;
-
-pub type NodeId = u32;
-pub type EdgeKey = u64;
-
-#[derive(Debug, PartialEq)]
-pub struct Node {
-    pub id: NodeId,
-    pub adjacency_list: Vec<AdjacencyListEntry>,
-}
-
-#[derive(Debug, PartialEq)]
-pub struct AdjacencyListEntry {
-    pub key: EdgeKey,
-    pub from: NodeId,
-    pub to: NodeId,
-    pub distance: f32,
-}
-
-impl AdjacencyListEntry {
-    pub fn new(from: NodeId, to: NodeId, distance: f32) -> Self {
-        AdjacencyListEntry {
-            key: UniquePair::generate_key(from, to),
-            from,
-            to,
-            distance,
-        }
-    }
-}
+pub use adjacency_list_entry::{AdjacencyListEntry, EdgeKey};
+pub use node::{Node, NodeId};
+pub use route::Route;
+pub use route_batch::RouteBatch;
+pub use route_collection::RouteCollection;
 
 #[derive(Debug, PartialEq)]
 pub struct Graph {
-    /*
-     * using BTreeMap for stable iteration order
-     * (which HashMap does not have)
-     * TODO: compare performance against indexmap (https://github.com/bluss/indexmap)
-     */
+    /// using BTreeMap instead of HashMap for stable iteration order
+    /// TODO: compare performance against indexmap (https://github.com/bluss/indexmap)
     nodes: BTreeMap<NodeId, Node>,
 }
 

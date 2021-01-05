@@ -6,11 +6,9 @@ use std::fmt::Display;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::ant_dispatcher::AntDispatcher;
-use crate::ant_colony::graph::Graph;
+use crate::ant_colony::graph::{Graph, RouteBatch, RouteCollection};
 use crate::ant_colony::pheromone::Pheromone;
 use crate::ant_colony::pheromone_updater::PheromoneUpdater;
-
-use super::graph::AdjacencyListEntry;
 
 pub struct Config<U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     pub ant_count: usize,
@@ -20,24 +18,12 @@ pub struct Config<U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     pub rng: R,
 }
 
-#[derive(Clone)]
-pub struct Stats {
-    pub num_cycles: usize,
-}
-
-impl Default for Stats {
-    fn default() -> Self {
-        Stats { num_cycles: 0 }
-    }
-}
-
 pub struct Colony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     ants: Vec<Ant>,
     graph: &'a Graph,
     pheromone: Pheromone,
-    routes: Vec<Vec<&'a AdjacencyListEntry>>,
+    routes: RouteCollection<'a>,
     config: Config<U, D, R>,
-    stats: Stats,
 }
 
 impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
@@ -45,10 +31,9 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
         Colony {
             graph,
             config,
-            routes: Vec::new(),
+            routes: RouteCollection::default(),
             ants: Vec::new(),
             pheromone: Pheromone::new(),
-            stats: Stats::default(),
         }
         .initialize_pheromone()
     }
@@ -69,13 +54,8 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
             .pheromone_updater
             .on_after_cycle(colony.pheromone, &colony.routes);
 
-        let stats = Stats {
-            num_cycles: colony.stats.num_cycles + 1,
-        };
-
         Colony {
             pheromone,
-            stats,
             ..colony
         }
     }
@@ -100,7 +80,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
 
         let seeds = (&mut rng).sample_iter(Uniform::new::<f32, f32>(0.0, 1.0));
 
-        let (ants, taken_edges): (Vec<Ant>, Vec<&AdjacencyListEntry>) = init_ants
+        let (ants, taken_edges): (Vec<Ant>, RouteBatch) = init_ants
             .into_iter()
             .zip(seeds)
             .collect::<Vec<_>>()
@@ -115,14 +95,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
 
         let pheromone = pheromone_updater.on_after_step(init_pheromone, &taken_edges);
 
-        let routes = taken_edges
-            .into_iter()
-            .zip(init_routes)
-            .map(|(edge, mut edges)| {
-                edges.push(edge);
-                edges
-            })
-            .collect();
+        let routes = init_routes.add_steps(&taken_edges);
 
         Colony {
             ants,
@@ -139,9 +112,8 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
     }
 
     fn initialize_routes(self) -> Self {
-        let routes = (0..self.config.ant_count)
-            .map(|_| Vec::with_capacity(self.config.num_of_steps_per_cycle))
-            .collect();
+        let routes =
+            RouteCollection::new(self.config.ant_count, self.config.num_of_steps_per_cycle);
 
         Colony { routes, ..self }
     }
@@ -168,7 +140,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
         let pheromone = self
             .config
             .pheromone_updater
-            .initialize(self.pheromone, edges);
+            .initialize(self.pheromone, &edges);
 
         Colony { pheromone, ..self }
     }
