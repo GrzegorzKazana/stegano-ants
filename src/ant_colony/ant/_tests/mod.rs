@@ -7,7 +7,7 @@ mod graph_tests {
         let ant = Ant::new(42);
 
         assert!(ant.current_node == 42);
-        assert!(!ant.has_visited(&42));
+        assert!(ant.has_visited(&42));
         assert!(!ant.has_visited(&43));
     }
 
@@ -19,7 +19,7 @@ mod graph_tests {
             .move_to_node(45);
 
         assert_eq!(ant.current_node, 45);
-        assert!(!ant.has_visited(&42));
+        assert!(ant.has_visited(&42));
         assert!(ant.has_visited(&43));
         assert!(ant.has_visited(&44));
         assert!(ant.has_visited(&45));

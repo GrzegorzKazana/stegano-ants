@@ -23,11 +23,8 @@ impl AntDispatcher for BasicAntDispatcher {
         pheromone: &Pheromone,
         random_seed: f32,
     ) -> &'a AdjacencyListEntry {
-        let possible_next_edges: Vec<&AdjacencyListEntry> = graph
-            .get_adjacent_edges(&ant.current_node)
-            .iter()
-            .filter(|edge| !ant.has_visited(&edge.to))
-            .collect();
+        let possible_next_edges: Vec<&AdjacencyListEntry> =
+            self.get_possible_next_edges_for_ant(ant, graph);
 
         let node_likelihood = possible_next_edges
             .iter()

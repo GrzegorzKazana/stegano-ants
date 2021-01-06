@@ -56,6 +56,10 @@ impl Graph {
     pub fn get_amount_of_nodes(&self) -> usize {
         self.nodes.len()
     }
+
+    pub fn get_max_cycle_edges(&self) -> usize {
+        self.get_amount_of_nodes() - 1
+    }
 }
 
 impl Display for Graph {

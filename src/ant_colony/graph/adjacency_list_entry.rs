@@ -4,7 +4,7 @@ use super::NodeId;
 
 pub type EdgeKey = u64;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct AdjacencyListEntry {
     pub key: EdgeKey,
     pub from: NodeId,

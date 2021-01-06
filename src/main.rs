@@ -66,8 +66,8 @@ fn main() {
 // TODO
 // 1. implement updaters: AveragePheromoneUpdater, CyclicalPheromoneUpdater (?), SystemPheromoneUpdater, MinMaxPheromoneUpdater
 // 2. implement dispatchers: BiasedAntDispatcher, SystemAntDispatcher
-// 3. way to measure/track learning progress
-// 4. module for solving tsp
+// X. way to measure/track learning progress
+// X. module for solving tsp
 // X. research parallelization
 //    5.1. Adapt colony to handle parallel cycle for each ant
 // X. optimize weighted sampling in ant_dispatcher

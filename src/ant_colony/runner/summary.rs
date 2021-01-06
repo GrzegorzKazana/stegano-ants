@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use crate::ant_colony::graph::Route;
+
 pub struct CycleSummary {
     pub cycle_idx: usize,
     pub exec_time_ms: u128,
@@ -25,14 +27,24 @@ impl Display for CycleSummary {
 pub struct EpochSummary {
     pub epoch_idx: usize,
     pub exec_time_ms: u128,
+    pub shortest_route: Option<Route>,
 }
 
 impl Display for EpochSummary {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let path_appendix = match &self.shortest_route {
+            Option::Some(route) => format!(
+                "\n\tshortest path ({}): {:?}",
+                route.get_distance(),
+                route.get_nodes()
+            ),
+            Option::None => String::from(""),
+        };
+
         write!(
             f,
-            "Epoch #{:<3} {:>5}ms\n",
-            self.epoch_idx, self.exec_time_ms,
+            "Epoch #{:<3} {:>5}ms{}",
+            self.epoch_idx, self.exec_time_ms, path_appendix
         )
     }
 }

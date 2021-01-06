@@ -66,10 +66,7 @@ mod colony_tests {
             .zip(routes.get_routes())
             .for_each(|(ant, route)| {
                 let ant_node_ids = ant.get_visited();
-                let route_nodes = route.get_nodes();
-                // skipping 1, since route also keeps track of initial node
-                // whereas, ant only stores it has transitioned to
-                let route_node_ids = route_nodes.iter().skip(1).collect::<Vec<_>>();
+                let route_node_ids = route.get_nodes();
 
                 assert_eq!(ant_node_ids.len(), route_node_ids.len());
                 assert!(route_node_ids

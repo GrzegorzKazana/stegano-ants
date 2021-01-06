@@ -1,15 +1,15 @@
 use super::{AdjacencyListEntry, NodeId};
 
 /// Container for multiple edges that represent same route
-#[derive(Debug, PartialEq)]
-pub struct Route<'a>(Vec<&'a AdjacencyListEntry>);
+#[derive(Debug, PartialEq, Clone)]
+pub struct Route(Vec<AdjacencyListEntry>);
 
-impl<'a> Route<'a> {
+impl Route {
     pub fn new(route_length: usize) -> Self {
         Route(Vec::with_capacity(route_length))
     }
 
-    pub fn add_step(mut self, edge: &'a AdjacencyListEntry) -> Self {
+    pub fn add_step(mut self, edge: AdjacencyListEntry) -> Self {
         self.0.push(edge);
 
         Route(self.0)
@@ -41,7 +41,7 @@ impl<'a> Route<'a> {
     }
 }
 
-impl<'a> Default for Route<'a> {
+impl Default for Route {
     fn default() -> Self {
         Route(Vec::new())
     }

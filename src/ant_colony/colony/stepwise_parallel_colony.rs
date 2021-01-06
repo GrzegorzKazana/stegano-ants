@@ -14,7 +14,7 @@ pub struct StepwiseParallelColony<'a, U: PheromoneUpdater, D: AntDispatcher, R: 
     ants: Vec<Ant>,
     graph: &'a Graph,
     pheromone: Pheromone,
-    routes: RouteCollection<'a>,
+    routes: RouteCollection,
     config: Config<U, D, R>,
 }
 
@@ -50,7 +50,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony
         &self.pheromone
     }
 
-    fn get_routes(&self) -> &'a RouteCollection {
+    fn get_routes(&self) -> &RouteCollection {
         &self.routes
     }
 

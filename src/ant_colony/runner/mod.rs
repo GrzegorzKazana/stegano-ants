@@ -49,7 +49,10 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
             },
         );
 
+        let shortest_route = colony.get_routes().get_shortest_route();
+
         let epoch_summary = EpochSummary {
+            shortest_route,
             epoch_idx: epoch_history.len() + 1,
             exec_time_ms: next_cycle_history
                 .iter()
@@ -85,7 +88,10 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
             },
         );
 
+        let shortest_route = colony.get_routes().get_shortest_route();
+
         let epoch_summary = EpochSummary {
+            shortest_route,
             epoch_idx: epoch_history.len() + 1,
             exec_time_ms: next_cycle_history
                 .iter()

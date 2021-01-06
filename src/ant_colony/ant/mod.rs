@@ -7,15 +7,21 @@ use crate::ant_colony::graph::NodeId;
 
 #[derive(Debug)]
 pub struct Ant {
+    pub inital_node: NodeId,
     pub current_node: NodeId,
     visited: HashSet<NodeId>,
 }
 
 impl Ant {
-    pub fn new(current_node: NodeId) -> Self {
+    pub fn new(inital_node: NodeId) -> Self {
+        let mut visited = HashSet::new();
+
+        visited.insert(inital_node);
+
         Ant {
-            current_node,
-            visited: HashSet::new(),
+            inital_node,
+            current_node: inital_node,
+            visited,
         }
     }
 
