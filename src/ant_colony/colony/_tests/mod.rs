@@ -2,7 +2,7 @@
 mod colony_tests {
     use rand::{prelude::StdRng, SeedableRng};
 
-    use super::super::{Colony, Config};
+    use super::super::{Colony, ColonyTrait, Config};
     use crate::ant_colony::ant_dispatcher::BasicAntDispatcher;
     use crate::ant_colony::graph::Graph;
     use crate::ant_colony::pheromone_updater::ConstantPheromoneUpdater;

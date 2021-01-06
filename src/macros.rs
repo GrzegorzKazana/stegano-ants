@@ -8,3 +8,11 @@ macro_rules! iif {
         }
     };
 }
+
+#[cfg(test)]
+#[macro_use]
+macro_rules! assert_delta {
+    ($x:expr, $y:expr, $d:expr) => {
+        assert!($x - $y < $d || $y - $x < $d);
+    };
+}

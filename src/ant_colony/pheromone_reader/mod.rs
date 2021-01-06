@@ -10,7 +10,7 @@ pub struct PheromoneReader;
 impl PheromoneReader {
     pub fn count_edges_with_pheromone_above<'a>(pheromone: &Pheromone, level: f32) -> usize {
         pheromone
-            .get_values()
+            .get_values_normalized()
             .iter()
             .filter_map(|(key, value)| iif!(*value > level, Option::Some(*key), Option::None))
             .count()
@@ -38,14 +38,15 @@ impl PheromoneReader {
 
     fn get_edge_keys_with_pheromone_above<'a>(pheromone: &Pheromone, level: f32) -> Vec<EdgeKey> {
         pheromone
-            .get_values()
+            .get_values_normalized()
             .iter()
             .filter_map(|(key, value)| iif!(*value > level, Option::Some(*key), Option::None))
             .collect::<Vec<_>>()
     }
 
     fn get_top_n_edge_keys<'a>(pheromone: &Pheromone, n: usize) -> Vec<EdgeKey> {
-        let mut pheromone_copy = pheromone.get_values().iter().collect::<Vec<_>>();
+        let pheromone_norm = pheromone.get_values_normalized();
+        let mut pheromone_copy = pheromone_norm.iter().collect::<Vec<_>>();
 
         (0..n).fold(Vec::with_capacity(n), |mut acc, _| {
             let maybe_max_idx = pheromone_copy

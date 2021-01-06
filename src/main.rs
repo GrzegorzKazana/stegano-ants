@@ -23,12 +23,9 @@ use ant_colony::ant_dispatcher::BasicAntDispatcher;
 use ant_colony::colony::{Colony, Config};
 use ant_colony::graph::Graph;
 use ant_colony::pheromone_updater::ConstantPheromoneUpdater;
-
-use common::utils::measure;
+use ant_colony::runner::{ColonyRunner, CommandLine};
 
 fn main() {
-    iif!(true, 0, 1);
-
     let mut rng = StdRng::seed_from_u64(42);
 
     // let graph = Graph::from_neighbour_tuples(vec![
@@ -49,10 +46,7 @@ fn main() {
         rng,
     };
 
-    let (colony, duration_ms) = measure(|| Colony::new(config, &graph).execute_n_cycles(10));
-
-    println!("{}", colony);
-    println!("execution time: {:>8}ms", duration_ms);
+    ColonyRunner::new(Colony::new(config, &graph), &graph, CommandLine).train(20);
 
     cfg_if! {
         if #[cfg(feature = "profiler")] {

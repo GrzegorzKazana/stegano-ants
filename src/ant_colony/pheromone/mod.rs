@@ -47,8 +47,30 @@ impl Pheromone {
         self
     }
 
-    pub fn get_values(&self) -> &HashMap<EdgeKey, PheromoneLevel> {
+    fn get_values(&self) -> &HashMap<EdgeKey, PheromoneLevel> {
         &self.values
+    }
+
+    /// Each pheromone trail is scaled to [0.0, 1.0)
+    pub fn get_values_normalized(&self) -> HashMap<EdgeKey, PheromoneLevel> {
+        let sum: f32 = self.values.values().sum();
+        let n = self.values.len() as f32;
+        let ratio = n / sum;
+
+        self.values
+            .iter()
+            .map(|(key, val)| (key.clone(), val * ratio))
+            .collect()
+    }
+
+    /// Each pheromone trail is scaled in such a way, that sum of all is 1.0
+    pub fn get_values_normalized_to_sum(&self) -> HashMap<EdgeKey, PheromoneLevel> {
+        let sum: f32 = self.values.values().sum();
+
+        self.values
+            .iter()
+            .map(|(key, val)| (key.clone(), val / sum))
+            .collect()
     }
 }
 

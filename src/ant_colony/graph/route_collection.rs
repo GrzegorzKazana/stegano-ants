@@ -31,6 +31,12 @@ impl<'a> RouteCollection<'a> {
     pub fn get_routes(&self) -> &[Route] {
         &self.0
     }
+
+    pub fn get_average_route_distance(&self) -> f32 {
+        self.0
+            .iter()
+            .fold(0.0, |acc, route| acc + route.get_distance())
+    }
 }
 
 impl<'a> Default for RouteCollection<'a> {

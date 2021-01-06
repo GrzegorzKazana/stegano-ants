@@ -18,6 +18,14 @@ pub struct Config<U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     pub rng: R,
 }
 
+pub trait ColonyTrait {
+    fn execute_n_cycles(self, n_cycles: usize) -> Self;
+
+    fn execute_cycle(self, _cycle: usize) -> Self;
+
+    fn get_progress(&self) -> (&Pheromone, &RouteCollection);
+}
+
 pub struct Colony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     ants: Vec<Ant>,
     graph: &'a Graph,
@@ -26,24 +34,13 @@ pub struct Colony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
     config: Config<U, D, R>,
 }
 
-impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
-    pub fn new(config: Config<U, D, R>, graph: &'a Graph) -> Self {
-        Colony {
-            graph,
-            config,
-            routes: RouteCollection::default(),
-            ants: Vec::new(),
-            pheromone: Pheromone::new(),
-        }
-        .initialize_pheromone()
-    }
-
-    pub fn execute_n_cycles(self, n_cycles: u32) -> Self {
+impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> ColonyTrait for Colony<'a, U, D, R> {
+    fn execute_n_cycles(self, n_cycles: usize) -> Self {
         (0..n_cycles).fold(self, Colony::execute_cycle)
     }
 
     #[cfg_attr(feature = "profiler", flame)]
-    fn execute_cycle(self, _cycle: u32) -> Self {
+    fn execute_cycle(self, _cycle: usize) -> Self {
         let steps = 0..self.config.num_of_steps_per_cycle;
         let init_colony = self.initialize_ants().initialize_routes();
 
@@ -58,6 +55,23 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
             pheromone,
             ..colony
         }
+    }
+
+    fn get_progress(&self) -> (&Pheromone, &RouteCollection) {
+        (&self.pheromone, &self.routes)
+    }
+}
+
+impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony<'a, U, D, R> {
+    pub fn new(config: Config<U, D, R>, graph: &'a Graph) -> Self {
+        Colony {
+            graph,
+            config,
+            routes: RouteCollection::default(),
+            ants: Vec::new(),
+            pheromone: Pheromone::new(),
+        }
+        .initialize_pheromone()
     }
 
     #[cfg_attr(feature = "profiler", flame)]
