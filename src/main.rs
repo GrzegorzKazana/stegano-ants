@@ -51,7 +51,7 @@ fn main() {
         &graph,
         CommandLine,
     )
-    .train(10);
+    .train_n_until_no_improvement(10);
 
     cfg_if! {
         if #[cfg(feature = "profiler")] {

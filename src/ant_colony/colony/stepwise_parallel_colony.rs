@@ -50,7 +50,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony
         &self.pheromone
     }
 
-    fn get_routes(&self) -> &RouteCollection {
+    fn get_routes(&self) -> &'a RouteCollection {
         &self.routes
     }
 
