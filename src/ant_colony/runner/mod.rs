@@ -1,55 +1,15 @@
 mod io;
+mod summary;
 
-use std::fmt::Display;
-
-use crate::ant_colony::colony::ColonyTrait;
+use crate::ant_colony::colony::Colony;
 use crate::ant_colony::graph::Graph;
 use crate::ant_colony::pheromone_reader::PheromoneReader;
 use crate::common::utils::measure;
 
 pub use io::{CliOutput, CommandLine, DummyOutput};
+pub use summary::{CycleSummary, EpochSummary};
 
-pub struct CycleSummary {
-    pub cycle_idx: usize,
-    pub exec_time_ms: u128,
-    pub shortest_dist: Option<f32>,
-    pub avg_dist: f32,
-    pub n_non_empty_edges: usize,
-}
-
-impl Display for CycleSummary {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Cycle #{:<5} ({:>6}ms)\n\t\
-            non empty edges: {:>10}\n\t\
-            avg path length: {:>10.3}\n\t\
-            shortest length: {:>10}\n",
-            self.cycle_idx,
-            self.exec_time_ms,
-            self.n_non_empty_edges,
-            self.avg_dist,
-            self.shortest_dist.unwrap_or(0.0)
-        )
-    }
-}
-
-pub struct EpochSummary {
-    pub epoch_idx: usize,
-    pub exec_time_ms: u128,
-}
-
-impl Display for EpochSummary {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Epoch #{:<5} ({:>6})ms\n",
-            self.epoch_idx, self.exec_time_ms,
-        )
-    }
-}
-
-pub struct ColonyRunner<'a, C: ColonyTrait, IO: CliOutput> {
+pub struct ColonyRunner<'a, C: Colony, IO: CliOutput> {
     colony: C,
     graph: &'a Graph,
     io: IO,
@@ -57,7 +17,7 @@ pub struct ColonyRunner<'a, C: ColonyTrait, IO: CliOutput> {
     epoch_history: Vec<EpochSummary>,
 }
 
-impl<'a, C: ColonyTrait, IO: CliOutput> ColonyRunner<'a, C, IO> {
+impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
     pub fn new(colony: C, graph: &'a Graph, io: IO) -> Self {
         ColonyRunner {
             colony,
@@ -84,7 +44,8 @@ impl<'a, C: ColonyTrait, IO: CliOutput> ColonyRunner<'a, C, IO> {
             |(colony, mut summaries), cycle_idx| {
                 let (new_colony, exec_time_ms) = measure(|| colony.execute_cycle(cycle_idx));
 
-                let (pheromone, routes) = new_colony.get_progress();
+                let pheromone = new_colony.get_pheromone();
+                let routes = new_colony.get_routes();
 
                 let summary = CycleSummary {
                     cycle_idx: n_prev_cycles + cycle_idx,
@@ -92,11 +53,11 @@ impl<'a, C: ColonyTrait, IO: CliOutput> ColonyRunner<'a, C, IO> {
                     shortest_dist: routes.get_shortest_route_distance(),
                     avg_dist: routes.get_average_route_distance(),
                     n_non_empty_edges: PheromoneReader::count_edges_with_pheromone_above(
-                        pheromone, 0.01,
+                        pheromone, 0.1,
                     ),
                 };
 
-                io.print(&summary);
+                io.print_cycle_summary(&summary);
                 summaries.push(summary);
 
                 (new_colony, summaries)
@@ -110,7 +71,7 @@ impl<'a, C: ColonyTrait, IO: CliOutput> ColonyRunner<'a, C, IO> {
                 .fold(0, |acc, cycle| acc + cycle.exec_time_ms),
         };
 
-        io.print(&epoch_summary);
+        io.print_epoch_summary(&epoch_summary);
 
         cycle_history.extend(next_cycle_history);
         epoch_history.push(epoch_summary);

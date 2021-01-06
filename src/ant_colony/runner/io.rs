@@ -1,19 +1,23 @@
+use super::{CycleSummary, EpochSummary};
+
 pub trait CliOutput {
-    fn print<Summary: std::fmt::Display>(&self, output: &Summary) {
+    fn print_cycle_summary(&self, output: &CycleSummary) {
+        println!("{}", output);
+    }
+
+    fn print_epoch_summary(&self, output: &EpochSummary) {
         println!("{}", output);
     }
 }
 
 pub struct CommandLine;
 
-impl CliOutput for CommandLine {
-    fn print<Summary: std::fmt::Display>(&self, output: &Summary) {
-        println!("{}", output);
-    }
-}
+impl CliOutput for CommandLine {}
 
 pub struct DummyOutput;
 
 impl CliOutput for DummyOutput {
-    fn print<Summary: std::fmt::Display>(&self, _output: &Summary) {}
+    fn print_cycle_summary(&self, _output: &CycleSummary) {}
+
+    fn print_epoch_summary(&self, _output: &EpochSummary) {}
 }

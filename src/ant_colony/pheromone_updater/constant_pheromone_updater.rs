@@ -39,13 +39,10 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
     }
 
     fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatch) -> Pheromone {
-        let n_steps = taken_edges.len() as i32;
-
         let decay = 1.0 - self.evaporation_rate;
         let increment = self.evaporation_rate * self.initial_value;
 
-        let accumulated_decay = decay.powi(n_steps);
-        let decayed_pheromone = pheromone.scale_all_pheromone_values(accumulated_decay);
+        let decayed_pheromone = pheromone.scale_all_pheromone_values(decay);
 
         taken_edges
             .iter()

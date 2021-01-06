@@ -2,7 +2,7 @@
 mod colony_tests {
     use rand::{prelude::StdRng, SeedableRng};
 
-    use super::super::{Colony, ColonyTrait, Config};
+    use super::super::{Colony, Config, ConfigurableColony, StepwiseParallelColony};
     use crate::ant_colony::ant_dispatcher::BasicAntDispatcher;
     use crate::ant_colony::graph::Graph;
     use crate::ant_colony::pheromone_updater::ConstantPheromoneUpdater;
@@ -12,7 +12,7 @@ mod colony_tests {
         ant_count: usize,
         num_of_steps_per_cycle: usize,
         graph: &'a Graph,
-    ) -> Colony<'a, ConstantPheromoneUpdater, BasicAntDispatcher, StdRng> {
+    ) -> StepwiseParallelColony<'a, ConstantPheromoneUpdater, BasicAntDispatcher, StdRng> {
         let config = Config {
             ant_count,
             num_of_steps_per_cycle,
@@ -21,7 +21,7 @@ mod colony_tests {
             rng: StdRng::seed_from_u64(seed),
         };
 
-        Colony::new(config, &graph)
+        StepwiseParallelColony::new(config, &graph)
     }
 
     #[test]
@@ -31,8 +31,11 @@ mod colony_tests {
         let colony_a = get_sample_colony(42, 20, 5, &graph).execute_n_cycles(2);
         let colony_b = get_sample_colony(42, 20, 5, &graph).execute_n_cycles(2);
 
-        assert_eq!(colony_a.pheromone, colony_b.pheromone);
-        assert_eq!(colony_a.routes.get_routes(), colony_b.routes.get_routes());
+        assert_eq!(colony_a.get_pheromone(), colony_b.get_pheromone());
+        assert_eq!(
+            colony_a.get_routes().get_routes(),
+            colony_b.get_routes().get_routes()
+        );
     }
 
     #[test]
@@ -41,9 +44,9 @@ mod colony_tests {
 
         let colony = get_sample_colony(42, 20, 5, &graph).execute_n_cycles(2);
 
-        assert_eq!(colony.routes.get_routes().len(), 20);
+        assert_eq!(colony.get_routes().get_routes().len(), 20);
         assert!(colony
-            .routes
+            .get_routes()
             .get_routes()
             .iter()
             .all(|route| route.get_length() == 5))
@@ -55,7 +58,8 @@ mod colony_tests {
 
         let colony = get_sample_colony(42, 20, 5, &graph).execute_n_cycles(2);
 
-        let Colony { ants, routes, .. } = colony;
+        let ants = colony.get_ants();
+        let routes = colony.get_routes();
 
         assert_eq!(ants.len(), routes.get_routes().len());
         ants.iter()

@@ -20,7 +20,7 @@ mod ant_colony;
 mod common;
 
 use ant_colony::ant_dispatcher::BasicAntDispatcher;
-use ant_colony::colony::{Colony, Config};
+use ant_colony::colony::{Config, ConfigurableColony, StepwiseParallelColony};
 use ant_colony::graph::Graph;
 use ant_colony::pheromone_updater::ConstantPheromoneUpdater;
 use ant_colony::runner::{ColonyRunner, CommandLine};
@@ -46,7 +46,12 @@ fn main() {
         rng,
     };
 
-    ColonyRunner::new(Colony::new(config, &graph), &graph, CommandLine).train(20);
+    ColonyRunner::new(
+        StepwiseParallelColony::new(config, &graph),
+        &graph,
+        CommandLine,
+    )
+    .train(10);
 
     cfg_if! {
         if #[cfg(feature = "profiler")] {

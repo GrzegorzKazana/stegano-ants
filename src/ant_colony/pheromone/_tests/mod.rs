@@ -56,22 +56,33 @@ mod pheromone_tests {
     }
 
     #[test]
-    fn it_allows_for_normalization() {
+    fn it_allows_for_normalization_to_max_of_1() {
         let pheromone = Pheromone::new()
             .initialize_pheromone_for_edge(0, 0.5)
             .initialize_pheromone_for_edge(1, 0.2)
             .initialize_pheromone_for_edge(2, 1.5);
 
-        let expected: HashMap<_, _> = vec![(0, 5.0 / 22.0), (1, 2.0 / 22.0), (2, 15.0 / 22.0)]
+        let expected: HashMap<_, _> = vec![(0, 5.0 / 15.0), (1, 2.0 / 15.0), (2, 15.0 / 15.0)]
             .into_iter()
             .collect();
 
         let result = pheromone.get_values_normalized();
-        let result_sum: f32 = result.values().sum();
 
-        assert_delta!(result_sum, 1.0, 1e-5);
         assert_delta!(result.get(&0).unwrap(), expected.get(&0).unwrap(), 1e-5);
         assert_delta!(result.get(&1).unwrap(), expected.get(&1).unwrap(), 1e-5);
         assert_delta!(result.get(&2).unwrap(), expected.get(&2).unwrap(), 1e-5);
+    }
+
+    #[test]
+    fn it_allows_for_normalization_to_sum() {
+        let pheromone = Pheromone::new()
+            .initialize_pheromone_for_edge(0, 0.5)
+            .initialize_pheromone_for_edge(1, 0.2)
+            .initialize_pheromone_for_edge(2, 1.5);
+
+        let result = pheromone.get_values_normalized_to_sum();
+        let result_sum: f32 = result.values().sum();
+
+        assert_delta!(result_sum, 1.0, 1e-5);
     }
 }

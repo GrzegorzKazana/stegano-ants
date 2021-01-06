@@ -52,14 +52,17 @@ impl Pheromone {
     }
 
     /// Each pheromone trail is scaled to [0.0, 1.0)
+    /// where 1.0 is maximum value
     pub fn get_values_normalized(&self) -> HashMap<EdgeKey, PheromoneLevel> {
-        let sum: f32 = self.values.values().sum();
-        let n = self.values.len() as f32;
-        let ratio = n / sum;
+        let max: f32 = *self
+            .values
+            .values()
+            .max_by(|a, b| a.partial_cmp(b).unwrap())
+            .unwrap_or(&1.0);
 
         self.values
             .iter()
-            .map(|(key, val)| (key.clone(), val * ratio))
+            .map(|(key, val)| (key.clone(), val / max))
             .collect()
     }
 

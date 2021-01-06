@@ -12,7 +12,7 @@ impl PheromoneReader {
         pheromone
             .get_values_normalized()
             .iter()
-            .filter_map(|(key, value)| iif!(*value > level, Option::Some(*key), Option::None))
+            .filter(|(_, value)| **value > level)
             .count()
     }
 

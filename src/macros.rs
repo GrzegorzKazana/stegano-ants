@@ -13,6 +13,9 @@ macro_rules! iif {
 #[macro_use]
 macro_rules! assert_delta {
     ($x:expr, $y:expr, $d:expr) => {
-        assert!($x - $y < $d || $y - $x < $d);
+        assert!(
+            ($y - $x).abs() < $d,
+            format!("{} is not within delta to {}", $x, $y)
+        );
     };
 }
