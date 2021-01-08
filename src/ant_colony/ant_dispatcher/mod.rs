@@ -1,6 +1,7 @@
 mod _tests;
 mod basic_ant_dispatcher;
 mod biased_ant_dispatcher;
+mod likelihood_dispatcher;
 mod system_ant_dispatcher;
 
 use rand::{seq::IteratorRandom, Rng};
@@ -9,10 +10,10 @@ use std::fmt::Display;
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 use crate::ant_colony::pheromone::Pheromone;
-use crate::common::utils::weighted_sample;
 
 pub use basic_ant_dispatcher::BasicAntDispatcher;
 pub use biased_ant_dispatcher::BiasedAntDispatcher;
+pub use likelihood_dispatcher::LikelihoodAntDispatcher;
 pub use system_ant_dispatcher::SystemAntDispatcher;
 
 pub trait AntDispatcher: Display + Send + Sync {
@@ -65,31 +66,5 @@ pub trait AntDispatcher: Display + Send + Sync {
             .find(|edge| edge.to == ant.inital_node);
 
         edge_leading_to_inital_node.map_or(possible_next_edges, |edge| vec![edge])
-    }
-}
-
-pub trait LikelihoodAntDispatcher: Display + Send + Sync {
-    fn cacluclate_node_likelihoods(
-        &self,
-        possible_next_edges: &[&AdjacencyListEntry],
-        pheromone: &Pheromone,
-    ) -> Vec<f32>;
-}
-
-impl<D: LikelihoodAntDispatcher> AntDispatcher for D {
-    #[cfg_attr(feature = "profiler", flame)]
-    fn select_next_edge<'a>(
-        &self,
-        ant: &Ant,
-        graph: &'a Graph,
-        pheromone: &Pheromone,
-        sample_seed: f32,
-        _strategy_seed: f32,
-    ) -> &'a AdjacencyListEntry {
-        let possible_next_edges = self.get_possible_next_edges_for_ant(ant, graph);
-
-        let node_likelihood = self.cacluclate_node_likelihoods(&possible_next_edges, pheromone);
-
-        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed)
     }
 }

@@ -1,9 +1,9 @@
 mod _tests;
 
-use itertools::Itertools;
-
 use crate::ant_colony::graph::{AdjacencyListEntry, EdgeKey, Graph};
 use crate::ant_colony::pheromone::Pheromone;
+
+use crate::common::utils::select_top_n_items;
 
 pub struct PheromoneReader;
 
@@ -45,23 +45,12 @@ impl PheromoneReader {
     }
 
     fn get_top_n_edge_keys<'a>(pheromone: &Pheromone, n: usize) -> Vec<EdgeKey> {
-        let pheromone_norm = pheromone.get_values_normalized();
-        let mut pheromone_copy = pheromone_norm.iter().collect::<Vec<_>>();
+        let pheromone_vals = pheromone.get_values_normalized();
+        let pheromone_norm = pheromone_vals.iter().collect::<Vec<_>>();
 
-        (0..n).fold(Vec::with_capacity(n), |mut acc, _| {
-            let maybe_max_idx = pheromone_copy
-                .iter()
-                .position_max_by(|(_, value_a), (_, value_b)| value_a.partial_cmp(value_b).unwrap())
-                .filter(|idx| *pheromone_copy[*idx].1 > std::f32::NEG_INFINITY);
-
-            match maybe_max_idx {
-                Option::Some(max_idx) => {
-                    acc.push(pheromone_copy[max_idx].0.clone());
-                    pheromone_copy[max_idx].1 = &std::f32::NEG_INFINITY;
-                    acc
-                }
-                Option::None => acc,
-            }
-        })
+        select_top_n_items(&pheromone_norm, n, |(_, value)| value)
+            .iter()
+            .map(|(key, _)| **key)
+            .collect()
     }
 }

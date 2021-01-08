@@ -6,6 +6,7 @@ cfg_if! {
         use rayon::prelude::*;
     }
 }
+
 use rand::{distributions::Uniform, Rng};
 use std::fmt::Display;
 
@@ -14,6 +15,7 @@ use crate::ant_colony::ant_dispatcher::AntDispatcher;
 use crate::ant_colony::graph::{Graph, RouteBatch, RouteCollection};
 use crate::ant_colony::pheromone::Pheromone;
 use crate::ant_colony::pheromone_updater::PheromoneUpdater;
+use crate::common::utils::random_pair_iter;
 
 use super::{Colony, Config, ConfigurableColony};
 
@@ -100,15 +102,10 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
             ..
         } = config;
 
-        let seed_dist = Uniform::new::<f32, f32>(0.0, 1.0);
-        let seeds = std::iter::from_fn(|| {
-            let seed_a = (&mut rng).sample(seed_dist);
-            let seed_b = (&mut rng).sample(seed_dist);
-
-            Option::Some((seed_a, seed_b))
-        });
+        let seeds = random_pair_iter(&mut rng, Uniform::new::<f32, f32>(0.0, 1.0));
 
         let ants_w_seeds = init_ants.into_iter().zip(seeds).collect::<Vec<_>>();
+
         cfg_if! {
             if #[cfg(feature = "singlethread")] {
                 let workload = ants_w_seeds.into_iter();

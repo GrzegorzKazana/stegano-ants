@@ -3,9 +3,12 @@ use cfg_if::cfg_if;
 
 cfg_if! {
     if #[cfg(feature = "profiler")] {
-        extern crate flame;
         #[macro_use]
+        // using extern instead of use, to be import
+        // flamer attribute once and do not need to conditionally
+        // import it elsewhere
         extern crate flamer;
+
         use flame as f;
         use std::fs::File;
     }
