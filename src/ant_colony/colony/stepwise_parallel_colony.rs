@@ -1,6 +1,12 @@
-use itertools::Itertools;
+use cfg_if::cfg_if;
+
+cfg_if! {
+    if #[cfg(feature = "singlethread")] {
+    } else {
+        use rayon::prelude::*;
+    }
+}
 use rand::{distributions::Uniform, Rng};
-use rayon::prelude::*;
 use std::fmt::Display;
 
 use crate::ant_colony::ant::Ant;
@@ -102,11 +108,16 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
             Option::Some((seed_a, seed_b))
         });
 
-        let (ants, taken_edges): (Vec<Ant>, RouteBatch) = init_ants
-            .into_iter()
-            .zip(seeds)
-            .collect::<Vec<_>>()
-            .into_par_iter()
+        let ants_w_seeds = init_ants.into_iter().zip(seeds).collect::<Vec<_>>();
+        cfg_if! {
+            if #[cfg(feature = "singlethread")] {
+                let workload = ants_w_seeds.into_iter();
+            } else {
+                let workload = ants_w_seeds.into_par_iter();
+            }
+        }
+
+        let (ants, taken_edges): (Vec<Ant>, RouteBatch) = workload
             .map(|(ant, (sample_seed, strategy_seed))| {
                 let next_edge = ant_dispatcher.select_next_edge(
                     &ant,

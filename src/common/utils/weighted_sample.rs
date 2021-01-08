@@ -5,6 +5,7 @@
 /// Based on LinearScan algorithm from https://blog.bruce-hill.com/a-faster-weighted-random-choice
 /// could utilize faster Hopscotch Selection, but it requires more costly preparation
 /// which for ant colony problems is not suitable (weights are dynamic and not reusable)
+#[cfg_attr(feature = "profiler", flame)]
 pub fn weighted_sample<'a, T>(data: &[&'a T], weights: &[f32], random_seed: f32) -> &'a T {
     let weight_sum: f32 = weights.iter().sum();
     let guess = weight_sum * random_seed;

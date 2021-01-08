@@ -22,3 +22,5 @@ proptest = "0.10.1"
 default = []
 # run by `cargo run --release --features profiler`
 profiler = ["flame", "flamer"]
+# cargo run --release --features "profiler singlethread"
+singlethread = []

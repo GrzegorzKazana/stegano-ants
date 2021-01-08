@@ -39,6 +39,7 @@ pub trait AntDispatcher: Display + Send + Sync {
         strategy_seed: f32,
     ) -> &'a AdjacencyListEntry;
 
+    #[cfg_attr(feature = "profiler", flame)]
     fn get_possible_next_edges_for_ant<'a>(
         &self,
         ant: &Ant,
@@ -76,6 +77,7 @@ pub trait LikelihoodAntDispatcher: Display + Send + Sync {
 }
 
 impl<D: LikelihoodAntDispatcher> AntDispatcher for D {
+    #[cfg_attr(feature = "profiler", flame)]
     fn select_next_edge<'a>(
         &self,
         ant: &Ant,
@@ -84,8 +86,7 @@ impl<D: LikelihoodAntDispatcher> AntDispatcher for D {
         sample_seed: f32,
         _strategy_seed: f32,
     ) -> &'a AdjacencyListEntry {
-        let possible_next_edges: Vec<&AdjacencyListEntry> =
-            self.get_possible_next_edges_for_ant(ant, graph);
+        let possible_next_edges = self.get_possible_next_edges_for_ant(ant, graph);
 
         let node_likelihood = self.cacluclate_node_likelihoods(&possible_next_edges, pheromone);
 

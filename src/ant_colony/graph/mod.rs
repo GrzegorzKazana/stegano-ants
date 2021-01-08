@@ -23,6 +23,7 @@ pub struct Graph {
 }
 
 impl Graph {
+    #[cfg_attr(feature = "profiler", flame)]
     pub fn get_adjacent_edges(&self, node_id: &NodeId) -> &[AdjacencyListEntry] {
         self.nodes.get(node_id).map_or(&[], |n| &n.adjacency_list)
     }
