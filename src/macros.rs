@@ -33,3 +33,13 @@ macro_rules! assert_delta {
         );
     };
 }
+
+#[cfg(test)]
+#[macro_use]
+macro_rules! assert_vec_delta {
+    ($xs:expr, $ys:expr, $d:expr) => {
+        $xs.iter().zip($ys.iter()).for_each(|(x, y)| {
+            assert_delta!(x, y, $d);
+        });
+    };
+}

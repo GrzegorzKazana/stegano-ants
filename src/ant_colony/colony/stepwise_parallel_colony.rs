@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use rand::{distributions::Uniform, Rng};
 use rayon::prelude::*;
 use std::fmt::Display;
@@ -93,16 +94,27 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
             ..
         } = config;
 
-        let seeds = (&mut rng).sample_iter(Uniform::new::<f32, f32>(0.0, 1.0));
+        let seed_dist = Uniform::new::<f32, f32>(0.0, 1.0);
+        let seeds = std::iter::from_fn(|| {
+            let seed_a = (&mut rng).sample(seed_dist);
+            let seed_b = (&mut rng).sample(seed_dist);
+
+            Option::Some((seed_a, seed_b))
+        });
 
         let (ants, taken_edges): (Vec<Ant>, RouteBatch) = init_ants
             .into_iter()
             .zip(seeds)
             .collect::<Vec<_>>()
             .into_par_iter()
-            .map(|(ant, seed)| {
-                let next_edge =
-                    ant_dispatcher.select_next_edge(&ant, &graph, &init_pheromone, seed);
+            .map(|(ant, (sample_seed, strategy_seed))| {
+                let next_edge = ant_dispatcher.select_next_edge(
+                    &ant,
+                    &graph,
+                    &init_pheromone,
+                    sample_seed,
+                    strategy_seed,
+                );
 
                 (ant.move_to_node(next_edge.to), next_edge)
             })

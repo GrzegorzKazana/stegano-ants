@@ -65,7 +65,7 @@ fn main() {
 
 // TODO
 // X. implement updaters: AveragePheromoneUpdater, CyclicalPheromoneUpdater (?), SystemPheromoneUpdater, MinMaxPheromoneUpdater (?)
-// 2. implement dispatchers: BiasedAntDispatcher, SystemAntDispatcher
+// X. implement dispatchers: BiasedAntDispatcher, SystemAntDispatcher
 // X. way to measure/track learning progress
 // X. module for solving tsp
 // X. research parallelization
