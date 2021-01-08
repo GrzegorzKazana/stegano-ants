@@ -21,6 +21,10 @@ impl Pheromone {
         }
     }
 
+    pub fn from_values(values: HashMap<EdgeKey, PheromoneLevel>) -> Self {
+        Pheromone { values }
+    }
+
     pub fn initialize_pheromone_for_edge(mut self, edge_key: EdgeKey, value: f32) -> Self {
         self.values.insert(edge_key, value);
 
@@ -47,7 +51,7 @@ impl Pheromone {
         self
     }
 
-    fn get_values(&self) -> &HashMap<EdgeKey, PheromoneLevel> {
+    pub fn get_values(&self) -> &HashMap<EdgeKey, PheromoneLevel> {
         &self.values
     }
 

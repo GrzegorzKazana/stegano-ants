@@ -16,7 +16,7 @@ mod colony_tests {
         let config = Config {
             ant_count,
             num_of_steps_per_cycle,
-            pheromone_updater: ConstantPheromoneUpdater::new(1.0, 0.1),
+            pheromone_updater: ConstantPheromoneUpdater::new(1.0, 0.1, 0.1),
             ant_dispatcher: BasicAntDispatcher,
             rng: StdRng::seed_from_u64(seed),
         };

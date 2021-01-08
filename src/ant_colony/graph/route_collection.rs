@@ -9,6 +9,8 @@ impl RouteCollection {
     }
 
     pub fn add_steps(self, taken_edges: &RouteBatch) -> Self {
+        debug_assert_eq!(self.0.len(), taken_edges.len());
+
         let values = taken_edges
             .iter()
             .zip(self.0)

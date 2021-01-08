@@ -5,15 +5,15 @@ use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
 
-pub struct ConstantPheromoneUpdater {
+pub struct AveragePheromoneUpdater {
     initial_value: f32,
     evaporation_rate: f32,
     increment: f32,
 }
 
-impl ConstantPheromoneUpdater {
+impl AveragePheromoneUpdater {
     pub fn new(initial_value: f32, evaporation_rate: f32, increment: f32) -> Self {
-        ConstantPheromoneUpdater {
+        AveragePheromoneUpdater {
             initial_value,
             evaporation_rate,
             increment,
@@ -21,7 +21,7 @@ impl ConstantPheromoneUpdater {
     }
 }
 
-impl PheromoneUpdater for ConstantPheromoneUpdater {
+impl PheromoneUpdater for AveragePheromoneUpdater {
     fn get_initial_value(&self) -> PheromoneLevel {
         self.initial_value
     }
@@ -34,7 +34,9 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
         taken_edges
             .iter()
             .fold(decayed_pheromone, |updated_pheromone, taken_edge| {
-                updated_pheromone.increase_pheromone_value(taken_edge.key, self.increment)
+                let increment = self.increment / taken_edge.distance;
+
+                updated_pheromone.increase_pheromone_value(taken_edge.key, increment)
             })
     }
 
@@ -43,11 +45,11 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
     }
 }
 
-impl Display for ConstantPheromoneUpdater {
+impl Display for AveragePheromoneUpdater {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Pheromone updater (Constant)\n\t\
+            "Pheromone updater (Average)\n\t\
             initial_value: {:>5}\n\t\
             evaporation:   {:>5.3}\n\t\
             increment:     {:>5.3}",

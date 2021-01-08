@@ -39,6 +39,10 @@ impl Route {
                 acc
             })
     }
+
+    pub fn get_edges(&self) -> &[AdjacencyListEntry] {
+        &self.0
+    }
 }
 
 impl Default for Route {

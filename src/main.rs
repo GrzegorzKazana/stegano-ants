@@ -22,7 +22,7 @@ mod common;
 use ant_colony::ant_dispatcher::BasicAntDispatcher;
 use ant_colony::colony::{Config, ConfigurableColony, StepwiseParallelColony};
 use ant_colony::graph::Graph;
-use ant_colony::pheromone_updater::ConstantPheromoneUpdater;
+use ant_colony::pheromone_updater::AveragePheromoneUpdater;
 use ant_colony::runner::{ColonyRunner, CommandLine};
 
 fn main() {
@@ -41,7 +41,7 @@ fn main() {
     let config = Config {
         ant_count: graph.get_amount_of_nodes(),
         num_of_steps_per_cycle: graph.get_amount_of_nodes(),
-        pheromone_updater: ConstantPheromoneUpdater::new(1.0, 0.1),
+        pheromone_updater: AveragePheromoneUpdater::new(1.0, 0.1, 0.1),
         ant_dispatcher: BasicAntDispatcher,
         rng,
     };
@@ -64,7 +64,7 @@ fn main() {
 }
 
 // TODO
-// 1. implement updaters: AveragePheromoneUpdater, CyclicalPheromoneUpdater (?), SystemPheromoneUpdater, MinMaxPheromoneUpdater
+// X. implement updaters: AveragePheromoneUpdater, CyclicalPheromoneUpdater (?), SystemPheromoneUpdater, MinMaxPheromoneUpdater (?)
 // 2. implement dispatchers: BiasedAntDispatcher, SystemAntDispatcher
 // X. way to measure/track learning progress
 // X. module for solving tsp
