@@ -26,18 +26,10 @@ impl Route {
     }
 
     pub fn get_nodes(&self) -> Vec<NodeId> {
-        let path_length = self.0.len() + 1;
+        let head = self.0.iter().take(1).map(|edge| edge.from);
+        let tail = self.0.iter().map(|edge| edge.to);
 
-        self.0
-            .iter()
-            .fold(Vec::with_capacity(path_length), |mut acc, edge| {
-                if acc.len() == 0 {
-                    acc.push(edge.from);
-                }
-
-                acc.push(edge.to);
-                acc
-            })
+        head.chain(tail).collect()
     }
 
     pub fn get_edges(&self) -> &[AdjacencyListEntry] {

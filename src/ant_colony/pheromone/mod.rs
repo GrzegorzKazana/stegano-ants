@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::fmt::Display;
 
 use crate::ant_colony::graph::EdgeKey;
+use crate::common::utils::compare_float;
 
 pub type PheromoneLevel = f32;
 
@@ -30,7 +31,15 @@ impl Pheromone {
     }
 
     pub fn get_pheromone_for_edge(&self, edge_key: EdgeKey) -> PheromoneLevel {
-        self.values.get(&edge_key).unwrap_or(&0.0).clone()
+        let value = self.values.get(&edge_key);
+
+        debug_assert_ne!(
+            value,
+            Option::None,
+            "Failed to find pheromone value for edge"
+        );
+
+        value.unwrap_or(&0.0).clone()
     }
 
     pub fn increase_pheromone_value(mut self, edge_key: EdgeKey, increment: f32) -> Self {
@@ -56,11 +65,7 @@ impl Pheromone {
     /// Each pheromone trail is scaled to [0.0, 1.0)
     /// where 1.0 is maximum value
     pub fn get_values_normalized(&self) -> HashMap<EdgeKey, PheromoneLevel> {
-        let max: f32 = *self
-            .values
-            .values()
-            .max_by(|a, b| a.partial_cmp(b).unwrap())
-            .unwrap_or(&1.0);
+        let max: f32 = *self.values.values().max_by(compare_float).unwrap_or(&1.0);
 
         self.values
             .iter()

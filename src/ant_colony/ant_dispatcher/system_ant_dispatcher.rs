@@ -3,7 +3,7 @@ use std::fmt::Display;
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 use crate::ant_colony::pheromone::Pheromone;
-use crate::common::utils::weighted_sample;
+use crate::common::utils::{compare_float, weighted_sample};
 
 use super::AntDispatcher;
 
@@ -40,7 +40,7 @@ impl SystemAntDispatcher {
                 let value_a = pheromone_a * visibility_a;
                 let value_b = pheromone_b * visibility_b;
 
-                value_a.partial_cmp(&value_b).unwrap()
+                compare_float(&value_a, &value_b)
             })
             .map(|edge| *edge)
     }

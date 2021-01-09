@@ -1,4 +1,8 @@
+use itertools::Itertools;
+
 use super::{Route, RouteBatch};
+
+use crate::common::utils::compare_float;
 
 /// Represents multiple unrelated Routes
 pub struct RouteCollection(Vec<Route>);
@@ -9,11 +13,9 @@ impl RouteCollection {
     }
 
     pub fn add_steps(self, taken_edges: &RouteBatch) -> Self {
-        debug_assert_eq!(self.0.len(), taken_edges.len());
-
         let values = taken_edges
             .iter()
-            .zip(self.0)
+            .zip_eq(self.0)
             .map(|(edge, route)| route.add_step(**edge))
             .collect();
 
@@ -23,7 +25,12 @@ impl RouteCollection {
     pub fn get_shortest_route(&self) -> Option<Route> {
         self.0
             .iter()
-            .min_by(|a, b| a.get_distance().partial_cmp(&b.get_distance()).unwrap())
+            .min_by(|a, b| {
+                let dist_a = a.get_distance();
+                let dist_b = b.get_distance();
+
+                compare_float(&dist_a, &dist_b)
+            })
             .map(|route| route.clone())
     }
 
