@@ -5,4 +5,4 @@ use super::AdjacencyListEntry;
 ///
 /// It is mostly used when edges from different routes are
 /// processed at the same time
-pub type RouteBatch<'a> = Vec<&'a AdjacencyListEntry>;
+pub type RouteBatch = Vec<AdjacencyListEntry>;

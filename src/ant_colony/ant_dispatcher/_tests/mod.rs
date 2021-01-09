@@ -1,9 +1,16 @@
 #[cfg(test)]
 mod ant_dispatcher_tests {
-    use crate::ant_colony::graph::AdjacencyListEntry;
+    use std::assert_eq;
+
+    use rand::{prelude::StdRng, SeedableRng};
+
+    use crate::ant_colony::graph::mock_graph_tuple;
+    use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
     use crate::ant_colony::pheromone::Pheromone;
 
-    use super::super::{BasicAntDispatcher, BiasedAntDispatcher, LikelihoodAntDispatcher};
+    use super::super::{
+        AntDispatcher, BasicAntDispatcher, BiasedAntDispatcher, LikelihoodAntDispatcher,
+    };
 
     fn get_pheromone() -> Pheromone {
         Pheromone::from_values(map!(
@@ -40,7 +47,7 @@ mod ant_dispatcher_tests {
         let edges = get_possible_edges();
         let pheromone = get_pheromone();
 
-        dispatcher.cacluclate_node_likelihoods(&vec![&edges[0], &edges[1], &edges[2]], &pheromone)
+        dispatcher.cacluclate_node_likelihoods(&vec![edges[0], edges[1], edges[2]], &pheromone)
     }
 
     #[test]
@@ -67,5 +74,15 @@ mod ant_dispatcher_tests {
         ];
 
         assert_vec_delta!(result, expected, 1e-4);
+    }
+
+    #[test]
+    fn basic_creates_n_ants_even_if_there_are_less_nodes() {
+        let graph = Graph::from_neighbour_tuples(mock_graph_tuple());
+        let dispatcher = BiasedAntDispatcher::new(2.0, 0.5);
+
+        let ants = dispatcher.place_ants_on_graph(9999, &graph, &mut StdRng::seed_from_u64(42));
+
+        assert_eq!(ants.len(), 9999);
     }
 }

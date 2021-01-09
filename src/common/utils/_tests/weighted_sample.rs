@@ -13,7 +13,7 @@ mod common_utils_weighted_sample_tests {
             weights[non_zero_idx] = weight;
 
             let expected = data[non_zero_idx];
-            let result = weighted_sample(&data, &weights, random_seed);
+            let result = *weighted_sample(&data, &weights, random_seed);
 
             assert_eq!(expected, result);
         }

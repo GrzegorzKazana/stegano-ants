@@ -22,7 +22,7 @@ impl BiasedAntDispatcher {
 impl LikelihoodAntDispatcher for BiasedAntDispatcher {
     fn cacluclate_node_likelihoods(
         &self,
-        possible_next_edges: &[&AdjacencyListEntry],
+        possible_next_edges: &[AdjacencyListEntry],
         pheromone: &Pheromone,
     ) -> Vec<f32> {
         possible_next_edges

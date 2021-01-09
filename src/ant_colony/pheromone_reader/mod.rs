@@ -8,7 +8,7 @@ use crate::common::utils::select_top_n_items;
 pub struct PheromoneReader;
 
 impl PheromoneReader {
-    pub fn count_edges_with_pheromone_above<'a>(pheromone: &Pheromone, level: f32) -> usize {
+    pub fn count_edges_with_pheromone_above(pheromone: &Pheromone, level: f32) -> usize {
         pheromone
             .get_values_normalized()
             .iter()
@@ -16,27 +16,27 @@ impl PheromoneReader {
             .count()
     }
 
-    pub fn get_edges_with_pheromone_above<'a>(
+    pub fn get_edges_with_pheromone_above(
         pheromone: &Pheromone,
-        graph: &'a Graph,
+        graph: &Graph,
         level: f32,
-    ) -> Vec<&'a AdjacencyListEntry> {
+    ) -> Vec<AdjacencyListEntry> {
         let keys = PheromoneReader::get_edge_keys_with_pheromone_above(pheromone, level);
 
         graph.get_edges(&keys)
     }
 
-    pub fn get_top_n_edges<'a>(
+    pub fn get_top_n_edges(
         pheromone: &Pheromone,
-        graph: &'a Graph,
+        graph: &Graph,
         n: usize,
-    ) -> Vec<&'a AdjacencyListEntry> {
+    ) -> Vec<AdjacencyListEntry> {
         let keys = PheromoneReader::get_top_n_edge_keys(pheromone, n);
 
         graph.get_edges(&keys)
     }
 
-    fn get_edge_keys_with_pheromone_above<'a>(pheromone: &Pheromone, level: f32) -> Vec<EdgeKey> {
+    fn get_edge_keys_with_pheromone_above(pheromone: &Pheromone, level: f32) -> Vec<EdgeKey> {
         pheromone
             .get_values_normalized()
             .iter()
@@ -44,7 +44,7 @@ impl PheromoneReader {
             .collect::<Vec<_>>()
     }
 
-    fn get_top_n_edge_keys<'a>(pheromone: &Pheromone, n: usize) -> Vec<EdgeKey> {
+    fn get_top_n_edge_keys(pheromone: &Pheromone, n: usize) -> Vec<EdgeKey> {
         let pheromone_vals = pheromone.get_values_normalized();
         let pheromone_norm = pheromone_vals.iter().collect::<Vec<_>>();
 

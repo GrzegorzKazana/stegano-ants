@@ -16,7 +16,7 @@ impl RouteCollection {
         let values = taken_edges
             .iter()
             .zip_eq(self.0)
-            .map(|(edge, route)| route.add_step(**edge))
+            .map(|(edge, route)| route.add_step(edge.to_owned()))
             .collect();
 
         RouteCollection(values)

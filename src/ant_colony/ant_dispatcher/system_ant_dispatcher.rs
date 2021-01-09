@@ -20,12 +20,12 @@ impl SystemAntDispatcher {
         }
     }
 
-    fn try_expoit_best_edge<'a>(
+    fn try_expoit_best_edge(
         &self,
-        possible_next_edges: &[&'a AdjacencyListEntry],
+        possible_next_edges: &[AdjacencyListEntry],
         pheromone: &Pheromone,
         strategy_seed: f32,
-    ) -> Option<&'a AdjacencyListEntry> {
+    ) -> Option<AdjacencyListEntry> {
         if strategy_seed < self.exploitation_rate {
             return Option::None;
         }
@@ -42,15 +42,15 @@ impl SystemAntDispatcher {
 
                 compare_float(&value_a, &value_b)
             })
-            .map(|edge| *edge)
+            .map(|edge| edge.to_owned())
     }
 
-    fn get_explored_edge<'a>(
+    fn get_explored_edge(
         &self,
-        possible_next_edges: &[&'a AdjacencyListEntry],
+        possible_next_edges: &[AdjacencyListEntry],
         pheromone: &Pheromone,
         sample_seed: f32,
-    ) -> &'a AdjacencyListEntry {
+    ) -> AdjacencyListEntry {
         let node_likelihood = possible_next_edges
             .into_iter()
             .map(|edge| {
@@ -61,21 +61,20 @@ impl SystemAntDispatcher {
             })
             .collect::<Vec<_>>();
 
-        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed)
+        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed).to_owned()
     }
 }
 
 impl AntDispatcher for SystemAntDispatcher {
-    fn select_next_edge<'a>(
+    fn select_next_edge(
         &self,
         ant: &Ant,
-        graph: &'a Graph,
+        graph: &Graph,
         pheromone: &Pheromone,
         sample_seed: f32,
         strategy_seed: f32,
-    ) -> &'a AdjacencyListEntry {
-        let possible_next_edges: Vec<&AdjacencyListEntry> =
-            self.get_possible_next_edges_for_ant(ant, graph);
+    ) -> AdjacencyListEntry {
+        let possible_next_edges = self.get_possible_next_edges_for_ant(ant, graph);
 
         self.try_expoit_best_edge(&possible_next_edges, pheromone, strategy_seed)
             .unwrap_or_else(|| self.get_explored_edge(&possible_next_edges, pheromone, sample_seed))

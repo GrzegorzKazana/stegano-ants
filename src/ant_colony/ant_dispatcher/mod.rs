@@ -26,32 +26,29 @@ pub trait AntDispatcher: Display + Send + Sync {
         let node_ids = graph.get_node_ids();
 
         (0..num_of_ants)
-            .map(|_| node_ids.iter().choose(rng).unwrap().clone())
-            .map(Ant::new)
+            .filter_map(|_| node_ids.iter().choose(rng))
+            .map(|id| Ant::new(*id))
             .collect()
     }
 
-    fn select_next_edge<'a>(
+    fn select_next_edge(
         &self,
         ant: &Ant,
-        graph: &'a Graph,
+        graph: &Graph,
         pheromone: &Pheromone,
         sample_seed: f32,
         strategy_seed: f32,
-    ) -> &'a AdjacencyListEntry;
+    ) -> AdjacencyListEntry;
 
     #[cfg_attr(feature = "profiler", flame)]
-    fn get_possible_next_edges_for_ant<'a>(
-        &self,
-        ant: &Ant,
-        graph: &'a Graph,
-    ) -> Vec<&'a AdjacencyListEntry> {
+    fn get_possible_next_edges_for_ant(&self, ant: &Ant, graph: &Graph) -> Vec<AdjacencyListEntry> {
         let adjacent_edges = graph.get_adjacent_edges(&ant.current_node);
 
-        let possible_next_edges: Vec<&AdjacencyListEntry> = adjacent_edges
+        let possible_next_edges = adjacent_edges
             .iter()
             .filter(|edge| !ant.has_visited(&edge.to))
-            .collect();
+            .map(|edge| edge.to_owned())
+            .collect::<Vec<_>>();
 
         if possible_next_edges.len() > 0 {
             return possible_next_edges;
@@ -62,7 +59,7 @@ pub trait AntDispatcher: Display + Send + Sync {
         // it might be because ant has travelled all possible nodes,
         // here, we allow the ant to go back to the initial node
         let edge_leading_to_inital_node = adjacent_edges
-            .iter()
+            .into_iter()
             .find(|edge| edge.to == ant.inital_node);
 
         edge_leading_to_inital_node.map_or(possible_next_edges, |edge| vec![edge])

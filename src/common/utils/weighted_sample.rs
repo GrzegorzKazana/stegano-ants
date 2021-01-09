@@ -6,7 +6,7 @@
 /// could utilize faster Hopscotch Selection, but it requires more costly preparation
 /// which for ant colony problems is not suitable (weights are dynamic and not reusable)
 #[cfg_attr(feature = "profiler", flame)]
-pub fn weighted_sample<'a, T>(data: &[&'a T], weights: &[f32], random_seed: f32) -> &'a T {
+pub fn weighted_sample<'a, T>(data: &'a [T], weights: &[f32], random_seed: f32) -> &'a T {
     let weight_sum: f32 = weights.iter().sum();
     let guess = weight_sum * random_seed;
 
@@ -17,6 +17,6 @@ pub fn weighted_sample<'a, T>(data: &[&'a T], weights: &[f32], random_seed: f32)
 
     data.iter()
         .zip(cumulative_weigts)
-        .find_map(|(item, weight_sum)| iif!(guess <= weight_sum, Option::Some(*item), Option::None))
+        .find_map(|(item, weight_sum)| iif!(guess <= weight_sum, Option::Some(item), Option::None))
         .unwrap()
 }

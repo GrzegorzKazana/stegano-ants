@@ -10,7 +10,7 @@ pub struct BasicAntDispatcher;
 impl LikelihoodAntDispatcher for BasicAntDispatcher {
     fn cacluclate_node_likelihoods(
         &self,
-        possible_next_edges: &[&AdjacencyListEntry],
+        possible_next_edges: &[AdjacencyListEntry],
         pheromone: &Pheromone,
     ) -> Vec<f32> {
         possible_next_edges
