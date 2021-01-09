@@ -38,7 +38,7 @@ pub trait AntDispatcher: Display + Send + Sync {
         pheromone: &Pheromone,
         sample_seed: f32,
         strategy_seed: f32,
-    ) -> AdjacencyListEntry;
+    ) -> Option<AdjacencyListEntry>;
 
     #[cfg_attr(feature = "profiler", flame)]
     fn get_possible_next_edges_for_ant(&self, ant: &Ant, graph: &Graph) -> Vec<AdjacencyListEntry> {

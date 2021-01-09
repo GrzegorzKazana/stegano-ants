@@ -24,11 +24,11 @@ impl<D: LikelihoodAntDispatcher> AntDispatcher for D {
         pheromone: &Pheromone,
         sample_seed: f32,
         _strategy_seed: f32,
-    ) -> AdjacencyListEntry {
+    ) -> Option<AdjacencyListEntry> {
         let possible_next_edges = self.get_possible_next_edges_for_ant(ant, graph);
 
         let node_likelihood = self.cacluclate_node_likelihoods(&possible_next_edges, pheromone);
 
-        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed).to_owned()
+        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed)
     }
 }

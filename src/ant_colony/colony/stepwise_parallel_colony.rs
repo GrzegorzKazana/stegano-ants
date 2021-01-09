@@ -12,7 +12,7 @@ use std::fmt::Display;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::ant_dispatcher::AntDispatcher;
-use crate::ant_colony::graph::{Graph, RouteBatch, RouteCollection};
+use crate::ant_colony::graph::{Graph, RouteBatchWithHoles, RouteCollection};
 use crate::ant_colony::pheromone::Pheromone;
 use crate::ant_colony::pheromone_updater::PheromoneUpdater;
 use crate::common::utils::random_pair_iter;
@@ -114,9 +114,9 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
             }
         }
 
-        let (ants, taken_edges): (Vec<Ant>, RouteBatch) = workload
+        let (ants, taken_edges): (Vec<Ant>, RouteBatchWithHoles) = workload
             .map(|(ant, (sample_seed, strategy_seed))| {
-                let next_edge = ant_dispatcher.select_next_edge(
+                let maybe_next_edge = ant_dispatcher.select_next_edge(
                     &ant,
                     &graph,
                     &init_pheromone,
@@ -124,7 +124,12 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
                     strategy_seed,
                 );
 
-                (ant.move_to_node(next_edge.to), next_edge)
+                let next_ant = match maybe_next_edge {
+                    Option::Some(next_edge) => ant.move_to_node(next_edge.to),
+                    Option::None => ant,
+                };
+
+                (next_ant, maybe_next_edge)
             })
             .unzip();
 

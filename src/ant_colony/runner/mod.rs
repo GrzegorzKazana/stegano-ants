@@ -121,12 +121,15 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
 
         let pheromone = new_colony.get_pheromone();
         let routes = new_colony.get_routes();
+        let shortest_route = routes.get_shortest_route();
 
         let summary = CycleSummary {
-            cycle_idx: cycle_idx,
+            cycle_idx,
             exec_time_ms,
-            shortest_dist: routes.get_shortest_route_distance(),
+            shortest_dist: shortest_route.clone().map(|r| r.get_distance()),
+            shortest_path_length: shortest_route.map(|r| r.get_length()),
             avg_dist: routes.get_average_route_distance(),
+            ratio_of_incomplete_routes: routes.get_ratio_of_incomplete_routes(),
             n_non_empty_edges: PheromoneReader::count_edges_with_pheromone_above(pheromone, 0.1),
         };
 

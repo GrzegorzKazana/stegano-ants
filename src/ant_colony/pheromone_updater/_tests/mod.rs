@@ -42,7 +42,10 @@ mod pheromone_updater_tests {
     fn test_step_update<U: PheromoneUpdater>(updater: U) -> Pheromone {
         let edges = get_edges();
         let init_edges = vec![edges[0], edges[1], edges[2]];
-        let taken_edges = vec![edges[0], edges[0], edges[2]];
+        let taken_edges = vec![edges[0], edges[0], edges[2]]
+            .into_iter()
+            .map(Option::Some)
+            .collect::<Vec<_>>();
 
         let init_pheromone = updater.initialize(Pheromone::new(), &init_edges);
 
@@ -55,8 +58,18 @@ mod pheromone_updater_tests {
 
         // route lengths are (1 + 2; 2 + 3, 1 + 3)
         let taken_route = RouteCollection::new(3, 2)
-            .add_steps(&vec![edges[0], edges[1], edges[0]])
-            .add_steps(&vec![edges[1], edges[2], edges[2]]);
+            .add_steps(
+                &vec![edges[0], edges[1], edges[0]]
+                    .into_iter()
+                    .map(Option::Some)
+                    .collect::<Vec<_>>(),
+            )
+            .add_steps(
+                &vec![edges[1], edges[2], edges[2]]
+                    .into_iter()
+                    .map(Option::Some)
+                    .collect::<Vec<_>>(),
+            );
 
         let init_pheromone = updater.initialize(Pheromone::new(), &init_edges);
 

@@ -50,7 +50,7 @@ impl SystemAntDispatcher {
         possible_next_edges: &[AdjacencyListEntry],
         pheromone: &Pheromone,
         sample_seed: f32,
-    ) -> AdjacencyListEntry {
+    ) -> Option<AdjacencyListEntry> {
         let node_likelihood = possible_next_edges
             .into_iter()
             .map(|edge| {
@@ -61,7 +61,7 @@ impl SystemAntDispatcher {
             })
             .collect::<Vec<_>>();
 
-        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed).to_owned()
+        weighted_sample(&possible_next_edges, &node_likelihood, sample_seed)
     }
 }
 
@@ -73,11 +73,11 @@ impl AntDispatcher for SystemAntDispatcher {
         pheromone: &Pheromone,
         sample_seed: f32,
         strategy_seed: f32,
-    ) -> AdjacencyListEntry {
+    ) -> Option<AdjacencyListEntry> {
         let possible_next_edges = self.get_possible_next_edges_for_ant(ant, graph);
 
         self.try_expoit_best_edge(&possible_next_edges, pheromone, strategy_seed)
-            .unwrap_or_else(|| self.get_explored_edge(&possible_next_edges, pheromone, sample_seed))
+            .or_else(|| self.get_explored_edge(&possible_next_edges, pheromone, sample_seed))
     }
 }
 

@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use super::{Route, RouteBatch};
+use super::{Route, RouteBatchWithHoles};
 
 use crate::common::utils::compare_float;
 
@@ -12,11 +12,14 @@ impl RouteCollection {
         RouteCollection((0..ant_count).map(|_| Route::new(route_length)).collect())
     }
 
-    pub fn add_steps(self, taken_edges: &RouteBatch) -> Self {
+    pub fn add_steps(self, taken_edges: &RouteBatchWithHoles) -> Self {
         let values = taken_edges
             .iter()
             .zip_eq(self.0)
-            .map(|(edge, route)| route.add_step(edge.to_owned()))
+            .map(|(maybe_edge, route)| match maybe_edge {
+                Option::Some(edge) => route.add_step(edge.to_owned()),
+                Option::None => route,
+            })
             .collect();
 
         RouteCollection(values)
@@ -49,6 +52,22 @@ impl RouteCollection {
             .fold(0.0, |acc, route| acc + route.get_distance());
 
         sum / self.0.len() as f32
+    }
+
+    /// calculates how many routes are shorter than other ones
+    /// this is be caused by the fact that `add_steps` accepts RouteBatchWithHoles
+    pub fn get_ratio_of_incomplete_routes(&self) -> f32 {
+        let lengths = self.0.iter().map(|route| route.get_length());
+        let maybe_max_length = lengths.clone().max();
+
+        match maybe_max_length {
+            Option::Some(max_length) => {
+                let incomplete_routes = lengths.filter(|route_len| *route_len < max_length).count();
+
+                incomplete_routes as f32 / max_length as f32
+            }
+            Option::None => 1.0,
+        }
     }
 }
 

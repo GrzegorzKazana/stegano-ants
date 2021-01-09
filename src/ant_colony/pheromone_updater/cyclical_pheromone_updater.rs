@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::ant_colony::graph::{RouteBatch, RouteCollection};
+use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
@@ -26,7 +26,7 @@ impl PheromoneUpdater for CyclicalPheromoneUpdater {
         self.initial_value
     }
 
-    fn on_after_step(&self, pheromone: Pheromone, _taken_edges: &RouteBatch) -> Pheromone {
+    fn on_after_step(&self, pheromone: Pheromone, _taken_edges: &RouteBatchWithHoles) -> Pheromone {
         pheromone
     }
 

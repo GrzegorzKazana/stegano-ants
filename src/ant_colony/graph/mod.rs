@@ -13,7 +13,7 @@ pub use _tests::{mock_graph_tuple, mock_graph_vector};
 pub use adjacency_list_entry::{AdjacencyListEntry, EdgeKey};
 pub use node::{Node, NodeId};
 pub use route::Route;
-pub use route_batch::RouteBatch;
+pub use route_batch::{RouteBatch, RouteBatchWithHoles};
 pub use route_collection::RouteCollection;
 
 #[derive(Debug, PartialEq)]

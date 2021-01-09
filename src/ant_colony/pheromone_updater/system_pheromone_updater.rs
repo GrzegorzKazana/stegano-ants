@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::ant_colony::graph::{RouteBatch, RouteCollection};
+use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
@@ -24,17 +24,18 @@ impl PheromoneUpdater for SystemPheromoneUpdater {
         self.initial_value
     }
 
-    fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatch) -> Pheromone {
+    fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatchWithHoles) -> Pheromone {
         let decay = 1.0 - self.evaporation_rate;
         let increment = self.evaporation_rate * self.initial_value;
 
         let decayed_pheromone = pheromone.scale_all_pheromone_values(decay);
 
-        taken_edges
-            .iter()
-            .fold(decayed_pheromone, |updated_pheromone, taken_edge| {
+        taken_edges.iter().filter_map(|a| a.as_ref()).fold(
+            decayed_pheromone,
+            |updated_pheromone, taken_edge| {
                 updated_pheromone.increase_pheromone_value(taken_edge.key, increment)
-            })
+            },
+        )
     }
 
     fn on_after_cycle(&self, pheromone: Pheromone, taken_routes: &RouteCollection) -> Pheromone {

@@ -6,7 +6,7 @@ mod system_pheromone_updater;
 
 use std::fmt::Display;
 
-use crate::ant_colony::graph::{RouteBatch, RouteCollection};
+use crate::ant_colony::graph::{RouteBatch, RouteBatchWithHoles, RouteCollection};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 pub use average_pheromone_updater::AveragePheromoneUpdater;
@@ -25,7 +25,7 @@ pub trait PheromoneUpdater: Display {
         })
     }
 
-    fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatch) -> Pheromone;
+    fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatchWithHoles) -> Pheromone;
 
     fn on_after_cycle(&self, pheromone: Pheromone, taken_routes: &RouteCollection) -> Pheromone;
 }
