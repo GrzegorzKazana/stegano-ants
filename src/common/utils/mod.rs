@@ -1,5 +1,6 @@
 mod _tests;
 mod compare_float;
+mod identity;
 mod measure;
 mod produce_until;
 mod random_pair_iter;
@@ -8,6 +9,7 @@ mod unique_pair;
 mod weighted_sample;
 
 pub use compare_float::compare_float;
+pub use identity::identity;
 pub use measure::measure;
 pub use produce_until::produce_until;
 pub use random_pair_iter::random_pair_iter;

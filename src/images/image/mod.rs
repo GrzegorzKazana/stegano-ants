@@ -1,8 +1,10 @@
+mod _tests;
 mod pixel;
 
 use bmp;
 
 use crate::common::errors::AppError;
+use crate::images::pixel_map::PixelMap;
 
 pub use pixel::Pixel;
 
@@ -82,5 +84,9 @@ impl Image {
 
     pub fn get_pixels(&self) -> Vec<Pixel> {
         self.iter().collect()
+    }
+
+    pub fn into_pixel_map(self) -> PixelMap {
+        PixelMap::new(self.height, self.width, self.get_pixels())
     }
 }
