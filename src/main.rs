@@ -4,7 +4,7 @@ use cfg_if::cfg_if;
 cfg_if! {
     if #[cfg(feature = "profiler")] {
         #[macro_use]
-        // using extern instead of use, to be import
+        // using extern instead of use, to import
         // flamer attribute once and do not need to conditionally
         // import it elsewhere
         extern crate flamer;
@@ -21,6 +21,7 @@ mod macros;
 
 mod ant_colony;
 mod common;
+mod images;
 
 use ant_colony::ant_dispatcher::BasicAntDispatcher;
 use ant_colony::colony::{Config, ConfigurableColony, StepwiseParallelColony};
