@@ -5,6 +5,7 @@ mod spatial_image_graph_converter;
 use crate::ant_colony::graph::Graph;
 use crate::images::pixel_map::PixelMap;
 
+pub use edge_change_converter::EdgeChangeConverter;
 pub use spatial_image_graph_converter::SpatialImageGraphConverter;
 
 pub trait ImageGraphConverter {
