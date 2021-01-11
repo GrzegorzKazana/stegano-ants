@@ -7,8 +7,8 @@ use crate::common::utils::identity;
 use crate::images::image::Pixel;
 
 pub struct PixelMap {
-    height: usize,
-    width: usize,
+    pub height: usize,
+    pub width: usize,
     pixels: Vec<Pixel>,
 }
 
