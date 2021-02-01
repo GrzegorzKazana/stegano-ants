@@ -47,21 +47,15 @@ impl Image {
             .map(|px| px.y + 1)
             .unwrap_or(1);
 
-        let empty_image = bmp::Image::new(width as u32, height as u32);
+        Self::from_pixels_and_known_dimensions(width, height, pixels)
+    }
 
-        let img = pixels.iter().fold(empty_image, |mut img, px| {
-            let Pixel { x, y, r, g, b } = px.to_owned();
-
-            img.set_pixel(x as u32, y as u32, bmp::Pixel { r, g, b });
-            img
-        });
-
-        Image {
-            img,
-            path: Option::None,
-            width,
-            height,
-        }
+    pub fn from_pixel_map(pixel_map: &PixelMap) -> Self {
+        Self::from_pixels_and_known_dimensions(
+            pixel_map.width,
+            pixel_map.height,
+            pixel_map.pixels(),
+        )
     }
 
     pub fn save(&self, path: &str) -> Result<(), AppError> {
@@ -88,5 +82,23 @@ impl Image {
 
     pub fn into_pixel_map(self) -> PixelMap {
         PixelMap::new(self.height, self.width, self.get_pixels())
+    }
+
+    fn from_pixels_and_known_dimensions(width: usize, height: usize, pixels: &[Pixel]) -> Self {
+        let empty_image = bmp::Image::new(width as u32, height as u32);
+
+        let img = pixels.iter().fold(empty_image, |mut img, px| {
+            let Pixel { x, y, r, g, b } = px.to_owned();
+
+            img.set_pixel(x as u32, y as u32, bmp::Pixel { r, g, b });
+            img
+        });
+
+        Image {
+            img,
+            path: Option::None,
+            width,
+            height,
+        }
     }
 }

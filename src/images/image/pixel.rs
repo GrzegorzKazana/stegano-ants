@@ -24,6 +24,16 @@ impl Pixel {
         }
     }
 
+    pub fn grey(x: usize, y: usize, level: u8) -> Self {
+        Pixel {
+            x,
+            y,
+            r: level,
+            g: level,
+            b: level,
+        }
+    }
+
     pub fn cmp_by_coords(&self, other: &Self) -> Ordering {
         let x_ord = self.x.cmp(&other.x);
         let y_ord = self.y.cmp(&other.y);
