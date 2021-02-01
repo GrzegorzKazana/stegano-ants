@@ -3,6 +3,7 @@ mod summary;
 
 use crate::ant_colony::colony::Colony;
 use crate::ant_colony::graph::Graph;
+use crate::ant_colony::pheromone::Pheromone;
 use crate::ant_colony::pheromone_reader::PheromoneReader;
 use crate::common::utils::{measure, produce_until};
 
@@ -26,6 +27,10 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
             cycle_history: Vec::new(),
             epoch_history: Vec::new(),
         }
+    }
+
+    pub fn get_pheromone(&self) -> &Pheromone {
+        self.colony.get_pheromone()
     }
 
     pub fn train(self, n_epochs: usize, n_cycles: usize) -> Self {

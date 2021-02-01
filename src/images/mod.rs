@@ -1,3 +1,3 @@
-mod image;
-mod image_graph_converter;
-mod pixel_map;
+pub mod image;
+pub mod image_graph_converter;
+pub mod pixel_map;
