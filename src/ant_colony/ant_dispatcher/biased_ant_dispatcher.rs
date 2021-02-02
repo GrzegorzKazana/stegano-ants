@@ -32,7 +32,7 @@ impl LikelihoodAntDispatcher for BiasedAntDispatcher {
                 let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
                 visibility.powf(self.visibility_bias) * pheromone_level.powf(self.pheromone_bias)
-                    + 1e-5
+                    + stability_factor!()
             })
             .collect::<Vec<_>>()
     }

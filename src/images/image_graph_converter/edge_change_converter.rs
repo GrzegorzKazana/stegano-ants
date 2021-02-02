@@ -17,7 +17,7 @@ impl SpatialImageGraphConverter for EdgeChangeConverter {
         let g_diff = f32::from(pixel_a.g) - f32::from(pixel_b.g);
         let b_diff = f32::from(pixel_a.b) - f32::from(pixel_b.b);
 
-        r_diff.powi(2) + g_diff.powi(2) + b_diff.powi(2)
+        r_diff.powi(2) + g_diff.powi(2) + b_diff.powi(2) + stability_factor!()
     }
 
     fn get_pixel_neighbours(pixel_map: &PixelMap, pixel: &Pixel) -> Vec<Pixel> {

@@ -60,7 +60,7 @@ mod ant_dispatcher_tests {
             0.05, // 0.25 / 5.0
         ];
 
-        assert_vec_delta!(result, expected, 1e-4);
+        assert_vec_delta!(result, expected);
     }
 
     #[test]
@@ -73,7 +73,7 @@ mod ant_dispatcher_tests {
             0.25f32.powf(2.0) / 5.0f32.powf(0.5), // 0.25^2.0 / 5.0^0.5
         ];
 
-        assert_vec_delta!(result, expected, 1e-4);
+        assert_vec_delta!(result, expected);
     }
 
     #[test]
