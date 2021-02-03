@@ -6,6 +6,7 @@ use std::convert::TryFrom;
 use crate::common::utils::identity;
 use crate::images::image::Pixel;
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct PixelMap {
     pub height: usize,
     pub width: usize,
@@ -25,6 +26,12 @@ impl PixelMap {
 
     pub fn pixels(&self) -> &[Pixel] {
         &self.pixels
+    }
+
+    pub fn map<F: Fn(&Pixel) -> Pixel>(&self, mapper: F) -> PixelMap {
+        let pixels = self.pixels().iter().map(mapper).collect();
+
+        PixelMap::new(self.height, self.width, pixels)
     }
 
     pub fn get_neighbours_4(&self, x: usize, y: usize) -> Vec<Pixel> {

@@ -1,8 +1,7 @@
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph, Node, NodeId};
+use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
-
-use super::ImageGraphConverter;
 
 pub trait SpatialImageGraphConverter {
     fn get_pixel_neighbours(pixel_map: &PixelMap, pixel: &Pixel) -> Vec<Pixel>;
@@ -28,10 +27,8 @@ pub trait SpatialImageGraphConverter {
             })
             .collect()
     }
-}
 
-impl<C: SpatialImageGraphConverter> ImageGraphConverter for C {
-    fn img_to_graph(pixel_map: &PixelMap) -> Graph {
+    fn construct_graph(pixel_map: &PixelMap) -> Graph {
         let nodes = pixel_map
             .pixels()
             .iter()
@@ -48,5 +45,37 @@ impl<C: SpatialImageGraphConverter> ImageGraphConverter for C {
             .collect();
 
         Graph::from_node_vector(nodes)
+    }
+
+    fn calculate_pixel_intensity_from_pheromone(
+        pheromone: &Pheromone,
+        adjacent_edges: &[AdjacencyListEntry],
+    ) -> u8 {
+        let num_of_edges = adjacent_edges.len();
+
+        let intensity_sum = adjacent_edges.into_iter().fold(0f32, |intensity, edge| {
+            intensity + pheromone.get_pheromone_for_edge(edge.key)
+        });
+
+        (255.0 * intensity_sum / num_of_edges as f32) as u8
+    }
+
+    fn construct_pheromone_visualization(
+        pixel_map: &PixelMap,
+        graph: &Graph,
+        pheromone: &Pheromone,
+    ) -> PixelMap {
+        let pheromone_norm = pheromone.normalize();
+
+        pixel_map.map(|pixel| {
+            let node_id = Self::pixel_to_id(pixel_map, pixel);
+            let edges_adjacent_to_pixel = graph.get_adjacent_edges(&node_id);
+            let intensity_level = Self::calculate_pixel_intensity_from_pheromone(
+                &pheromone_norm,
+                &edges_adjacent_to_pixel,
+            );
+
+            Pixel::grey(pixel.x, pixel.y, intensity_level)
+        })
     }
 }

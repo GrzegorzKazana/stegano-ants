@@ -82,6 +82,12 @@ impl Pheromone {
             .map(|(key, val)| (key.clone(), val / sum))
             .collect()
     }
+
+    pub fn normalize(&self) -> Self {
+        Pheromone {
+            values: self.get_values_normalized(),
+        }
+    }
 }
 
 impl Display for Pheromone {

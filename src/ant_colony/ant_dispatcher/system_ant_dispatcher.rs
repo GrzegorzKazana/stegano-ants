@@ -57,7 +57,7 @@ impl SystemAntDispatcher {
                 let visibility = 1.0 / edge.distance;
                 let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-                visibility.powf(self.visibility_bias) * pheromone_level + 1e-5
+                visibility.powf(self.visibility_bias) * pheromone_level + stability_factor!()
             })
             .collect::<Vec<_>>();
 

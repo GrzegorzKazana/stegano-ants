@@ -24,13 +24,16 @@ mod common;
 mod images;
 
 use ant_colony::ant_dispatcher::BasicAntDispatcher;
-use ant_colony::colony::{Config, ConfigurableColony, StepwiseParallelColony};
+use ant_colony::colony::{Colony, Config, ConfigurableColony, StepwiseParallelColony};
 use ant_colony::graph::Graph;
 use ant_colony::pheromone_updater::AveragePheromoneUpdater;
 use ant_colony::runner::{ColonyRunner, CommandLine};
 
+use images::image::Image;
+use images::image_graph_converter::{EdgeChangeConverter, ImageGraphConverter};
+
 fn main() {
-    let mut rng = StdRng::seed_from_u64(42);
+    let rng = StdRng::seed_from_u64(42);
 
     // let graph = Graph::from_neighbour_tuples(vec![
     //     (0, 1, 1.0),
@@ -40,22 +43,33 @@ fn main() {
     //     (1, 3, 5.0),
     //     (2, 3, 6.0),
     // ]);
-    let graph = Graph::random_tsp_graph(&mut rng, 100);
+    // let graph = Graph::random_tsp_graph(&mut rng, 100);
+
+    let pixel_map = Image::load("./assets/images/sample1_xsmall.bmp")
+        .unwrap()
+        .into_pixel_map();
+
+    let img_graph_converter = EdgeChangeConverter::initialize(&pixel_map);
+    let graph = img_graph_converter.img_to_graph();
 
     let config = Config {
-        ant_count: graph.get_amount_of_nodes(),
-        num_of_steps_per_cycle: graph.get_amount_of_nodes(),
+        ant_count: 100 * graph.get_amount_of_nodes(),
+        num_of_steps_per_cycle: graph.get_amount_of_nodes() / 100,
         pheromone_updater: AveragePheromoneUpdater::new(1.0, 0.1, 0.1),
         ant_dispatcher: BasicAntDispatcher,
         rng,
     };
 
-    ColonyRunner::new(
-        StepwiseParallelColony::new(config, &graph),
-        &graph,
-        CommandLine,
-    )
-    .train_n_until_no_improvement(10);
+    let colony = StepwiseParallelColony::new(config, &graph);
+
+    let runner = ColonyRunner::new(colony, &graph, CommandLine).train(1, 10);
+
+    let pheromone = runner.get_pheromone();
+    let pixel_map = img_graph_converter.visualize_pheromone(pheromone);
+
+    Image::from_pixel_map(&pixel_map)
+        .save("./assets/images/sample1_xsmall_pheromone.bmp")
+        .unwrap();
 
     cfg_if! {
         if #[cfg(feature = "profiler")] {

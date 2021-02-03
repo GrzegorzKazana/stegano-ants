@@ -68,9 +68,9 @@ mod pheromone_tests {
 
         let result = pheromone.get_values_normalized();
 
-        assert_delta!(result.get(&0).unwrap(), expected.get(&0).unwrap(), 1e-5);
-        assert_delta!(result.get(&1).unwrap(), expected.get(&1).unwrap(), 1e-5);
-        assert_delta!(result.get(&2).unwrap(), expected.get(&2).unwrap(), 1e-5);
+        assert_delta!(result.get(&0).unwrap(), expected.get(&0).unwrap());
+        assert_delta!(result.get(&1).unwrap(), expected.get(&1).unwrap());
+        assert_delta!(result.get(&2).unwrap(), expected.get(&2).unwrap());
     }
 
     #[test]
@@ -83,6 +83,6 @@ mod pheromone_tests {
         let result = pheromone.get_values_normalized_to_sum();
         let result_sum: f32 = result.values().sum();
 
-        assert_delta!(result_sum, 1.0, 1e-5);
+        assert_delta!(result_sum, 1.0);
     }
 }

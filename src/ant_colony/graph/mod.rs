@@ -16,7 +16,7 @@ pub use route::Route;
 pub use route_batch::{RouteBatch, RouteBatchWithHoles};
 pub use route_collection::RouteCollection;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Graph {
     /// using BTreeMap instead of HashMap for stable iteration order
     /// TODO: compare performance against indexmap (https://github.com/bluss/indexmap)
