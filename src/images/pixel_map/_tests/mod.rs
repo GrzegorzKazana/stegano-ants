@@ -81,4 +81,62 @@ mod images_pixel_map_tests {
         assert_eq!(neighbours.len(), 5);
         assert!(expected.iter().all(|id| neighbours.contains(id)))
     }
+
+    #[test]
+    fn it_allows_for_mapping() {
+        let map = mock_image();
+        let result = map.map(|pixel| Pixel::new(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b * 2));
+
+        let expected = PixelMap::new(
+            3,
+            3,
+            vec![
+                // using blue channel as primitive form of id
+                Pixel::new(0, 0, 0, 0, 20),
+                Pixel::new(1, 0, 0, 0, 40),
+                Pixel::new(2, 0, 0, 0, 60),
+                Pixel::new(0, 1, 0, 0, 80),
+                Pixel::new(1, 1, 0, 0, 100),
+                Pixel::new(2, 1, 0, 0, 120),
+                Pixel::new(0, 2, 0, 0, 140),
+                Pixel::new(1, 2, 0, 0, 160),
+                Pixel::new(2, 2, 0, 0, 180),
+            ],
+        );
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_allows_for_scan_mapping() {
+        let map = mock_image();
+        let result = map.scan_map(0, |pixel, acc| {
+            (
+                Pixel::new(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b * 2),
+                acc + 1,
+            )
+        });
+
+        let expected = (
+            PixelMap::new(
+                3,
+                3,
+                vec![
+                    // using blue channel as primitive form of id
+                    Pixel::new(0, 0, 0, 0, 20),
+                    Pixel::new(1, 0, 0, 0, 40),
+                    Pixel::new(2, 0, 0, 0, 60),
+                    Pixel::new(0, 1, 0, 0, 80),
+                    Pixel::new(1, 1, 0, 0, 100),
+                    Pixel::new(2, 1, 0, 0, 120),
+                    Pixel::new(0, 2, 0, 0, 140),
+                    Pixel::new(1, 2, 0, 0, 160),
+                    Pixel::new(2, 2, 0, 0, 180),
+                ],
+            ),
+            9,
+        );
+
+        assert_eq!(result, expected);
+    }
 }

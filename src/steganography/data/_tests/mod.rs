@@ -26,4 +26,21 @@ mod data_tests {
 
         assert_eq!(result, expected);
     }
+
+    #[test]
+    fn it_converts_bytes_to_bits() {
+        assert_eq!(Data::byte_to_bits(97), vec![0, 1, 1, 0, 0, 0, 0, 1]);
+    }
+
+    #[test]
+    fn it_correctly_yield_bits() {
+        let data = Data::from_bytes(b"az");
+        let mut bits_iter = data.iter_bits();
+
+        let bits_a = bits_iter.by_ref().take(3).collect::<Vec<_>>();
+        let bits_b = bits_iter.by_ref().take(5).collect::<Vec<_>>();
+
+        assert_eq!(bits_a, vec![0u8, 1, 1]);
+        assert_eq!(bits_b, (vec![0u8, 0, 0, 0, 1]));
+    }
 }

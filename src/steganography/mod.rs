@@ -1,2 +1,2 @@
 mod data;
-mod encoder_decoder;
+mod image_embedder;
