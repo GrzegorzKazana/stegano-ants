@@ -10,8 +10,6 @@ use super::EmbedInImage;
 /// uses only 7 bits, we can safely reserve this character
 const MESSAGE_END_TOKEN: u8 = 0b11111111;
 
-trait Foo {}
-
 pub struct ImageEmbedder;
 
 impl ImageEmbedder {

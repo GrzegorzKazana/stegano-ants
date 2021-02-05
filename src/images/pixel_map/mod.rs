@@ -34,20 +34,6 @@ impl PixelMap {
         PixelMap::new(self.height, self.width, pixels)
     }
 
-    pub fn scan_map<T, F: Fn(&Pixel, T) -> (Pixel, T)>(&self, init: T, mapper: F) -> (PixelMap, T) {
-        let mut payload = init;
-        let mut pixels = Vec::with_capacity(self.pixels.len());
-
-        for pixel in self.pixels() {
-            let (new_pixel, new_payload) = mapper(pixel, payload);
-
-            payload = new_payload;
-            pixels.push(new_pixel)
-        }
-
-        (PixelMap::new(self.height, self.width, pixels), payload)
-    }
-
     pub fn get_neighbours_4(&self, x: usize, y: usize) -> Vec<Pixel> {
         vec![
             self.get_pixel_by_delta(x, y, 0, -1),
