@@ -44,4 +44,8 @@ impl Pixel {
             (Ordering::Equal, ord) => ord,
         }
     }
+
+    pub fn intensity(&self) -> u8 {
+        ((self.r + self.g + self.b) as f32 / 3.0) as u8
+    }
 }
