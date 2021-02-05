@@ -87,8 +87,12 @@ mod image_embedder_tests {
         let data = mock_data();
 
         let result = ImageEmbedder::extract(&steganogram, &mask);
+        // only first 9 bytes fit into the image
         let expected = Data::from_bytes(&data.bytes()[..9]);
 
         assert_eq!(result, expected);
     }
+
+    #[test]
+    fn it_should_correctly_embed_the_data_if_image_has_lerger_capacity() {}
 }
