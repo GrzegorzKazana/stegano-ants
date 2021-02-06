@@ -65,10 +65,12 @@ impl Data {
         }
     }
 
-    pub fn iter_bits(&self) -> impl BitIterator + '_ {
+    pub fn iter_bits(&self) -> impl ExactBitIterator + '_ {
         self.bytes
             .iter()
             .flat_map(|byte| Data::byte_to_bits_iter(*byte))
+            .collect::<Vec<_>>()
+            .into_iter()
     }
 
     pub fn byte_to_bits_iter(byte: Byte) -> impl ExactBitIterator {

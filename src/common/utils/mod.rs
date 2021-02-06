@@ -1,5 +1,6 @@
 mod _tests;
 mod compare_float;
+mod exact_sized_chain;
 mod identity;
 mod measure;
 mod produce_until;
@@ -9,6 +10,7 @@ mod unique_pair;
 mod weighted_sample;
 
 pub use compare_float::compare_float;
+pub use exact_sized_chain::ExactChainExt;
 pub use identity::identity;
 pub use measure::measure;
 pub use produce_until::produce_until;

@@ -1,5 +1,6 @@
 use itertools::Itertools;
 
+use crate::common::utils::ExactChainExt;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
 use crate::steganography::data::{BitIterator, Byte, Data, ExactBitIterator};
@@ -119,11 +120,8 @@ impl EmbedInImage for MaskImageEmbedder {
             .sum()
     }
 
-    fn embed<I: BitIterator>(&self, data: &mut I, pixel_map: &PixelMap) -> PixelMap {
-        let mut bits = data
-            .chain(Data::byte_to_bits_iter(MESSAGE_END_TOKEN))
-            .collect::<Vec<_>>()
-            .into_iter();
+    fn embed<I: ExactBitIterator>(&self, data: &mut I, pixel_map: &PixelMap) -> PixelMap {
+        let mut bits = data.chain_exact(Data::byte_to_bits_iter(MESSAGE_END_TOKEN));
 
         let pixels_zipped_with_mask = pixel_map.pixels().iter().zip_eq(self.mask.pixels().iter());
 
