@@ -88,6 +88,12 @@ impl Pheromone {
             values: self.get_values_normalized(),
         }
     }
+
+    pub fn normalize_sum(&self) -> Self {
+        Pheromone {
+            values: self.get_values_normalized_to_sum(),
+        }
+    }
 }
 
 impl Display for Pheromone {

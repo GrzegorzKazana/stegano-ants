@@ -53,9 +53,10 @@ pub trait SpatialImageGraphConverter {
     ) -> u8 {
         let num_of_edges = adjacent_edges.len();
 
-        let intensity_sum = adjacent_edges.into_iter().fold(0f32, |intensity, edge| {
-            intensity + pheromone.get_pheromone_for_edge(edge.key)
-        });
+        let intensity_sum: f32 = adjacent_edges
+            .into_iter()
+            .map(|edge| pheromone.get_pheromone_for_edge(edge.key))
+            .sum();
 
         (255.0 * intensity_sum / num_of_edges as f32) as u8
     }

@@ -1,13 +1,15 @@
 mod _tests;
-mod image_embedder;
+mod mask_image_embedder;
 
 use crate::images::pixel_map::PixelMap;
-use crate::steganography::data::Data;
+use crate::steganography::data::{BitIterator, Data};
 
-pub use image_embedder::ImageEmbedder;
+pub use mask_image_embedder::MaskImageEmbedder;
 
 pub trait EmbedInImage {
-    fn embed(data: &Data, pixel_map: &PixelMap, mask: &PixelMap) -> PixelMap;
+    fn estimate_embeddable_bytes(&self) -> usize;
 
-    fn extract(pixel_map: &PixelMap, mask: &PixelMap) -> Data;
+    fn embed<I: BitIterator>(&self, data: &mut I, pixel_map: &PixelMap) -> PixelMap;
+
+    fn extract(&self, pixel_map: &PixelMap) -> Data;
 }

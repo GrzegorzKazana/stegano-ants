@@ -45,7 +45,11 @@ impl Pixel {
         }
     }
 
+    pub fn channel_sum(&self) -> usize {
+        self.r as usize + self.g as usize + self.b as usize
+    }
+
     pub fn intensity(&self) -> u8 {
-        ((self.r + self.g + self.b) as f32 / 3.0) as u8
+        (self.channel_sum() as f32 / 3.0) as u8
     }
 }

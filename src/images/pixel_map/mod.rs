@@ -34,6 +34,10 @@ impl PixelMap {
         PixelMap::new(self.height, self.width, pixels)
     }
 
+    pub fn sum_all_pixel_channels(&self) -> usize {
+        self.pixels().iter().map(|pixel| pixel.channel_sum()).sum()
+    }
+
     pub fn get_neighbours_4(&self, x: usize, y: usize) -> Vec<Pixel> {
         vec![
             self.get_pixel_by_delta(x, y, 0, -1),

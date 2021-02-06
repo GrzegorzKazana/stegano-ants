@@ -2,22 +2,31 @@ use itertools::Itertools;
 
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
-use crate::steganography::data::{Bit, Byte, Data};
+use crate::steganography::data::{BitIterator, Byte, Data, ExactBitIterator};
 
 use super::EmbedInImage;
 
 /// Assuming we only encode ASCII data, which
 /// uses only 7 bits, we can safely reserve this character
-const MESSAGE_END_TOKEN: u8 = 0b11111111;
+const MESSAGE_END_TOKEN: Byte = 0b11111111;
 
-pub struct ImageEmbedder;
+pub struct MaskImageEmbedder {
+    mask: PixelMap,
+}
 
-impl ImageEmbedder {
-    fn calculate_n_of_bits_to_embed(mask_byte: u8) -> usize {
-        (mask_byte as f32 + 1.0).log2().floor() as usize
+impl MaskImageEmbedder {
+    pub fn new(mask: PixelMap) -> Self {
+        MaskImageEmbedder { mask }
     }
 
-    fn embed_n_bits_in_byte<I: Iterator<Item = Bit> + DoubleEndedIterator + ExactSizeIterator>(
+    fn calculate_n_of_bits_to_embed(mask_byte: Byte) -> usize {
+        let max_number_of_bits = 8;
+        let bin_size = 256 / max_number_of_bits;
+
+        mask_byte as usize / bin_size
+    }
+
+    fn embed_n_bits_in_byte<I: ExactBitIterator>(
         bits_iter: &mut I,
         n_bits: usize,
         transport_byte: Byte,
@@ -43,7 +52,7 @@ impl ImageEmbedder {
             .sum()
     }
 
-    fn embed_pixel_channel<I: Iterator<Item = Bit> + DoubleEndedIterator + ExactSizeIterator>(
+    fn embed_pixel_channel<I: ExactBitIterator>(
         bits_iter: &mut I,
         transport_pixel_channel: Byte,
         mask_pixel_channel: Byte,
@@ -53,7 +62,7 @@ impl ImageEmbedder {
         Self::embed_n_bits_in_byte(bits_iter, n_bits_to_embed, transport_pixel_channel)
     }
 
-    fn embed_pixel<I: Iterator<Item = Bit> + DoubleEndedIterator + ExactSizeIterator>(
+    fn embed_pixel<I: ExactBitIterator>(
         bits_iter: &mut I,
         transport_pixel: &Pixel,
         mask_pixel: &Pixel,
@@ -70,7 +79,7 @@ impl ImageEmbedder {
     fn extract_pixel_channel(
         transport_pixel_channel: Byte,
         mask_pixel_channel: Byte,
-    ) -> impl Iterator<Item = Bit> {
+    ) -> impl BitIterator {
         let n_bits_to_extract = Self::calculate_n_of_bits_to_embed(mask_pixel_channel);
 
         Data::byte_to_bits_iter(transport_pixel_channel)
@@ -79,28 +88,37 @@ impl ImageEmbedder {
             .rev()
     }
 
-    fn extract_from_pixel(
-        transport_pixel: &Pixel,
-        mask_pixel: &Pixel,
-    ) -> impl Iterator<Item = Bit> {
+    fn extract_from_pixel(transport_pixel: &Pixel, mask_pixel: &Pixel) -> impl BitIterator {
         Self::extract_pixel_channel(transport_pixel.r, mask_pixel.r)
             .chain(Self::extract_pixel_channel(transport_pixel.g, mask_pixel.g))
             .chain(Self::extract_pixel_channel(transport_pixel.b, mask_pixel.b))
     }
 }
 
-impl EmbedInImage for ImageEmbedder {
-    fn embed(data: &Data, pixel_map: &PixelMap, mask: &PixelMap) -> PixelMap {
-        let bits = data
-            .iter_bits()
+impl EmbedInImage for MaskImageEmbedder {
+    fn estimate_embeddable_bytes(&self) -> usize {
+        self.mask
+            .pixels()
+            .iter()
+            .map(|pixel| {
+                Self::calculate_n_of_bits_to_embed(pixel.r)
+                    + Self::calculate_n_of_bits_to_embed(pixel.g)
+                    + Self::calculate_n_of_bits_to_embed(pixel.b)
+            })
+            .map(|n_bits_per_px| n_bits_per_px / 8)
+            .sum()
+    }
+
+    fn embed<I: BitIterator>(&self, data: &mut I, pixel_map: &PixelMap) -> PixelMap {
+        let mut bits = data
             .chain(Data::byte_to_bits_iter(MESSAGE_END_TOKEN))
             .collect::<Vec<_>>()
             .into_iter();
 
-        let pixels_zipped_with_mask = pixel_map.pixels().iter().zip_eq(mask.pixels().iter());
+        let pixels_zipped_with_mask = pixel_map.pixels().iter().zip_eq(self.mask.pixels().iter());
 
         let pixels = pixels_zipped_with_mask
-            .scan(bits, |bits_iter, (transport_pixel, mask_pixel)| {
+            .scan(bits.by_ref(), |bits_iter, (transport_pixel, mask_pixel)| {
                 Option::Some(Self::embed_pixel(bits_iter, transport_pixel, mask_pixel))
             })
             .collect::<Vec<_>>();
@@ -108,11 +126,11 @@ impl EmbedInImage for ImageEmbedder {
         PixelMap::new(pixel_map.height, pixel_map.width, pixels)
     }
 
-    fn extract(pixel_map: &PixelMap, mask: &PixelMap) -> Data {
+    fn extract(&self, pixel_map: &PixelMap) -> Data {
         let data = pixel_map
             .pixels()
             .iter()
-            .zip_eq(mask.pixels().iter())
+            .zip_eq(self.mask.pixels().iter())
             .flat_map(|(transport_pixel, mask_pixel)| {
                 Self::extract_from_pixel(transport_pixel, mask_pixel)
             })

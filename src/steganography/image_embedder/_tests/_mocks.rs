@@ -39,12 +39,12 @@ pub fn mock_mask_image() -> PixelMap {
         3,
         2,
         vec![
-            Pixel::new(0, 0, 46, 59, 6),  // 5, 5, 2 bits
-            Pixel::new(1, 0, 25, 52, 15), // 4, 5, 4 bits
-            Pixel::new(2, 0, 2, 21, 60),  // 1, 4, 5 bits
-            Pixel::new(0, 1, 4, 32, 12),  // 2, 5, 3 bits
-            Pixel::new(1, 1, 50, 34, 22), // 5, 5, 4 bits
-            Pixel::new(2, 1, 61, 14, 65), // 5, 3, 6 bits, 73 bits total
+            Pixel::new(0, 0, 161, 162, 65),  // 5, 5, 2 bits
+            Pixel::new(1, 0, 129, 163, 130), // 4, 5, 4 bits
+            Pixel::new(2, 0, 33, 131, 164),  // 1, 4, 5 bits
+            Pixel::new(0, 1, 66, 165, 97),   // 2, 5, 3 bits
+            Pixel::new(1, 1, 166, 167, 132), // 5, 5, 4 bits
+            Pixel::new(2, 1, 168, 98, 193),  // 5, 3, 6 bits, 73 bits total
         ],
     )
 }

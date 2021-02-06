@@ -6,7 +6,7 @@ use std::fs;
 
 use crate::common::errors::AppError;
 
-pub use bit::Bit;
+pub use bit::{Bit, BitIterator, ExactBitIterator};
 pub use byte::Byte;
 
 #[derive(Debug, PartialEq)]
@@ -51,15 +51,17 @@ impl Data {
         &self.bytes
     }
 
-    pub fn iter_bits(&self) -> impl Iterator<Item = Bit> + DoubleEndedIterator + '_ {
+    pub fn num_of_bits(&self) -> usize {
+        self.bytes.len() * 8
+    }
+
+    pub fn iter_bits(&self) -> impl BitIterator + '_ {
         self.bytes
             .iter()
             .flat_map(|byte| Data::byte_to_bits_iter(*byte))
     }
 
-    pub fn byte_to_bits_iter(
-        byte: Byte,
-    ) -> impl Iterator<Item = Bit> + DoubleEndedIterator + ExactSizeIterator {
+    pub fn byte_to_bits_iter(byte: Byte) -> impl ExactBitIterator {
         (0..8).rev().map(move |idx| Bit(byte >> idx & 1u8))
     }
 
