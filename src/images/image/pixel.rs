@@ -34,6 +34,16 @@ impl Pixel {
         }
     }
 
+    pub fn scale(&self, scaler: f32) -> Self {
+        Pixel {
+            x: self.x,
+            y: self.y,
+            r: (self.r as f32 * scaler).min(255.0) as u8,
+            g: (self.g as f32 * scaler).min(255.0) as u8,
+            b: (self.b as f32 * scaler).min(255.0) as u8,
+        }
+    }
+
     pub fn cmp_by_coords(&self, other: &Self) -> Ordering {
         let x_ord = self.x.cmp(&other.x);
         let y_ord = self.y.cmp(&other.y);

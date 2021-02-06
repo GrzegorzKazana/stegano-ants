@@ -18,7 +18,7 @@ mod image_embedder_tests {
         let data = mocks::mock_data();
         let expected = mocks::expected_steganogram();
 
-        let result = MaskImageEmbedder::new(mask).embed(&mut data.iter_bits(), &transport);
+        let result = MaskImageEmbedder::new(&mask).embed(&mut data.iter_bits(), &transport);
 
         assert_eq!(result, expected);
     }
@@ -29,7 +29,7 @@ mod image_embedder_tests {
         let mask = mocks::mock_mask_image();
         let data = mocks::mock_data();
 
-        let result = MaskImageEmbedder::new(mask).extract(&steganogram);
+        let result = MaskImageEmbedder::new(&mask).extract(&steganogram);
         // only first 9 bytes fit into the image
         let expected = Data::from_bytes(&data.bytes()[..9]);
 
@@ -44,7 +44,7 @@ mod image_embedder_tests {
         let data = mocks::mock_data_very_short();
         let expected = mocks::expected_steganogram_very_short();
 
-        let result = MaskImageEmbedder::new(mask).embed(&mut data.iter_bits(), &transport);
+        let result = MaskImageEmbedder::new(&mask).embed(&mut data.iter_bits(), &transport);
 
         assert_eq!(result, expected);
     }
@@ -56,7 +56,7 @@ mod image_embedder_tests {
         let mask = mocks::mock_mask_image();
         let expected = mocks::mock_data_very_short();
 
-        let result = MaskImageEmbedder::new(mask).extract(&steganogram);
+        let result = MaskImageEmbedder::new(&mask).extract(&steganogram);
 
         assert_eq!(result, expected);
     }
@@ -69,7 +69,7 @@ mod image_embedder_tests {
         let data = mocks::mock_data_short();
         let expected = mocks::expected_steganogram_short();
 
-        let result = MaskImageEmbedder::new(mask).embed(&mut data.iter_bits(), &transport);
+        let result = MaskImageEmbedder::new(&mask).embed(&mut data.iter_bits(), &transport);
 
         assert_eq!(result, expected);
     }
@@ -81,7 +81,7 @@ mod image_embedder_tests {
         let mask = mocks::mock_mask_image();
         let expected = mocks::mock_data_short();
 
-        let result = MaskImageEmbedder::new(mask).extract(&steganogram);
+        let result = MaskImageEmbedder::new(&mask).extract(&steganogram);
 
         assert_eq!(result, expected);
     }
@@ -115,7 +115,7 @@ mod image_embedder_tests {
             let mask = PixelMap::new(1, 9, mask_pixels);
             let data = Data::new(bytes);
 
-            let embedder = MaskImageEmbedder::new(mask);
+            let embedder = MaskImageEmbedder::new(&mask);
             let steganogram = embedder.embed(&mut data.iter_bits(), &transport);
             let extracted_data = embedder.extract(&steganogram);
 

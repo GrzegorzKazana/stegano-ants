@@ -15,8 +15,18 @@ pub struct MaskImageEmbedder {
 }
 
 impl MaskImageEmbedder {
-    pub fn new(mask: PixelMap) -> Self {
-        MaskImageEmbedder { mask }
+    pub fn new(mask: &PixelMap) -> Self {
+        MaskImageEmbedder { mask: mask.clone() }
+    }
+
+    pub fn estimate_embeddable_bytes_and_transform<F: Fn(usize) -> Option<PixelMap>>(
+        self,
+        transformer: F,
+    ) -> Self {
+        match transformer(self.estimate_embeddable_bytes()) {
+            Option::Some(new_mask) => MaskImageEmbedder { mask: new_mask },
+            Option::None => self,
+        }
     }
 
     fn calculate_n_of_bits_to_embed(mask_byte: Byte) -> usize {

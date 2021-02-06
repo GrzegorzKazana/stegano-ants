@@ -22,6 +22,7 @@ mod macros;
 mod ant_colony;
 mod common;
 mod images;
+mod steganography;
 
 use ant_colony::ant_dispatcher::BasicAntDispatcher;
 use ant_colony::colony::{Colony, Config, ConfigurableColony, StepwiseParallelColony};
@@ -31,6 +32,9 @@ use ant_colony::runner::{ColonyRunner, CommandLine};
 
 use images::image::Image;
 use images::image_graph_converter::{EdgeChangeConverter, ImageGraphConverter};
+
+use steganography::data::Data;
+use steganography::image_embedder::{EmbedInImage, MaskImageEmbedder};
 
 fn main() {
     let rng = StdRng::seed_from_u64(42);
@@ -45,30 +49,62 @@ fn main() {
     // ]);
     // let graph = Graph::random_tsp_graph(&mut rng, 100);
 
-    let pixel_map = Image::load("./assets/images/sample1_xsmall.bmp")
+    let transport_image = Image::load("./assets/images/sample1_xsmall.bmp")
         .unwrap()
         .into_pixel_map();
 
-    let img_graph_converter = EdgeChangeConverter::initialize(&pixel_map);
+    let data = Data::from_file("./assets/data/lorem_ipsum.txt").unwrap();
+
+    let img_graph_converter = EdgeChangeConverter::initialize(&transport_image);
     let graph = img_graph_converter.img_to_graph();
 
     let config = Config {
-        ant_count: 100 * graph.get_amount_of_nodes(),
+        ant_count: graph.get_amount_of_nodes(),
         num_of_steps_per_cycle: graph.get_amount_of_nodes() / 100,
-        pheromone_updater: AveragePheromoneUpdater::new(1.0, 0.1, 0.1),
+        pheromone_updater: AveragePheromoneUpdater::new(1.0, 0.01, 0.1),
         ant_dispatcher: BasicAntDispatcher,
         rng,
     };
 
     let colony = StepwiseParallelColony::new(config, &graph);
 
-    let runner = ColonyRunner::new(colony, &graph, CommandLine).train(1, 10);
+    let runner = ColonyRunner::new(colony, &graph, CommandLine).train(1, 2);
 
     let pheromone = runner.get_pheromone();
-    let pixel_map = img_graph_converter.visualize_pheromone(pheromone);
+    let pheromone_image = img_graph_converter.visualize_pheromone(pheromone);
 
-    Image::from_pixel_map(&pixel_map)
+    let embedder = MaskImageEmbedder::new(&pheromone_image);
+
+    // .estimate_embeddable_bytes_and_transform(|capacity| {
+    //     // > 1 data will not fit, we can upscale pheromone trails evenly
+    //     // < 1 data will fit, but will be distributed unevenly
+    //     // 1   data fits perfectly
+    //     // ideal scenario is very close to 1 but below
+    //     let fill_ratio = data.num_of_bytes() as f32 / capacity as f32;
+
+    //     Option::Some(pheromone_image.scale(fill_ratio))
+    // });
+
+    let mut bits_iter = data.iter_bits();
+    let steganogram = embedder.embed(&mut bits_iter, &transport_image);
+
+    println!("{:?}", data.iter_bits().count());
+
+    let remaining = bits_iter.count();
+    println!(
+        "Bit capacity: {:?}\nNum of data bits: {:?}\nRemaining bits: {:?}\nEmbedded bits: {:?}",
+        embedder.estimate_embeddable_bytes() * 8,
+        data.num_of_bits(),
+        remaining,
+        data.num_of_bits() - remaining
+    );
+
+    Image::from_pixel_map(&pheromone_image)
         .save("./assets/images/sample1_xsmall_pheromone.bmp")
+        .unwrap();
+
+    Image::from_pixel_map(&steganogram)
+        .save("./assets/images/sample1_xsmall_steganogram.bmp")
         .unwrap();
 
     cfg_if! {

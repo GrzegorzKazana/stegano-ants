@@ -51,8 +51,18 @@ impl Data {
         &self.bytes
     }
 
+    pub fn num_of_bytes(&self) -> usize {
+        self.bytes.len()
+    }
+
     pub fn num_of_bits(&self) -> usize {
         self.bytes.len() * 8
+    }
+
+    pub fn take(self, n_bytes: usize) -> Self {
+        Data {
+            bytes: self.bytes.into_iter().take(n_bytes).collect::<Vec<_>>(),
+        }
     }
 
     pub fn iter_bits(&self) -> impl BitIterator + '_ {

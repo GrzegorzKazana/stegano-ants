@@ -1,2 +1,2 @@
-mod data;
-mod image_embedder;
+pub mod data;
+pub mod image_embedder;
