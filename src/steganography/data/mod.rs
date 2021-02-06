@@ -89,4 +89,8 @@ impl Data {
             + (bits[6].raw() << 1)
             + (bits[7].raw() << 0)
     }
+
+    pub fn to_string(&self) -> String {
+        String::from_utf8_lossy(&self.bytes).into_owned()
+    }
 }

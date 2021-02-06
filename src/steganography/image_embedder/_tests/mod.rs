@@ -12,6 +12,16 @@ mod image_embedder_tests {
     use crate::steganography::data::Data;
 
     #[test]
+    fn it_should_estimate_capacity() {
+        let mask = mocks::mock_mask_image();
+        let expected = 73;
+
+        let result = MaskImageEmbedder::new(&mask).estimate_embeddable_bits();
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
     fn it_should_correctly_embed_the_data() {
         let transport = mocks::mock_transport_image();
         let mask = mocks::mock_mask_image();

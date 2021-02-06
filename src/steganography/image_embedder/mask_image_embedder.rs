@@ -24,7 +24,7 @@ impl MaskImageEmbedder {
         self,
         transformer: F,
     ) -> Self {
-        match transformer(self.estimate_embeddable_bytes()) {
+        match transformer(self.estimate_embeddable_bits()) {
             Option::Some(new_mask) => MaskImageEmbedder { mask: new_mask },
             Option::None => self,
         }
@@ -107,7 +107,7 @@ impl MaskImageEmbedder {
 }
 
 impl EmbedInImage for MaskImageEmbedder {
-    fn estimate_embeddable_bytes(&self) -> usize {
+    fn estimate_embeddable_bits(&self) -> usize {
         self.mask
             .pixels()
             .iter()
@@ -116,7 +116,6 @@ impl EmbedInImage for MaskImageEmbedder {
                     + Self::calculate_n_of_bits_to_embed(pixel.g)
                     + Self::calculate_n_of_bits_to_embed(pixel.b)
             })
-            .map(|n_bits_per_px| n_bits_per_px / 8)
             .sum()
     }
 

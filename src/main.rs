@@ -80,7 +80,7 @@ fn main() {
     //     // < 1 data will fit, but will be distributed unevenly
     //     // 1   data fits perfectly
     //     // ideal scenario is very close to 1 but below
-    //     let fill_ratio = data.num_of_bytes() as f32 / capacity as f32;
+    //     let fill_ratio = data.num_of_bits() as f32 / capacity as f32;
 
     //     Option::Some(pheromone_image.scale(fill_ratio))
     // });
@@ -91,9 +91,10 @@ fn main() {
     println!("{:?}", data.iter_bits().count());
 
     let remaining = bits_iter.count();
+
     println!(
         "Bit capacity: {:?}\nNum of data bits: {:?}\nRemaining bits: {:?}\nEmbedded bits: {:?}",
-        embedder.estimate_embeddable_bytes() * 8,
+        embedder.estimate_embeddable_bits(),
         data.num_of_bits(),
         remaining,
         data.num_of_bits() - remaining
@@ -106,6 +107,10 @@ fn main() {
     Image::from_pixel_map(&steganogram)
         .save("./assets/images/sample1_xsmall_steganogram.bmp")
         .unwrap();
+
+    let extracted = embedder.extract(&steganogram);
+
+    println!("extracted: \n{}", extracted.to_string());
 
     cfg_if! {
         if #[cfg(feature = "profiler")] {
