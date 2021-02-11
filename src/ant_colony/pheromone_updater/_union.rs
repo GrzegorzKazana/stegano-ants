@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use std::fmt::Display;
 
-use crate::ant_colony::graph::{RouteBatch, RouteBatchWithHoles, RouteCollection};
+use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::{

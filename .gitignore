@@ -3,3 +3,6 @@
 /.profiles/*
 
 !/.profiles/.gitkeep
+
+assets/images/*_steg*
+assets/images/*_pher*

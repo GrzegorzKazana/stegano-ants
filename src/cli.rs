@@ -22,7 +22,6 @@ pub struct Opts {
     pub cycles: Option<usize>,
 
     #[clap(
-        short,
         long,
         about = "train until number of cycles does not provide improvement"
     )]
