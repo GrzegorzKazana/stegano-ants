@@ -1,13 +1,17 @@
 use rand::{prelude::StdRng, SeedableRng};
 use std::path::Path;
 
-use crate::cli::{EmbedCommand, ExtractCommand, Opts, SubCommand};
+use crate::common::cli_output::CliOutputs;
 use crate::common::errors::AppError;
+use crate::{
+    cli::{EmbedCommand, ExtractCommand, Opts, SubCommand},
+    common::cli_output::CliOutput,
+};
 
 use crate::ant_colony::ant_dispatcher::Dispatchers;
 use crate::ant_colony::colony::{Config, ConfigurableColony, StepwiseParallelColony};
 use crate::ant_colony::pheromone_updater::Updaters;
-use crate::ant_colony::runner::{ColonyRunner, CommandLine};
+use crate::ant_colony::runner::ColonyRunner;
 
 use crate::images::image::Image;
 use crate::images::image_graph_converter::{EdgeChangeConverter, ImageGraphConverter};
@@ -22,14 +26,18 @@ pub struct App {
     opts: Opts,
     data_base_path: String,
     image_base_path: String,
+    cli: CliOutputs,
 }
 
 impl App {
     pub fn new(opts: Opts) -> Self {
+        let cli = CliOutputs::from_bool(opts.quiet);
+
         App {
             opts,
             data_base_path: String::from("./assets/data"),
             image_base_path: String::from("./assets/images"),
+            cli,
         }
     }
 
@@ -45,7 +53,7 @@ impl App {
 
         let transport_image = self.load_image(img_name)?;
         let data = self.load_data(&embed_opts.data)?;
-        let pheromone_image = Self::generate_pheromone_mask(&self.opts, &transport_image)?;
+        let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
         let embedder = MaskImageEmbedder::new(&pheromone_image);
 
@@ -70,7 +78,7 @@ impl App {
         let transport_image = self.load_image(&extract_opts.image)?;
         let steg_image = self.load_image(&extract_opts.steg)?;
 
-        let pheromone_image = Self::generate_pheromone_mask(&self.opts, &transport_image)?;
+        let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
         let embedder = MaskImageEmbedder::new(&pheromone_image);
         let extracted = embedder.extract(&steg_image);
@@ -78,7 +86,11 @@ impl App {
         Result::Ok(format!("Extracted:\n{}", extracted.to_string()))
     }
 
-    fn generate_pheromone_mask(opts: &Opts, transport_image: &PixelMap) -> AppResult<PixelMap> {
+    fn generate_pheromone_mask(
+        &self,
+        opts: &Opts,
+        transport_image: &PixelMap,
+    ) -> AppResult<PixelMap> {
         let rng = StdRng::seed_from_u64(opts.seed);
 
         let img_graph_converter = EdgeChangeConverter::initialize(&transport_image);
@@ -103,7 +115,8 @@ impl App {
             ))
             .map_err(AppError::IoError)?;
 
-        let num_of_steps_per_cycle = graph.get_amount_of_nodes() / ant_count;
+        let num_of_steps_per_cycle =
+            (graph.get_amount_of_nodes().pow(2) as f32 / ant_count as f32) as usize;
 
         let config = Config {
             ant_count,
@@ -113,9 +126,11 @@ impl App {
             rng,
         };
 
+        self.cli.print(&config);
+
         let colony = StepwiseParallelColony::new(config, &graph);
 
-        let runner = ColonyRunner::new(colony, &graph, CommandLine);
+        let runner = ColonyRunner::new(colony, &graph, &self.cli);
 
         let executed_runner = match (opts.cycles, opts.stop_after) {
             (Option::Some(n_cycles), _) => Option::Some(runner.train(1, n_cycles)),

@@ -27,6 +27,9 @@ pub struct Opts {
     )]
     pub stop_after: Option<usize>,
 
+    #[clap(short, long)]
+    pub quiet: bool,
+
     #[clap(subcommand)]
     pub subcmd: SubCommand,
 }

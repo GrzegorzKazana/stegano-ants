@@ -1,25 +1,24 @@
-mod io;
 mod summary;
 
 use crate::ant_colony::colony::Colony;
 use crate::ant_colony::graph::Graph;
 use crate::ant_colony::pheromone::Pheromone;
 use crate::ant_colony::pheromone_reader::PheromoneReader;
+use crate::common::cli_output::CliOutput;
 use crate::common::utils::{measure, produce_until};
 
-pub use io::{CliOutput, CommandLine, DummyOutput};
 pub use summary::{CycleSummary, EpochSummary};
 
 pub struct ColonyRunner<'a, C: Colony, IO: CliOutput> {
     colony: C,
     graph: &'a Graph,
-    io: IO,
+    io: &'a IO,
     cycle_history: Vec<CycleSummary>,
     epoch_history: Vec<EpochSummary>,
 }
 
 impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
-    pub fn new(colony: C, graph: &'a Graph, io: IO) -> Self {
+    pub fn new(colony: C, graph: &'a Graph, io: &'a IO) -> Self {
         ColonyRunner {
             colony,
             graph,
@@ -48,7 +47,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
 
         let (colony, next_cycle_history) = produce_until(
             (init_colony, Vec::new()),
-            |(colony, history), idx| ColonyRunner::train_cycle(colony, &io, history, idx),
+            |(colony, history), idx| ColonyRunner::train_cycle(colony, io, history, idx),
             |(_, history), _| {
                 ColonyRunner::<'a, C, IO>::had_no_improvement_in_n_last_steps(history, n_until)
             },
@@ -64,7 +63,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
                 .fold(0, |acc, cycle| acc + cycle.exec_time_ms),
         };
 
-        io.print_epoch_summary(&epoch_summary);
+        io.print(&epoch_summary);
         cycle_history.extend(next_cycle_history);
         epoch_history.push(epoch_summary);
 
@@ -89,7 +88,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
         let (colony, next_cycle_history) = (0..n_cycles).fold(
             (init_colony, Vec::with_capacity(n_cycles)),
             |(colony, summaries), cycle_idx| {
-                ColonyRunner::train_cycle(colony, &io, summaries, cycle_idx)
+                ColonyRunner::train_cycle(colony, io, summaries, cycle_idx)
             },
         );
 
@@ -103,7 +102,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
                 .fold(0, |acc, cycle| acc + cycle.exec_time_ms),
         };
 
-        io.print_epoch_summary(&epoch_summary);
+        io.print(&epoch_summary);
         cycle_history.extend(next_cycle_history);
         epoch_history.push(epoch_summary);
 
@@ -118,7 +117,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
 
     fn train_cycle(
         colony: C,
-        io: &IO,
+        io: &'a IO,
         mut summaries: Vec<CycleSummary>,
         cycle_idx: usize,
     ) -> (C, Vec<CycleSummary>) {
@@ -138,7 +137,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
             n_non_empty_edges: PheromoneReader::count_edges_with_pheromone_above(pheromone, 0.1),
         };
 
-        io.print_cycle_summary(&summary);
+        io.print(&summary);
         summaries.push(summary);
 
         (new_colony, summaries)
