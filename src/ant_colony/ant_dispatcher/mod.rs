@@ -1,4 +1,5 @@
 mod _tests;
+mod _union;
 mod basic_ant_dispatcher;
 mod biased_ant_dispatcher;
 mod likelihood_dispatcher;
@@ -11,6 +12,7 @@ use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 use crate::ant_colony::pheromone::Pheromone;
 
+pub use _union::Dispatchers;
 pub use basic_ant_dispatcher::BasicAntDispatcher;
 pub use biased_ant_dispatcher::BiasedAntDispatcher;
 pub use likelihood_dispatcher::LikelihoodAntDispatcher;
