@@ -135,6 +135,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
             avg_dist: routes.get_average_route_distance(),
             ratio_of_incomplete_routes: routes.get_ratio_of_incomplete_routes(),
             n_non_empty_edges: PheromoneReader::count_edges_with_pheromone_above(pheromone, 0.1),
+            pheromone_variance: pheromone.calc_variance(),
         };
 
         io.print(&summary);
