@@ -34,7 +34,7 @@ fn main() {
 
     match App::new(opts).run() {
         Result::Err(msg) => println!("{}", msg),
-        Result::Ok(msg) => println!("{}", msg),
+        Result::Ok(summary) => println!("{}", summary.to_string()),
     }
 
     cfg_if! {

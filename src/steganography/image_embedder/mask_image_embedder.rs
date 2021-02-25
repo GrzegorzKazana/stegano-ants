@@ -134,7 +134,7 @@ impl EmbedInImage for MaskImageEmbedder {
     }
 
     fn extract(&self, pixel_map: &PixelMap) -> Data {
-        let data = pixel_map
+        let bytes = pixel_map
             .pixels()
             .iter()
             .zip_eq(self.mask.pixels().iter())
@@ -143,10 +143,10 @@ impl EmbedInImage for MaskImageEmbedder {
             })
             .collect::<Vec<_>>()
             .chunks_exact(8)
-            .map(|chunk| Data::bits_to_byte(chunk))
+            .map(Data::bits_to_byte)
             .take_while(|byte| *byte != MESSAGE_END_TOKEN)
             .collect::<Vec<_>>();
 
-        Data::new(data)
+        Data::new(bytes)
     }
 }

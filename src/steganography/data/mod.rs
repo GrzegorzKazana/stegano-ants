@@ -41,7 +41,7 @@ impl Data {
         let data = bits
             .chunks_exact(8)
             .into_iter()
-            .map(|chunk| Data::bits_to_byte(chunk))
+            .map(Data::bits_to_byte)
             .collect::<Vec<Byte>>();
 
         Data::new(data)
@@ -89,8 +89,10 @@ impl Data {
             + (bits[6].raw() << 1)
             + (bits[7].raw() << 0)
     }
+}
 
-    pub fn to_string(&self) -> String {
+impl ToString for Data {
+    fn to_string(&self) -> String {
         String::from_utf8_lossy(&self.bytes).into_owned()
     }
 }

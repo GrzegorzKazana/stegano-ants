@@ -26,3 +26,9 @@ default = []
 profiler = ["flame", "flamer"]
 # cargo run --release --features "profiler singlethread"
 singlethread = []
+
+
+# http://sipi.usc.edu/database/database.php?volume=misc&image=10#top
+# find assets | grep \.tiff | sed -e 's/.tiff//g' | sed -e 's:assets/images/::g' | xargs -I '{}' mkdir -p 'assets/images/{}'
+# find assets | grep \.tiff | sed -e 's/.tiff//g' | sed -e 's:assets/images/::g' | xargs -I '{}' convert 'assets/images/{}.tiff' 'assets/images/{}/{}.bmp'
+# find assets/images/*/* | sed -e 's:.bmp::g' | xargs -I '{}' convert '{}.bmp' -resize 200x200 '{}-l.bmp'

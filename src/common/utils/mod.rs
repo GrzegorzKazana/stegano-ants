@@ -1,6 +1,7 @@
 mod _tests;
 mod compare_float;
 mod exact_sized_chain;
+mod extend_basename;
 mod identity;
 mod measure;
 mod produce_until;
@@ -11,6 +12,7 @@ mod weighted_sample;
 
 pub use compare_float::compare_float;
 pub use exact_sized_chain::ExactChainExt;
+pub use extend_basename::extend_basename;
 pub use identity::identity;
 pub use measure::measure;
 pub use produce_until::produce_until;
