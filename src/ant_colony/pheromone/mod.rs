@@ -98,7 +98,7 @@ impl Pheromone {
     pub fn calc_variance(&self) -> f32 {
         let values_normalized = self.get_values_normalized();
         let count = values_normalized.len() as f32;
-        let avg = values_normalized.values().map(|val| *val).sum::<f32>() / count;
+        let avg = values_normalized.values().cloned().sum::<f32>() / count;
 
         values_normalized
             .values()

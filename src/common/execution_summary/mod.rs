@@ -4,14 +4,24 @@ pub struct EmbeddingSummary {
     image_capacity_bits: usize,
     data_size_bits: usize,
     remaining_bits: usize,
+    mean_square_error: f32,
+    peak_signal_noise_ratio: f32,
 }
 
 impl EmbeddingSummary {
-    pub fn new(image_capacity_bits: usize, data_size_bits: usize, remaining_bits: usize) -> Self {
+    pub fn new(
+        image_capacity_bits: usize,
+        data_size_bits: usize,
+        remaining_bits: usize,
+        mean_square_error: f32,
+        peak_signal_noise_ratio: f32,
+    ) -> Self {
         EmbeddingSummary {
             image_capacity_bits,
             data_size_bits,
             remaining_bits,
+            mean_square_error,
+            peak_signal_noise_ratio,
         }
     }
 }

@@ -17,6 +17,9 @@ use crate::images::pixel_map::PixelMap;
 
 use crate::steganography::data::Data;
 use crate::steganography::image_embedder::{EmbedInImage, MaskImageEmbedder};
+use crate::steganography::quality_assessment::{
+    AssessSteganogramQuality, MeanSquareError, PeakSignalNoiseRatio,
+};
 
 type AppResult<T> = Result<T, AppError>;
 
@@ -60,6 +63,8 @@ impl App {
             embedder.estimate_embeddable_bits(),
             data.num_of_bits(),
             bits_iter.count(),
+            MeanSquareError::eval(&transport_image, &steganogram),
+            PeakSignalNoiseRatio::eval(&transport_image, &steganogram),
         );
 
         Result::Ok(summary)

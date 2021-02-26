@@ -27,8 +27,8 @@ pub fn select_top_n_items<T: Copy, P: PartialOrd, F: Fn(&T) -> &P>(
     });
 
     partially_sorted_data
-        .iter()
+        .into_iter()
         .take(n)
-        .map(|item| **item)
+        .cloned()
         .collect_vec()
 }

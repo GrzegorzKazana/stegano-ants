@@ -1,4 +1,7 @@
 use std::cmp::{Ord, Ordering};
+use std::iter;
+
+use crate::common::utils::ExactChainExt;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Pixel {
@@ -61,5 +64,11 @@ impl Pixel {
 
     pub fn intensity(&self) -> u8 {
         (self.channel_sum() as f32 / 3.0) as u8
+    }
+
+    pub fn iter_channels(&self) -> impl Iterator<Item = u8> + ExactSizeIterator {
+        iter::once(self.r)
+            .chain_exact(iter::once(self.g))
+            .chain_exact(iter::once(self.b))
     }
 }
