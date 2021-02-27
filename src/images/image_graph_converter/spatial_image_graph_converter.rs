@@ -3,6 +3,9 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
 
+/// Trait shared by all ImageGraphConverters that create graphs
+/// that have 1:1 mapping between pixel and node.
+/// Structs implementing need to provide list of pixels which will be adjacent for given pixel.
 pub trait SpatialImageGraphConverter {
     fn get_pixel_neighbours(pixel_map: &PixelMap, pixel: &Pixel) -> Vec<Pixel>;
 

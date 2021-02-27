@@ -63,7 +63,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony
         &self.routes
     }
 
-    fn get_ants(&self) -> &Vec<Ant> {
+    fn get_ants(&self) -> &[Ant] {
         &self.ants
     }
 }

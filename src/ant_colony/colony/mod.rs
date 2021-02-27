@@ -22,7 +22,7 @@ pub trait Colony {
 
     fn get_routes(&self) -> &RouteCollection;
 
-    fn get_ants(&self) -> &Vec<Ant>;
+    fn get_ants(&self) -> &[Ant];
 }
 
 pub trait ConfigurableColony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {

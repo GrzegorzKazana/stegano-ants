@@ -68,7 +68,8 @@ impl Data {
     pub fn iter_bits(&self) -> impl ExactBitIterator + '_ {
         self.bytes
             .iter()
-            .flat_map(|byte| Data::byte_to_bits_iter(*byte))
+            .cloned()
+            .flat_map(Data::byte_to_bits_iter)
             .collect::<Vec<_>>()
             .into_iter()
     }
@@ -80,14 +81,12 @@ impl Data {
     pub fn bits_to_byte(bits: &[Bit]) -> Byte {
         debug_assert_eq!(bits.len(), 8, "Tried to construct byte from unaligned bits");
 
-        (bits[0].raw() << 7)
-            + (bits[1].raw() << 6)
-            + (bits[2].raw() << 5)
-            + (bits[3].raw() << 4)
-            + (bits[4].raw() << 3)
-            + (bits[5].raw() << 2)
-            + (bits[6].raw() << 1)
-            + (bits[7].raw() << 0)
+        let exponents = (0..8).rev();
+
+        bits.iter()
+            .zip(exponents)
+            .map(|(bit, exp)| bit.shift_left(exp).raw())
+            .sum()
     }
 }
 

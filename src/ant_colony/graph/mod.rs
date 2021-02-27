@@ -28,7 +28,7 @@ impl Graph {
     pub fn get_adjacent_edges(&self, node_id: &NodeId) -> Vec<AdjacencyListEntry> {
         self.nodes
             .get(node_id)
-            .map_or(vec![], |n| n.adjacency_list.to_owned())
+            .map_or_else(|| vec![], |n| n.adjacency_list.to_owned())
     }
 
     pub fn get_all_edges(&self) -> Vec<AdjacencyListEntry> {

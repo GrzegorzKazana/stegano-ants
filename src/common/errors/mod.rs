@@ -15,10 +15,10 @@ pub enum AppError {
 impl Display for AppError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            AppError::ImageLoadingError(err) => write!(f, "{}", err),
-            AppError::ImageSavingError(err) => write!(f, "{}", err),
-            AppError::DataLoadingError(err) => write!(f, "{}", err),
-            AppError::IoError(err) => write!(f, "{}", err),
+            AppError::ImageLoadingError(err) => write!(f, "ImageLoadingError: {}", err),
+            AppError::ImageSavingError(err) => write!(f, "ImageSavingError: {}", err),
+            AppError::DataLoadingError(err) => write!(f, "DataLoadingError: {}", err),
+            AppError::IoError(err) => write!(f, "IoError: {}", err),
         }
     }
 }

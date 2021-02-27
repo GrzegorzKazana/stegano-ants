@@ -1,5 +1,19 @@
 use crate::steganography::data::Data;
 
+pub enum ExecutionSummary {
+    Embed(EmbeddingSummary),
+    Extract(ExtractionSummary),
+}
+
+impl ToString for ExecutionSummary {
+    fn to_string(&self) -> String {
+        match self {
+            ExecutionSummary::Embed(summary) => summary.to_string(),
+            ExecutionSummary::Extract(summary) => summary.to_string(),
+        }
+    }
+}
+
 pub struct EmbeddingSummary {
     image_capacity_bits: usize,
     data_size_bits: usize,
@@ -29,11 +43,19 @@ impl EmbeddingSummary {
 impl ToString for EmbeddingSummary {
     fn to_string(&self) -> String {
         format!(
-            "Bit capacity: {:?}\nNum of data bits: {:?}\nRemaining bits: {:?}\nEmbedded bits: {:?}",
+            "Bit capacity: {}\n\
+            Num of data bits: {}\n\
+            Remaining bits: {}\n\
+            Embedded bits: {} ({:>5.2}%)\n\
+            Mean square error: {}\n\
+            Peak signal noise ratio: {}dB",
             self.image_capacity_bits,
             self.data_size_bits,
             self.remaining_bits,
-            self.data_size_bits - self.remaining_bits
+            self.data_size_bits - self.remaining_bits,
+            (self.data_size_bits - self.remaining_bits) as f32 / self.data_size_bits as f32,
+            self.mean_square_error,
+            self.peak_signal_noise_ratio
         )
     }
 }
@@ -51,19 +73,5 @@ impl ExtractionSummary {
 impl ToString for ExtractionSummary {
     fn to_string(&self) -> String {
         format!("Extracted:\n{}", self.extracted_data.to_string())
-    }
-}
-
-pub enum ExecutionSummary {
-    Embed(EmbeddingSummary),
-    Extract(ExtractionSummary),
-}
-
-impl ToString for ExecutionSummary {
-    fn to_string(&self) -> String {
-        match self {
-            ExecutionSummary::Embed(summary) => summary.to_string(),
-            ExecutionSummary::Extract(summary) => summary.to_string(),
-        }
     }
 }

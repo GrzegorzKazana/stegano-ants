@@ -7,6 +7,10 @@ use super::LikelihoodAntDispatcher;
 
 pub struct BasicAntDispatcher;
 
+/// Each edge is attributed probability simply proportional to
+/// pheromone level and inversly to distance
+///
+/// p_{if}=\frac{\tau_{ij}}{d_{ij}}
 impl LikelihoodAntDispatcher for BasicAntDispatcher {
     fn cacluclate_node_likelihoods(
         &self,

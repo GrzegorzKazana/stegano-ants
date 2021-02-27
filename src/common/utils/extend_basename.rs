@@ -1,5 +1,11 @@
 use std::path::Path;
 
+/// transforms path or filename by inserting an infix prior to extension
+///
+/// ```
+/// assert_eq!(extend_basename("my_file.jpg", "_test"), "my_file_test.jpg");
+/// assert_eq!(extend_basename("foo/my_file.jpg", "_test"), "foo/my_file_test.jpg");
+/// ```
 pub fn extend_basename(name: &str, infix: &str) -> Option<String> {
     let directory = Path::new(name).parent().unwrap_or(Path::new(""));
     let basename = Path::new(name).file_stem().and_then(|a| a.to_str());

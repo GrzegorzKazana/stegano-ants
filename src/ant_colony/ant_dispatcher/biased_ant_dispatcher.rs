@@ -5,6 +5,11 @@ use crate::ant_colony::pheromone::Pheromone;
 
 use super::LikelihoodAntDispatcher;
 
+/// Each edge is attributed probability proportional to
+/// pheromone level and inversly to distance.
+/// Both factors are raised to given powers to control each importance.
+///
+/// p_{if}=\frac{\tau_{ij}^a}{d_{ij}^b}
 pub struct BiasedAntDispatcher {
     pheromone_bias: f32,
     visibility_bias: f32,

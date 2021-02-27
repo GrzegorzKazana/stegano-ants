@@ -5,6 +5,11 @@ use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
 
+/// After all ants execute a single step, decays the pheromone level
+/// and increases pheromone value of taken edges by a contant value.
+///
+/// After whole cycle is finished, increases pheromone levels of edges
+/// that belong to the shortest route.
 pub struct SystemPheromoneUpdater {
     initial_value: f32,
     evaporation_rate: f32,

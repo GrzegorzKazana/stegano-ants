@@ -11,6 +11,9 @@ use super::EmbedInImage;
 /// uses only 7 bits, we can safely reserve this character
 const MESSAGE_END_TOKEN: Byte = 0b11111111;
 
+/// Image embedder/extractor using a mask image for calculating how many bits to embed
+/// in given pixel.
+/// Mask and transport image must have exact same size.
 pub struct MaskImageEmbedder {
     mask: PixelMap,
 }

@@ -7,6 +7,12 @@ use crate::common::utils::weighted_sample;
 
 use super::AntDispatcher;
 
+/// Trait common for all dispatchers that determine
+/// probability of transition to each of edges.
+/// Probabilities do not need to sum up to 1 (they are normalized anyway).
+///
+/// Dispatcher implementing the trait are only required to calculate a vector
+/// of probabilities coresponding to given edges.
 pub trait LikelihoodAntDispatcher: Display + Send + Sync {
     fn cacluclate_node_likelihoods(
         &self,

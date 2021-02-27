@@ -5,6 +5,12 @@ use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
 
+/// After all ants finish whole cycle, decays the pheromone and updates pheromone levels
+/// of specific edges by value inversly proportional to length of route they belong to.
+///
+/// If edge was taken by multiple ants it will be increased multiple times.
+///
+/// Does not perform updates after each step.
 pub struct CyclicalPheromoneUpdater {
     initial_value: f32,
     evaporation_rate: f32,

@@ -7,6 +7,14 @@ use crate::common::utils::{compare_float, weighted_sample};
 
 use super::AntDispatcher;
 
+/// Picks edge in one of two modes which are selected with given probability (exploitation_rate).
+///
+/// Exploration:
+/// each edge is attributed probability proportional to pheromone trail and inversly proportional to distance raised to bias power
+///         p_{if}=\frac{\tau_{ij}}{d_{ij}^b}
+///
+/// Exploitation:
+/// selects edge with maximum score which is evaluated in the same way as in exploration mode.
 pub struct SystemAntDispatcher {
     exploitation_rate: f32,
     visibility_bias: f32,
@@ -18,6 +26,13 @@ impl SystemAntDispatcher {
             exploitation_rate,
             visibility_bias,
         }
+    }
+
+    fn evalutate_edge(&self, pheromone: &Pheromone, edge: &AdjacencyListEntry) -> f32 {
+        let visibility = 1.0 / edge.distance;
+        let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
+
+        visibility.powf(self.visibility_bias) * pheromone_level + stability_factor!()
     }
 
     fn try_expoit_best_edge(
@@ -33,12 +48,8 @@ impl SystemAntDispatcher {
         possible_next_edges
             .iter()
             .max_by(|edge_a, edge_b| {
-                let pheromone_a = pheromone.get_pheromone_for_edge(edge_a.key);
-                let pheromone_b = pheromone.get_pheromone_for_edge(edge_b.key);
-                let visibility_a = 1.0 / edge_a.distance;
-                let visibility_b = 1.0 / edge_b.distance;
-                let value_a = pheromone_a * visibility_a;
-                let value_b = pheromone_b * visibility_b;
+                let value_a = self.evalutate_edge(pheromone, edge_a);
+                let value_b = self.evalutate_edge(pheromone, edge_b);
 
                 compare_float(&value_a, &value_b)
             })
@@ -53,12 +64,7 @@ impl SystemAntDispatcher {
     ) -> Option<AdjacencyListEntry> {
         let node_likelihood = possible_next_edges
             .into_iter()
-            .map(|edge| {
-                let visibility = 1.0 / edge.distance;
-                let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
-
-                visibility.powf(self.visibility_bias) * pheromone_level + stability_factor!()
-            })
+            .map(|edge| self.evalutate_edge(pheromone, edge))
             .collect::<Vec<_>>();
 
         weighted_sample(&possible_next_edges, &node_likelihood, sample_seed)

@@ -28,8 +28,8 @@ pub trait AntDispatcher: Display + Send + Sync {
         let node_ids = graph.get_node_ids();
 
         (0..num_of_ants)
-            .filter_map(|_| node_ids.iter().choose(rng))
-            .map(|id| Ant::new(*id))
+            .filter_map(|_| node_ids.iter().choose(rng).cloned())
+            .map(Ant::new)
             .collect()
     }
 

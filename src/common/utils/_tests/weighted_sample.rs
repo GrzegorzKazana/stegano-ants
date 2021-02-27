@@ -9,7 +9,7 @@ mod common_utils_weighted_sample_tests {
             let data = ['a', 'b', 'c', 'd', 'e'].iter().collect::<Vec<_>>();
 
             let weight = weight_seed.abs() + stability_factor!();
-            let mut weights= [0.0, 0.0, 0.0, 0.0, 0.0];
+            let mut weights = [0.0, 0.0, 0.0, 0.0, 0.0];
             weights[non_zero_idx] = weight;
 
             let expected = data[non_zero_idx];
