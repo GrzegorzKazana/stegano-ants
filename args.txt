@@ -1,0 +1,16 @@
+# This file is just a convinience for running the program when frequently changing arguments
+#
+# to load the args from file use the command:
+# `cargo run -q --release -- `cat args.txt | grep -v ^#``
+
+--ants=1000
+--cycles=10
+--steps=100
+--dispatcher=basic:
+--updater=const:1.0,0.0001,1
+# --mask-width=50
+embed
+--data assets/data/lorem_ipsum.txt
+# extract
+# --steg assets/images/baboon/baboon-s_steg.bmp
+--image assets/images/baboon/baboon-s.bmp

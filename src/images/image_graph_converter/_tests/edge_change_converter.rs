@@ -8,6 +8,8 @@ mod edge_change_converter_tests {
 
     use super::super::super::{EdgeChangeConverter, ImageGraphConverter};
 
+    const MAX_PIXEL_DISTANCE: f32 = 255.0 * 255.0 * 3.0;
+
     fn mock_image() -> PixelMap {
         PixelMap::new(
             2,
@@ -40,51 +42,107 @@ mod edge_change_converter_tests {
     fn it_creates_correct_graph_from_mock() {
         let img = mock_image();
 
-        let result = EdgeChangeConverter::initialize(&img).img_to_graph();
+        let result = EdgeChangeConverter::new(&img).img_to_graph();
 
         let nodes = vec![
             Node {
                 id: 0,
                 adjacency_list: vec![
-                    AdjacencyListEntry::new(0, 1, 100.0 + 100.0 + 100.0),
-                    AdjacencyListEntry::new(0, 3, 900.0 + 900.0 + 900.0),
+                    AdjacencyListEntry::new(
+                        0,
+                        1,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        0,
+                        3,
+                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
                 ],
             },
             Node {
                 id: 1,
                 adjacency_list: vec![
-                    AdjacencyListEntry::new(1, 2, 100.0 + 100.0 + 100.0),
-                    AdjacencyListEntry::new(1, 4, 900.0 + 900.0 + 900.0),
-                    AdjacencyListEntry::new(1, 0, 100.0 + 100.0 + 100.0),
+                    AdjacencyListEntry::new(
+                        1,
+                        2,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        1,
+                        4,
+                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        1,
+                        0,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
                 ],
             },
             Node {
                 id: 2,
                 adjacency_list: vec![
-                    AdjacencyListEntry::new(2, 5, 900.0 + 900.0 + 900.0),
-                    AdjacencyListEntry::new(2, 1, 100.0 + 100.0 + 100.0),
+                    AdjacencyListEntry::new(
+                        2,
+                        5,
+                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        2,
+                        1,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
                 ],
             },
             Node {
                 id: 3,
                 adjacency_list: vec![
-                    AdjacencyListEntry::new(3, 0, 900.0 + 900.0 + 900.0),
-                    AdjacencyListEntry::new(3, 4, 100.0 + 100.0 + 100.0),
+                    AdjacencyListEntry::new(
+                        3,
+                        0,
+                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        3,
+                        4,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
                 ],
             },
             Node {
                 id: 4,
                 adjacency_list: vec![
-                    AdjacencyListEntry::new(4, 1, 900.0 + 900.0 + 900.0),
-                    AdjacencyListEntry::new(4, 5, 100.0 + 100.0 + 100.0),
-                    AdjacencyListEntry::new(4, 3, 100.0 + 100.0 + 100.0),
+                    AdjacencyListEntry::new(
+                        4,
+                        1,
+                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        4,
+                        5,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        4,
+                        3,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
                 ],
             },
             Node {
                 id: 5,
                 adjacency_list: vec![
-                    AdjacencyListEntry::new(5, 2, 900.0 + 900.0 + 900.0),
-                    AdjacencyListEntry::new(5, 4, 100.0 + 100.0 + 100.0),
+                    AdjacencyListEntry::new(
+                        5,
+                        2,
+                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
+                    AdjacencyListEntry::new(
+                        5,
+                        4,
+                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                    ),
                 ],
             },
         ];
@@ -99,7 +157,7 @@ mod edge_change_converter_tests {
         let img = mock_image();
         let pheromone = mock_pheromone();
 
-        let result = EdgeChangeConverter::initialize(&img).visualize_pheromone(&pheromone);
+        let result = EdgeChangeConverter::new(&img).visualize_pheromone(&pheromone);
 
         let expected = PixelMap::new(
             2,

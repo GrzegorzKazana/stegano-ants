@@ -28,13 +28,15 @@ mod steganography;
 
 use app::App;
 use cli::Opts;
+use common::cli_output::{CliOutput, CliOutputs};
 
 fn main() {
     let opts: Opts = Opts::parse();
+    let cli = CliOutputs::from_bool(opts.quiet);
 
-    match App::new(opts).run() {
-        Result::Err(msg) => println!("{}", msg),
-        Result::Ok(summary) => println!("{}", summary.to_string()),
+    match App::new(opts, &cli).run() {
+        Result::Err(msg) => cli.print(&format!("{}", msg)),
+        Result::Ok(summary) => cli.print(&format!("{}", summary.to_string())),
     }
 
     cfg_if! {

@@ -23,15 +23,13 @@ use crate::steganography::quality_assessment::{
 
 type AppResult<T> = Result<T, AppError>;
 
-pub struct App {
+pub struct App<'a> {
     opts: Opts,
-    cli: CliOutputs,
+    cli: &'a CliOutputs,
 }
 
-impl App {
-    pub fn new(opts: Opts) -> Self {
-        let cli = CliOutputs::from_bool(opts.quiet);
-
+impl<'a> App<'a> {
+    pub fn new(opts: Opts, cli: &'a CliOutputs) -> Self {
         App { opts, cli }
     }
 
@@ -91,7 +89,9 @@ impl App {
     ) -> AppResult<PixelMap> {
         let rng = StdRng::seed_from_u64(opts.seed);
 
-        let img_graph_converter = EdgeChangeConverter::initialize(&transport_image);
+        let downscaled_transport_image = Self::downscale_transport_image(opts, transport_image);
+
+        let img_graph_converter = EdgeChangeConverter::new(&downscaled_transport_image);
         let graph = img_graph_converter.img_to_graph();
 
         let ant_dispatcher = Self::parse_dispatcher(&opts)?;
@@ -108,12 +108,31 @@ impl App {
         self.cli.print(&config);
 
         let colony = StepwiseParallelColony::new(config, &graph);
-        let runner = ColonyRunner::new(colony, &graph, &self.cli);
+        let runner = ColonyRunner::new(colony, &graph, self.cli);
         let executed_runner = Self::execute_runner(runner, &opts)?;
 
         let pheromone = executed_runner.get_pheromone();
+        let visualized_pheromone = img_graph_converter
+            .visualize_pheromone(pheromone)
+            .resize(transport_image.width, transport_image.height);
 
-        Result::Ok(img_graph_converter.visualize_pheromone(pheromone))
+        Result::Ok(visualized_pheromone)
+    }
+
+    fn downscale_transport_image(opts: &Opts, transport_image: &PixelMap) -> PixelMap {
+        match opts.mask_width {
+            Option::None => transport_image.clone(),
+            Option::Some(target_width) => {
+                if target_width >= transport_image.width {
+                    return transport_image.clone();
+                }
+
+                let ratio = target_width as f32 / transport_image.width as f32;
+                let target_height = (ratio * transport_image.height as f32) as usize;
+
+                transport_image.resize(target_width, target_height)
+            }
+        }
     }
 
     fn parse_dispatcher(opts: &Opts) -> AppResult<Dispatchers> {
@@ -128,10 +147,10 @@ impl App {
             .map_err(AppError::IoError)
     }
 
-    fn execute_runner<'a, C: Colony, IO: CliOutput>(
-        runner: ColonyRunner<'a, C, IO>,
+    fn execute_runner<'b, C: Colony, IO: CliOutput>(
+        runner: ColonyRunner<'b, C, IO>,
         opts: &Opts,
-    ) -> AppResult<ColonyRunner<'a, C, IO>> {
+    ) -> AppResult<ColonyRunner<'b, C, IO>> {
         if let Option::Some(n_cycles) = opts.cycles {
             Option::Some(runner.train(1, n_cycles))
         } else if let Option::Some(n_until) = opts.stop_after {

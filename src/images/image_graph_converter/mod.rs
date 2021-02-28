@@ -10,8 +10,7 @@ pub use edge_change_converter::EdgeChangeConverter;
 pub use spatial_image_graph_converter::SpatialImageGraphConverter;
 
 pub trait ImageGraphConverter {
-    fn initialize(pixel_map: &PixelMap) -> Self;
-
+    /// image in any form is expected to be passed via constructor
     fn img_to_graph(&self) -> Graph;
 
     fn visualize_pheromone(&self, pheromone: &Pheromone) -> PixelMap;

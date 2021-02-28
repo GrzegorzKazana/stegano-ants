@@ -79,7 +79,7 @@ impl Updaters {
 
             "const" => {
                 let (initial_value_str, evaporation_rate_str, increment_str): (&str, &str, &str) =
-                    opts.splitn(2, ',').collect_tuple()?;
+                    opts.splitn(3, ',').collect_tuple()?;
 
                 let initial_value = initial_value_str.parse().ok()?;
                 let evaporation_rate = evaporation_rate_str.parse().ok()?;
