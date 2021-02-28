@@ -11,7 +11,7 @@ rand = "0.8.0"
 itertools = "0.10.0"
 cfg-if = "1.0.0"
 rayon = "1.5.0"
-bmp = "0.5.0"
+image = "0.23.13"
 clap = "3.0.0-beta.2"
 
 flame = { version = "0.2.2", optional = true }

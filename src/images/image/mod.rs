@@ -1,7 +1,7 @@
 mod _tests;
 mod pixel;
 
-use bmp;
+use image::{DynamicImage, GenericImageView, Pixel as ImagePixel};
 
 use crate::common::errors::AppError;
 use crate::images::pixel_map::PixelMap;
@@ -10,22 +10,21 @@ pub use pixel::Pixel;
 
 pub struct Image {
     path: Option<String>,
-    img: bmp::Image,
+    img: image::DynamicImage,
     pub height: usize,
     pub width: usize,
 }
 
 impl Image {
     pub fn load(path: &str) -> Result<Self, AppError> {
-        bmp::open(path)
+        image::open(path)
             .map(|img| {
-                let height = img.get_height() as usize;
-                let width = img.get_width() as usize;
+                let (width, height) = img.dimensions();
 
                 Image {
                     img,
-                    height,
-                    width,
+                    height: height as usize,
+                    width: width as usize,
                     path: Option::Some(path.to_owned()),
                 }
             })
@@ -63,15 +62,15 @@ impl Image {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = Pixel> + '_ {
-        self.img.coordinates().map(move |(x, y)| {
-            let pixel = self.img.get_pixel(x, y);
+        self.img.pixels().map(move |(x, y, pixel)| {
+            let colors_rgb = pixel.to_rgb().0;
 
             Pixel {
                 x: x as usize,
                 y: y as usize,
-                r: pixel.r,
-                g: pixel.g,
-                b: pixel.b,
+                r: colors_rgb[0],
+                g: colors_rgb[1],
+                b: colors_rgb[2],
             }
         })
     }
@@ -85,17 +84,17 @@ impl Image {
     }
 
     fn from_pixels_and_known_dimensions(width: usize, height: usize, pixels: &[Pixel]) -> Self {
-        let empty_image = bmp::Image::new(width as u32, height as u32);
+        let empty_image = image::ImageBuffer::new(width as u32, height as u32);
 
         let img = pixels.iter().fold(empty_image, |mut img, px| {
             let Pixel { x, y, r, g, b } = px.to_owned();
 
-            img.set_pixel(x as u32, y as u32, bmp::Pixel { r, g, b });
+            img.put_pixel(x as u32, y as u32, image::Rgb([r, g, b]));
             img
         });
 
         Image {
-            img,
+            img: DynamicImage::ImageRgb8(img),
             path: Option::None,
             width,
             height,

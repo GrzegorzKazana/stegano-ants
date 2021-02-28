@@ -1,11 +1,11 @@
 use std::fmt::Display;
 
-use bmp;
+use image;
 
 #[derive(Debug)]
 pub enum AppError {
-    ImageLoadingError(bmp::BmpError),
-    ImageSavingError(std::io::Error),
+    ImageLoadingError(image::ImageError),
+    ImageSavingError(image::ImageError),
 
     DataLoadingError(std::io::Error),
 
