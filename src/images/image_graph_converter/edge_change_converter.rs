@@ -12,6 +12,15 @@ pub struct EdgeChangeConverter {
     graph: Graph,
 }
 
+impl EdgeChangeConverter {
+    pub fn new(pixel_map: &PixelMap) -> Self {
+        EdgeChangeConverter {
+            source_image: pixel_map.clone(),
+            graph: Self::construct_graph(pixel_map),
+        }
+    }
+}
+
 impl SpatialImageGraphConverter for EdgeChangeConverter {
     fn calc_distance_between_pixels(pixel_a: &Pixel, pixel_b: &Pixel) -> f32 {
         const MAX_DISTANCE: f32 = 255.0 * 255.0 * 3.0;
@@ -30,13 +39,6 @@ impl SpatialImageGraphConverter for EdgeChangeConverter {
 }
 
 impl ImageGraphConverter for EdgeChangeConverter {
-    fn initialize(pixel_map: &PixelMap) -> Self {
-        EdgeChangeConverter {
-            source_image: pixel_map.clone(),
-            graph: Self::construct_graph(pixel_map),
-        }
-    }
-
     fn img_to_graph(&self) -> Graph {
         self.graph.clone()
     }

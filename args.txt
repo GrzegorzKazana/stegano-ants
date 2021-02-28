@@ -8,6 +8,7 @@
 --steps=100
 --dispatcher=basic:
 --updater=const:1.0,0.0001,1
+# --mask-width=50
 embed
 --data assets/data/lorem_ipsum.txt
 # extract

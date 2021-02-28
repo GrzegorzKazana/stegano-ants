@@ -42,7 +42,7 @@ mod edge_change_converter_tests {
     fn it_creates_correct_graph_from_mock() {
         let img = mock_image();
 
-        let result = EdgeChangeConverter::initialize(&img).img_to_graph();
+        let result = EdgeChangeConverter::new(&img).img_to_graph();
 
         let nodes = vec![
             Node {
@@ -157,7 +157,7 @@ mod edge_change_converter_tests {
         let img = mock_image();
         let pheromone = mock_pheromone();
 
-        let result = EdgeChangeConverter::initialize(&img).visualize_pheromone(&pheromone);
+        let result = EdgeChangeConverter::new(&img).visualize_pheromone(&pheromone);
 
         let expected = PixelMap::new(
             2,

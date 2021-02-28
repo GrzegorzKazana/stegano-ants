@@ -83,6 +83,19 @@ impl Image {
         PixelMap::new(self.height, self.width, self.get_pixels())
     }
 
+    pub fn resize(&self, width: usize, height: usize) -> Self {
+        Image {
+            path: Option::None,
+            width,
+            height,
+            img: self.img.resize_exact(
+                width as u32,
+                height as u32,
+                image::imageops::FilterType::Lanczos3,
+            ),
+        }
+    }
+
     fn from_pixels_and_known_dimensions(width: usize, height: usize, pixels: &[Pixel]) -> Self {
         let empty_image = image::ImageBuffer::new(width as u32, height as u32);
 

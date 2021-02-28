@@ -27,6 +27,12 @@ pub struct Opts {
     )]
     pub stop_after: Option<usize>,
 
+    #[clap(
+        long,
+        about = "dimension of the pheromone mask, directly affects graph size, height is calculated automatically"
+    )]
+    pub mask_width: Option<usize>,
+
     #[clap(short, long)]
     pub quiet: bool,
 

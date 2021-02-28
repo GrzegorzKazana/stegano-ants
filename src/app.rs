@@ -89,7 +89,9 @@ impl<'a> App<'a> {
     ) -> AppResult<PixelMap> {
         let rng = StdRng::seed_from_u64(opts.seed);
 
-        let img_graph_converter = EdgeChangeConverter::initialize(&transport_image);
+        let downscaled_transport_image = Self::downscale_transport_image(opts, transport_image);
+
+        let img_graph_converter = EdgeChangeConverter::new(&downscaled_transport_image);
         let graph = img_graph_converter.img_to_graph();
 
         let ant_dispatcher = Self::parse_dispatcher(&opts)?;
@@ -110,8 +112,27 @@ impl<'a> App<'a> {
         let executed_runner = Self::execute_runner(runner, &opts)?;
 
         let pheromone = executed_runner.get_pheromone();
+        let visualized_pheromone = img_graph_converter
+            .visualize_pheromone(pheromone)
+            .resize(transport_image.width, transport_image.height);
 
-        Result::Ok(img_graph_converter.visualize_pheromone(pheromone))
+        Result::Ok(visualized_pheromone)
+    }
+
+    fn downscale_transport_image(opts: &Opts, transport_image: &PixelMap) -> PixelMap {
+        match opts.mask_width {
+            Option::None => transport_image.clone(),
+            Option::Some(target_width) => {
+                if target_width >= transport_image.width {
+                    return transport_image.clone();
+                }
+
+                let ratio = target_width as f32 / transport_image.width as f32;
+                let target_height = (ratio * transport_image.height as f32) as usize;
+
+                transport_image.resize(target_width, target_height)
+            }
+        }
     }
 
     fn parse_dispatcher(opts: &Opts) -> AppResult<Dispatchers> {

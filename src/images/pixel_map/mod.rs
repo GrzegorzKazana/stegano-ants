@@ -4,6 +4,7 @@ use itertools::Itertools;
 use std::convert::TryFrom;
 
 use crate::common::utils::identity;
+use crate::images::image::Image;
 use crate::images::image::Pixel;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -36,6 +37,12 @@ impl PixelMap {
 
     pub fn scale(&self, scaler: f32) -> PixelMap {
         self.map(|pixel| pixel.scale(scaler))
+    }
+
+    pub fn resize(&self, width: usize, height: usize) -> Self {
+        Image::from_pixel_map(self)
+            .resize(width, height)
+            .into_pixel_map()
     }
 
     pub fn get_neighbours_4(&self, x: usize, y: usize) -> Vec<Pixel> {
