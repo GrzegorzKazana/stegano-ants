@@ -23,15 +23,13 @@ use crate::steganography::quality_assessment::{
 
 type AppResult<T> = Result<T, AppError>;
 
-pub struct App {
+pub struct App<'a> {
     opts: Opts,
-    cli: CliOutputs,
+    cli: &'a CliOutputs,
 }
 
-impl App {
-    pub fn new(opts: Opts) -> Self {
-        let cli = CliOutputs::from_bool(opts.quiet);
-
+impl<'a> App<'a> {
+    pub fn new(opts: Opts, cli: &'a CliOutputs) -> Self {
         App { opts, cli }
     }
 
@@ -108,7 +106,7 @@ impl App {
         self.cli.print(&config);
 
         let colony = StepwiseParallelColony::new(config, &graph);
-        let runner = ColonyRunner::new(colony, &graph, &self.cli);
+        let runner = ColonyRunner::new(colony, &graph, self.cli);
         let executed_runner = Self::execute_runner(runner, &opts)?;
 
         let pheromone = executed_runner.get_pheromone();
@@ -128,10 +126,10 @@ impl App {
             .map_err(AppError::IoError)
     }
 
-    fn execute_runner<'a, C: Colony, IO: CliOutput>(
-        runner: ColonyRunner<'a, C, IO>,
+    fn execute_runner<'b, C: Colony, IO: CliOutput>(
+        runner: ColonyRunner<'b, C, IO>,
         opts: &Opts,
-    ) -> AppResult<ColonyRunner<'a, C, IO>> {
+    ) -> AppResult<ColonyRunner<'b, C, IO>> {
         if let Option::Some(n_cycles) = opts.cycles {
             Option::Some(runner.train(1, n_cycles))
         } else if let Option::Some(n_until) = opts.stop_after {

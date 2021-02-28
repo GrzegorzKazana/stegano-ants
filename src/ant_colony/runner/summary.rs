@@ -17,7 +17,7 @@ impl Display for CycleSummary {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Cycle #{:<3} {:>5}ms  |  non empty edges: {:>10}  |  avg path length: {:>10.3}  ({:>4.1}%)  |  shortest length: {:>10.3}  ({:>3})  |  pheromone variance: {:>4.3}",
+            "Cycle #{:<3} {:>5}ms  |  non empty edges: {:>10}  |  avg path length: {:>10.3}  ({:>4.1}%)  |  shortest length: {:>10.3}  ({:>3})  |  pheromone variance: {:>4.5}",
             self.cycle_idx,
             self.exec_time_ms,
             self.n_non_empty_edges,
