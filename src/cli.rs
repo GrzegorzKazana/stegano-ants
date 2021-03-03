@@ -1,5 +1,7 @@
 use clap::Clap;
 
+use crate::common::utils::Capacity;
+
 #[derive(Clap, Debug)]
 #[clap(version = "1.0.0", author = "Grzegorz K. <kazana.grzegorz@gmail.com>")]
 pub struct Opts {
@@ -32,6 +34,9 @@ pub struct Opts {
         about = "dimension of the pheromone mask, directly affects graph size, height is calculated automatically"
     )]
     pub mask_width: Option<usize>,
+
+    #[clap(long, about = "target capacity")]
+    pub target_capacity: Option<Capacity>,
 
     #[clap(short, long)]
     pub quiet: bool,

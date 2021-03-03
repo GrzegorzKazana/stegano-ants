@@ -39,10 +39,18 @@ impl PixelMap {
         self.map(|pixel| pixel.scale(scaler))
     }
 
+    pub fn increment(&self, increment: isize) -> PixelMap {
+        self.map(|pixel| pixel.increment(increment))
+    }
+
     pub fn resize(&self, width: usize, height: usize) -> Self {
         Image::from_pixel_map(self)
             .resize(width, height)
             .into_pixel_map()
+    }
+
+    pub fn invert(&self) -> Self {
+        self.map(Pixel::invert)
     }
 
     pub fn get_neighbours_4(&self, x: usize, y: usize) -> Vec<Pixel> {

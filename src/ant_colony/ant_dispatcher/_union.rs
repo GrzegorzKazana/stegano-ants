@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
@@ -79,5 +80,13 @@ impl Dispatchers {
 
             _ => Option::None,
         }
+    }
+}
+
+impl FromStr for Dispatchers {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Dispatchers::from_string(s).ok_or("Failed to parse Dispatcher")
     }
 }

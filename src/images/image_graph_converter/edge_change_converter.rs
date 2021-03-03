@@ -7,6 +7,8 @@ use super::spatial_image_graph_converter::SpatialImageGraphConverter;
 use super::ImageGraphConverter;
 
 /// Image-graph converted build around 4-kind neighbourhood
+/// Attributes distance proportional to pixel distance
+/// (the more pixels differ, the higher distance between them)
 pub struct EdgeChangeConverter {
     source_image: PixelMap,
     graph: Graph,

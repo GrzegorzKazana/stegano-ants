@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::fmt::Display;
+use std::{fmt::Display, str::FromStr};
 
 use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
@@ -119,5 +119,13 @@ impl Updaters {
 
             _ => Option::None,
         }
+    }
+}
+
+impl FromStr for Updaters {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::from_string(s).ok_or("Failed to parse Updater")
     }
 }

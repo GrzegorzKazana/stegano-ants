@@ -23,13 +23,16 @@ impl MaskImageEmbedder {
         MaskImageEmbedder { mask: mask.clone() }
     }
 
-    pub fn estimate_embeddable_bytes_and_transform<F: Fn(usize) -> Option<PixelMap>>(
-        self,
-        transformer: F,
-    ) -> Self {
-        match transformer(self.estimate_embeddable_bits()) {
-            Option::Some(new_mask) => MaskImageEmbedder { mask: new_mask },
-            Option::None => self,
+    pub fn scale_mask_to_fit(self, target_bits: usize) -> Self {
+        let embeddable_bits = self.estimate_embeddable_bits();
+        let ratio = target_bits as f32 / embeddable_bits as f32;
+        // since `calculate_n_of_bits_to_embed` splits byte range into 32 bit bins
+        // we risk loosing to much capacity by scaling down. Therefore we add
+        // addiional 16 to roughly compensate that. For upscaling we do the opposite.
+        let increment = iif!(ratio > 1.0, -16, 16);
+
+        MaskImageEmbedder {
+            mask: self.mask.scale(ratio).increment(increment),
         }
     }
 

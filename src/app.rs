@@ -49,7 +49,7 @@ impl<'a> App<'a> {
         let data = self.load_data(&embed_opts.data)?;
         let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
-        let embedder = MaskImageEmbedder::new(&pheromone_image);
+        let embedder = Self::prepare_embedder(&self.opts, &pheromone_image);
 
         let mut bits_iter = data.iter_bits();
         let steganogram = embedder.embed(&mut bits_iter, &transport_image);
@@ -74,7 +74,7 @@ impl<'a> App<'a> {
 
         let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
-        let embedder = MaskImageEmbedder::new(&pheromone_image);
+        let embedder = Self::prepare_embedder(&self.opts, &pheromone_image);
         let extracted = embedder.extract(&steg_image);
 
         let summary = ExtractionSummary::new(extracted);
@@ -114,7 +114,8 @@ impl<'a> App<'a> {
         let pheromone = executed_runner.get_pheromone();
         let visualized_pheromone = img_graph_converter
             .visualize_pheromone(pheromone)
-            .resize(transport_image.width, transport_image.height);
+            .resize(transport_image.width, transport_image.height)
+            .invert();
 
         Result::Ok(visualized_pheromone)
     }
@@ -160,6 +161,13 @@ impl<'a> App<'a> {
         }
         .ok_or(format!("you must specify cycles or stop_after"))
         .map_err(AppError::IoError)
+    }
+
+    fn prepare_embedder(opts: &Opts, pheromone_image: &PixelMap) -> MaskImageEmbedder {
+        opts.target_capacity.map_or_else(
+            || MaskImageEmbedder::new(&pheromone_image),
+            |capacity| MaskImageEmbedder::new(&pheromone_image).scale_mask_to_fit(capacity.bits()),
+        )
     }
 
     fn load_image(&self, path: &str) -> AppResult<PixelMap> {

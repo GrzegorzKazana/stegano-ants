@@ -1,4 +1,5 @@
 mod _tests;
+mod capacity;
 mod compare_float;
 mod exact_sized_chain;
 mod extend_basename;
@@ -7,9 +8,11 @@ mod measure;
 mod produce_until;
 mod random_pair_iter;
 mod select_top_n_items;
+mod split_once;
 mod unique_pair;
 mod weighted_sample;
 
+pub use capacity::Capacity;
 pub use compare_float::compare_float;
 pub use exact_sized_chain::ExactChainExt;
 pub use extend_basename::extend_basename;
@@ -18,5 +21,6 @@ pub use measure::measure;
 pub use produce_until::produce_until;
 pub use random_pair_iter::random_pair_iter;
 pub use select_top_n_items::select_top_n_items;
+pub use split_once::split_once;
 pub use unique_pair::UniquePair;
 pub use weighted_sample::weighted_sample;

@@ -47,6 +47,26 @@ impl Pixel {
         }
     }
 
+    pub fn increment(&self, increment: isize) -> Self {
+        Pixel {
+            x: self.x,
+            y: self.y,
+            r: (self.r as isize + increment).min(255).max(0) as u8,
+            g: (self.g as isize + increment).min(255).max(0) as u8,
+            b: (self.b as isize + increment).min(255).max(0) as u8,
+        }
+    }
+
+    pub fn invert(&self) -> Self {
+        Pixel {
+            x: self.x,
+            y: self.y,
+            r: 255 - self.r,
+            g: 255 - self.g,
+            b: 255 - self.b,
+        }
+    }
+
     pub fn cmp_by_coords(&self, other: &Self) -> Ordering {
         let x_ord = self.x.cmp(&other.x);
         let y_ord = self.y.cmp(&other.y);
