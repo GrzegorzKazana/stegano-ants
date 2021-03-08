@@ -13,5 +13,5 @@
 embed
 --data assets/data/lorem_ipsum_large.txt
 # extract
-# --steg assets/images/baboon/baboon-l_steg.bmp
---image assets/images/baboon/baboon-l.bmp
+# --steg assets/images/house/house-m_steg.bmp
+--image assets/images/house/house-m.bmp
