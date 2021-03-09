@@ -40,6 +40,8 @@ jobs:
           path: ./target/release/stegano-ants-${{ matrix.os }}*
       - uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
+          replacesArtifacts: false
           artifacts: ./target/release/stegano-ants-${{ matrix.os }}*
           token: ${{ secrets.GITHUB_TOKEN }}
 
