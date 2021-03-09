@@ -1,0 +1,48 @@
+name: release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/cargo@v1
+        with:
+            command: test
+
+  release:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/cargo@v1
+        with:
+            command: build
+            args: --release
+      - run: |
+          rm ./target/release/stegano-ants.d
+          export DIST_FILE=$(find ./target/release -maxdepth 1 \( -name 'stegano-ants' -o -name 'stegano-ants.exe' \) -exec basename {} \;)
+          export DIST_FILE_NAME=${DIST_FILE%.*}
+          export DIST_FILE_EXT=$([[ "$DIST_FILE" = *.* ]] && echo ".${DIST_FILE##*.}" || echo '')
+          export DIST_FILE_FULL_NAME="${DIST_FILE_NAME}-${{ matrix.os }}${DIST_FILE_EXT}"
+          mv "./target/release/${DIST_FILE}" "./target/release/${DIST_FILE_FULL_NAME}"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-files
+          path: ./target/release/stegano-ants-${{ matrix.os }}*
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./target/release/stegano-ants-${{ matrix.os }}*
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+defaults:
+  run:
+    shell: bash
