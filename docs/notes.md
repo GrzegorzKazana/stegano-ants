@@ -79,3 +79,9 @@
 
 -   [Imperceptibility—Robustness tradeoff studies for ECG steganography
     using Continuous Ant Colony Optimization](file:///Users/grzegorzkazana/Desktop/Stegano_Ant/studiesforECGsteganographyusingContinuousAntColonyOptimization.pdf)
+
+-   look up super-pixels (SLIC) and foveal sampling
+-   check out other pixel spaces than RBG (CIELAB)
+-   contrast masking (decreased detectability in high contrast areas 'Contrast masking in human vision')
+-   https://en.wikipedia.org/wiki/List_of_color_spaces_and_their_uses
+-   https://en.wikipedia.org/wiki/Color_difference
