@@ -1,0 +1,60 @@
+% !TEX root = report.tex
+\documentclass[a4paper,twoside,12pt]{book}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% NAGŁÓWEK %%%%%%%%%%%%%%%%%
+
+%%% PREAMBUŁA %%%
+\input{src/header/preambula.tex}
+% \let\OLDitemize\itemize
+% \renewcommand\itemize{\OLDitemize\addtolength{\itemsep}{10pt}}
+
+%%% KOLOR %%%
+% \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
+\usepackage{float}
+\usepackage{nameref}
+
+%%% LINKOWANIE DO OBRAZKÓW
+\graphicspath{ {./assets/images/} }
+
+\begin{document}
+
+%%%% STRONA TYTUŁOWA %%%
+\input{src/header/tytulowa.tex}
+
+%%% OŚWIADCZENIE O UDOSTĘPNIANIU PRACY DYPLOMOWEJ %%%%
+\input{src/header/oswiadczenie_o_udostepnieniu.tex}
+
+
+%%% OŚWIADCZENIE PROMOTORA O SPEŁNIENIU WYMAGAŃ FORMALNYCH %%%%
+\input{src/header/osw_promotora_o_zgdnsci.tex}
+
+%%%%%%%%%%%%%%%%%% SPIS TREŚCI %%%%%%%%%%%%%%%%%%%%%%
+\input{src/others/spis_tresci.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% TREŚĆ PRACY %%%%%%%%%%%%%%%%%%%%%%
+
+\input{src/chapters/01_wstep.tex}
+% \input{src/chapters/02_analiza_tematu.tex}
+% \input{src/chapters/03_dobor_danych.tex}
+% \input{src/chapters/04_sposoby_reprezentacji_danych.tex}
+% \input{src/chapters/05_uczenie.tex}
+% \input{src/chapters/06_implementacja.tex}
+% \input{src/chapters/07_analiza_wyników.tex}
+% \input{src/chapters/08_wnioski.tex}
+
+%%%%%%%%%%%%%%%%%% TREŚĆ PRACY %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%% BIBLIOGRAFIA %%%%%%%%%%%%%%%%%%%%%%
+\input{src/others/bibliografia.tex}
+
+\listoffigures
+\listoftables
+
+%%%%%%%%%%%%%%%%%% DODATKI %%%%%%%%%%%%%%%%%%%%%%
+\input{src/appendices/main.tex}
+
+\end{document}

@@ -6,3 +6,7 @@
 
 assets/images/**/*_steg*
 assets/images/**/*_pher*
+
+/docs/thesis/*.*
+!/docs/thesis/*.tex
+!/docs/thesis/*.pdf
