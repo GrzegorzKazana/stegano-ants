@@ -17,9 +17,7 @@ use crate::images::pixel_map::PixelMap;
 
 use crate::steganography::data::Data;
 use crate::steganography::image_embedder::{EmbedInImage, MaskImageEmbedder};
-use crate::steganography::quality_assessment::{
-    AssessSteganogramQuality, MeanSquareError, PeakSignalNoiseRatio,
-};
+use crate::steganography::quality_assessment::ImageMagick;
 
 type AppResult<T> = Result<T, AppError>;
 
@@ -54,15 +52,18 @@ impl<'a> App<'a> {
         let mut bits_iter = data.iter_bits();
         let steganogram = embedder.embed(&mut bits_iter, &transport_image);
 
-        self.save_pheromone_image(img_name, &pheromone_image)?;
-        self.save_steg_image(img_name, &steganogram)?;
+        let _ = self.save_pheromone_image(img_name, &pheromone_image)?;
+        let output_path = self.save_steg_image(img_name, &steganogram)?;
 
         let summary = EmbeddingSummary::new(
             embedder.estimate_embeddable_bits(),
             data.num_of_bits(),
             bits_iter.count(),
-            MeanSquareError::eval(&transport_image, &steganogram),
-            PeakSignalNoiseRatio::eval(&transport_image, &steganogram),
+            ImageMagick::mse(img_name, &output_path),
+            ImageMagick::psnr(img_name, &output_path),
+            ImageMagick::ssim(img_name, &output_path),
+            ImageMagick::dssim(img_name, &output_path),
+            ImageMagick::phash(img_name, &output_path),
         );
 
         Result::Ok(summary)
@@ -177,21 +178,22 @@ impl<'a> App<'a> {
             .map_err(AppError::IoError)
     }
 
-    fn save_image(&self, path: &str, pixel_map: &PixelMap) -> AppResult<()> {
+    fn save_image(&self, path: &str, pixel_map: &PixelMap) -> AppResult<String> {
         Image::from_pixel_map(&pixel_map)
             .save(path)
+            .map(|_| path.to_owned())
             .map_err(|_| format!("Failed to save image: {}", path))
             .map_err(AppError::IoError)
     }
 
-    fn save_steg_image(&self, name: &str, pixel_map: &PixelMap) -> AppResult<()> {
+    fn save_steg_image(&self, name: &str, pixel_map: &PixelMap) -> AppResult<String> {
         extend_basename(name, "_steg")
             .ok_or(format!("Failed to generate file with extension."))
             .map_err(AppError::IoError)
             .and_then(|name_ext| self.save_image(&name_ext, pixel_map))
     }
 
-    fn save_pheromone_image(&self, name: &str, pixel_map: &PixelMap) -> AppResult<()> {
+    fn save_pheromone_image(&self, name: &str, pixel_map: &PixelMap) -> AppResult<String> {
         extend_basename(name, "_pher")
             .ok_or(format!("Failed to generate file with extension."))
             .map_err(AppError::IoError)

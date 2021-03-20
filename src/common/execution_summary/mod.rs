@@ -1,4 +1,5 @@
 use crate::steganography::data::Data;
+use crate::steganography::quality_assessment::QualityOption;
 
 pub enum ExecutionSummary {
     Embed(EmbeddingSummary),
@@ -18,8 +19,11 @@ pub struct EmbeddingSummary {
     image_capacity_bits: usize,
     data_size_bits: usize,
     remaining_bits: usize,
-    mean_square_error: f32,
-    peak_signal_noise_ratio: f32,
+    mse: QualityOption,
+    psnr: QualityOption,
+    ssim: QualityOption,
+    dssim: QualityOption,
+    phash: QualityOption,
 }
 
 impl EmbeddingSummary {
@@ -27,15 +31,21 @@ impl EmbeddingSummary {
         image_capacity_bits: usize,
         data_size_bits: usize,
         remaining_bits: usize,
-        mean_square_error: f32,
-        peak_signal_noise_ratio: f32,
+        mse: QualityOption,
+        psnr: QualityOption,
+        ssim: QualityOption,
+        dssim: QualityOption,
+        phash: QualityOption,
     ) -> Self {
         EmbeddingSummary {
             image_capacity_bits,
             data_size_bits,
             remaining_bits,
-            mean_square_error,
-            peak_signal_noise_ratio,
+            mse,
+            psnr,
+            ssim,
+            dssim,
+            phash,
         }
     }
 }
@@ -47,15 +57,21 @@ impl ToString for EmbeddingSummary {
             Num of data bits: {}\n\
             Remaining bits: {}\n\
             Embedded bits: {} ({:>5.2}%)\n\
-            Mean square error: {}\n\
-            Peak signal noise ratio: {}dB",
+            MSE: {}\n\
+            PSNR: {}dB\n\
+            SSIM: {}\n\
+            DSSIM: {}\n\
+            PHASH: {}",
             self.image_capacity_bits,
             self.data_size_bits,
             self.remaining_bits,
             self.data_size_bits - self.remaining_bits,
             (self.data_size_bits - self.remaining_bits) as f32 / self.data_size_bits as f32,
-            self.mean_square_error,
-            self.peak_signal_noise_ratio
+            self.mse,
+            self.psnr,
+            self.ssim,
+            self.dssim,
+            self.phash
         )
     }
 }
