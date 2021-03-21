@@ -1,10 +1,31 @@
 {
-    "spellright.language": [
-        "pl"
-    ],
-    "spellright.documentTypes": [
-        "markdown",
-        "plaintext",
-        "latex"
+    "spellright.language": ["pl", "en"],
+    "spellright.documentTypes": ["markdown", "plaintext", "latex"],
+    "spellright.latexSpellParameters": [
+        "author",
+        "title",
+        "subtitle",
+        "date",
+        "chapter",
+        "section\\*?",
+        "subsection\\*?",
+        "subsubsection\\*?",
+        "part",
+        "paragraph",
+        "subparagraph",
+        "text(rm|sf|tt|md|bf|up|it|sl|sc|normal)",
+        "underline",
+        "emph",
+        "item",
+        "footnote(text)?",
+        "caption(of)?",
+        "multicolumn",
+        "href",
+        "hyperref",
+        "institute",
+        "frametitle",
+        "framesubtitle",
+        "begin\\{frame\\}",
+        "label"
     ]
 }

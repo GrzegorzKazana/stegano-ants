@@ -1,0 +1,106 @@
+
+\chapter{Steganografia}\label{chap:steganography}
+{
+    % - czym jest steganografia
+    % - odniesienie do kryptografii
+    % - rys historyczny
+    %   - pierwsze użycia w starożytności
+    %   - przykłady
+    % - steganografia cyfrowa (jakiś diagram idk), opis mediów nośnych
+    % - steganografia z wykorzystaniem obrazów
+    %   - podział na techniki dziedzinowe i przestrzenne
+    %   - opis metod (LSB etc)
+    %   - vLSB
+    %   - wpływ doboru obszaru na pojemność obrazu
+
+    Steganografia jest dziedziną nauki poświęconą ukrywaniu informacji w jawnych kanałach komunikacji.
+    Nazwa nauki wywodzi się z języka greckiego, i może być tłumaczona jako 'ukryte pismo' (\textit{steganós} - ukryty, \textit{graphia} - pismo).
+
+    W celu podkreślenia cech oraz charakteru metod steganograficznych często przytaczane jest również pojęcie kryptografii.
+    Obiektem zainteresowań kryptografii jest uniemożliwienie zrozumienia treści wiadomości przez osoby postronne,
+    pozbawione do niej dostępu. Współcześnie jest to osiągane poprzez stosowanie klucza dzielonego przez osoby zaufane
+    (kryptografia symetryczna) lub par kluczy publicznych i prywatnych (kryptografia asymetryczna). Dzięki ich zastosowaniu,
+    osoba postronna pomimo dostępu do szyfrogramu nie jest w stanie wydobyć tekstu jawnego.
+
+    Celem technik steganograficznych jest umożliwienie uczestnikom komunikacji przesyłania informacji bez ujawniania faktu istnienia samego przekazu.
+    
+    % https://www.petitcolas.net/fabien/publications/ieee99-infohiding.pdf
+    Pierwszych przykładów zastosowania steganografii można doszukiwać się już w czasach starożytnych.
+    Herodotus, w swoim dziele \textit{Dzieje} opisuje historię greckiego polityka Histiajosa,
+    który w celu przekazania poufnej informacji wytatuował ją na skalpie zaufanego niewolnika.
+    Gdy jego włosy odrosły, został on wysłany w celu doręczenia listu oraz ukrytej wiadomości.
+    Do innych przykładów steganografii można zaliczyć również ukrywanie wiadomości w zapisach nutowych,
+    stosowanie atramentów sympatycznych lub technikę mikrokropek,
+    która przeżyła swój renesans w czasach zimnej i drugiej wojny światowej.
+    
+    % https://www.researchgate.net/publication/296695903_Watermarking_Security_-_Fundamentals_Secure_Designs_and_Attacks
+    % https://dl.acm.org/doi/10.1145/3206004.3206019
+    Warto również podkreślić, że kolejnym z zastosowań steganografii są znaki wodne oraz symbole
+    pozwalające na identyfikację źródła informacji. Za równo w przypadku multimediów objętych prawami autorskimi
+    jak i poufnych dokumentów, ich producent lub organizacja strzegąca ich tajności może umieścić ukryte
+    informacje pozwalające wskazać źródło wycieku.
+    Podobną technikę stosują producenci drukarek - seria oraz model drukarki może być odzwierciedlona w drukowanym
+    dokumencie poprzez układ niewidocznych gołym okiem żółtych kropek. Takie działania mają na celu ułatwienia
+    walki z przestępczością polegającą na fałszowaniu dokumentów i banknotów.
+
+    %  STEGANOGRAFIA CYFROWA
+    Wraz z wzrostem wykorzystania komputerów do celach multimedialnych oraz rozpowszechnieniu szerokopasmowego
+    internetu coraz popularniejsza i bardziej opłacalna staje się steganografia cyfrowa.
+    Jej ideą jest wykorzystanie jako medium nośnego różnych rodzajów plików komputerowych
+    lub protokołów komunikacji cyfrowej.
+    % https://www.researchgate.net/publication/337304290_Covert_Channel_and_Data_Hiding_in_TCPIP
+    Przykładem wykorzystania protokołów do celów steganograficznych może być ukrywanie danych w polach kontrolnych ramek TCP/IP,
+    kontrolowanie opóźnień między poszczególnymi pakietami lub nawet umyślne powodowanie utrat wybranych pakietów.
+
+    Znacznie prostszą, lecz bardzo rozwiniętą techniką jest wykorzystanie plików multimedialnych takich jak zdjęcia,
+    pliku muzyczne i filmy. Do ich szczególnej atrakcyjności jako medium służące do ukrywania informacji przyczynia
+    się między innymi ich wszechobecność, duże rozmiary oraz wysoka nadmiarowość.
+    Ostatni aspekt w kontekście steganografii ma szczególne znaczenie, gdyż oznacza że modyfikacja pewnej części informacji
+    bitowej zawartej w pliku ma niski wpływ na jego końcową treść. Przykładowo, zmiana wartości jednego z kanałów konkretnego
+    piksela będzie miało mało zauważalny wpływ na końcowy obraz nawet przez uważnego obserwatora.
+    % https://scholarworks.rit.edu/cgi/viewcontent.cgi?article=1305&context=other
+    Podobne prawidłowości można również dostrzec w plikach muzycznych - manipulacja zawartością częstotliwości składowych
+    będących poza granicą percepcji, czyli poniżej 20Hz i powyżej 20kHz również będzie trudna w detekcji przez subiektywnego odbiorcę.
+    Innym przykładem ukrywania informacji w muzyce jest tzw. \textit{backmasking}, polegający na ukrywaniu wiadomości
+    możliwych w odbiorze tylko i wyłącznie po odtworzeniu utworu od tyłu. Jednym z pierwszych zespołów przyczyniających się
+    do wzrostu popularności powyższych eksperymentów jest \textit{The Beatles}.
+ 
+    %   TECHNIKI UKRYWANIA INFORMACJI W OBRAZACH
+    Mimo tego, że jako medium steganograficzne można wykorzystać każdy plik binarny,
+    szczególnie dużo uwagi zostało poświęcone cyfrowym obrazom i zdjęciom.
+    Pomimo pozornej prostoty powyższego zadania powstało wiele wyrafinowanych metod i technik, różniących się za równo pod kątem
+    założeń jak i rezultatów. 
+    Pierwszym parametrem mogącym służyć do podziału zaproponowanych metod jest dziedzina w której 
+    obraz zostaje poddany analizie. 
+
+    %   TECHNIKI PRZESTRZENNE
+    W technikach przestrzennych, obraz jest traktowany jak zbiór punktów (pikseli) umieszczonych w dwuwymiarowym układzie współrzędnych.
+    Zaletą tych metod jest ich intuicyjność oraz przystępność, lecz są to również metody bardziej podatne na ataki polegające na wykryciu
+    lub zniszczeniu ukrytej wiadomości. % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/AnInclusiveStudyandAnalysis.pdf
+
+    Najbardziej powszechną techniką przestrzenną jest metoda \textit{Least Significant Bit (LSB)}. Jej zastosowanie sprowadza się
+    do zastąpienia najmniej znaczącego bitu obrazu będącego nośnikiem informacji bitem wiadomości ukrywanej. W zależności od spadku
+    jakości który uznajemy za akceptowalny, możemy wykorzystać \textit{n} najmniej znaczących bitów każdego z kanałów \textit{RGB}.
+
+    Pewnym uszczegółowieniem \textit{LSB} jest metoda \textit{4LSB}. Zakłada ona wykorzystanie dokładnie 4 bitów z każdego bajtu
+    obrazu maskującego, co przekłada się na wykorzystanie 50\% pojemności nośnika. Kosztem tak znacznej pojemności jest znaczący spadek
+    jakości obrazu oraz ułatwiona steganoanaliza.
+
+    W celu zmniejszenia wykrywalności manipulacji obrazu przy jednoczesnym zachowaniu względnie dużej pojemności steganogramu,
+    zaproponowano technikę \textit{Variable Least Significant Bit (VLSB)}. W przeciwieństwie do \textit{LSB} podczas ukrywania danych
+    wykorzystywana jest różna ilość bitów obrazu w zależności od położenia piksela.
+    Nośnik zostaje podzielony na zadaną ilość sekcji, a następnie dla każdej z nich jest wyznaczana jest ilość bitów które zostaną
+    zastąpione tekstem jawnym. Twórcy metody zaproponowali algorytm \textit{Decreasing Distance Decreasing Bits Algorithm (DDDBA)},
+    który na podstawie odległości sektora względem piksela referencyjnego (najczęściej środkowy piksel obrazu) wyznacza proporcjonalną
+    ilość ukrywanych bitów. Wynikiem działania algorytmu \textit{VLSB} jest obraz, którego środkowa część jest mniej zniekształcona,
+    co obniża subiektywne odczucie spadku jakości i pozwala na ukrycie większej ilości danych. % https://www.researchgate.net/publication/250002424_Implementation_of_Variable_Least_Significant_Bits_Steganography_Using_DDDB_Algorithm
+
+    
+    
+
+    %   TECHNIKI CZĘSTOTLIWOŚCIOWE
+}
+
+% steganogram - nośnik + ukrywana wiadomość
+% steganoanaliza - proces wykrywania i ekstrakcji tekstu jawnego
+% stegokanał - kanał przesyłu ukrytej informacji
