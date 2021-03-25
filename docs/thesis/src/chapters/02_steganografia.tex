@@ -89,16 +89,95 @@
     W celu zmniejszenia wykrywalności manipulacji obrazu przy jednoczesnym zachowaniu względnie dużej pojemności steganogramu,
     zaproponowano technikę \textit{Variable Least Significant Bit (VLSB)}. W przeciwieństwie do \textit{LSB} podczas ukrywania danych
     wykorzystywana jest różna ilość bitów obrazu w zależności od położenia piksela.
-    Nośnik zostaje podzielony na zadaną ilość sekcji, a następnie dla każdej z nich jest wyznaczana jest ilość bitów które zostaną
+    Nośnik zostaje podzielony na zadaną ilość sekcji, a następnie dla każdej z nich wyznaczana jest ilość bitów które zostaną
     zastąpione tekstem jawnym. Twórcy metody zaproponowali algorytm \textit{Decreasing Distance Decreasing Bits Algorithm (DDDBA)},
-    który na podstawie odległości sektora względem piksela referencyjnego (najczęściej środkowy piksel obrazu) wyznacza proporcjonalną
+    który na podstawie odległości sektora względem piksela referencyjnego, którym najczęściej jest środkowy piksel obrazu, wyznacza proporcjonalną
     ilość ukrywanych bitów. Wynikiem działania algorytmu \textit{VLSB} jest obraz, którego środkowa część jest mniej zniekształcona,
     co obniża subiektywne odczucie spadku jakości i pozwala na ukrycie większej ilości danych. % https://www.researchgate.net/publication/250002424_Implementation_of_Variable_Least_Significant_Bits_Steganography_Using_DDDB_Algorithm
 
-    
-    
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Varying_index_varying_bits_substitution_algorithm_.pdf
+    Dalszym udoskonaleniem, za równo pod kątem bezpieczeństwa ukrywanej informacji jak i utrudnienia wykrywalności ukrytego przekazu
+    jest metoda o nazwie \textit{Varying Index Varying Bits Substitution (VIVBS)} zaproponowana przez XYZ. % TODO: uzupełnić autora
+    Podobnie jak w metodzie \textit{VLSB}, ilość wykorzystanych bitów obrazu nośnego jest zmienna. W przeciwieństwie do wariantu \textit{VLSB}
+    opartego o algorytm \textit{DDDBA}, ilość bitów ukrywanych w danym pikselu nie jest wyznaczana podczas działania algorytmu, lecz jest
+    zależna od dodatkowego klucza będącego parametrem jego działania. Klucz przyjmuje postać tablicy przypisującej indeksowi każdego z
+    pikseli ilość bitów które należy zastąpić bitami tekstu jawnego. Ponieważ ilość możliwych kombinacji rozmieszczenia bitów informacji
+    w obrazie jest znacząca, odczytanie przekazu poprzez wykorzystanie przeszukiwania wyczerpującego poprzez osobę postronną nieposiadającą
+    klucza będzie praktycznie niemożliwe. Główną wadą, powyższej metody jest jej również największa zaleta - klucz definiujący
+    rozmieszczenie informacji w pikselach obrazu. Każdorazowe kodowanie informacji wymaga utworzenia klucza, od którego będzie również
+    zależeć wpływ procesu na jakość obrazu - arbitralny wybór wysokiej ilości wykorzystanych bitów w nieodpowiednich sekcjach obrazu
+    może przykuć uwagę osób postronnych i zdradzić fakt istnienia ukrytego przekazu. Dodatkową wadę metody jest również rozmiar klucza - 
+    w minimalnym przypadku, w którym wykorzystujemy 0 lub 1 bit każdego piksela klucz ma rozmiar $w * h$ bitów, gdzie
+    \textit{w} i \textit{h} to odpowiednio szerokość i wysokość obrazu. Wraz z wzrostem ilości wykorzystywanych bitów, rozmiar klucza
+    również będzie się powiększał.
+
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/ASteganographicMethodForImagesByPixelValueDifferencing.pdf
+    W celu poprawy subiektywnej oceny jakości obrazów oraz zmniejszenia ryzyka przekazu w roku XYVZ, XYZ zaproponował metodę % TODO: uzupełnić autora i datę
+    \textit{Value Pixel Differencing (VPD)}. Jednym z jej założeń jest uzależnienie ilości wykorzystanych bitów obrazu nośnego
+    od różnicy pomiędzy poziomami intensywności kolejnych pikseli. W metodzie \textit{VPD} piksele są odczytywane parami sekwencyjnie,
+    zakreślając ciągły, łamany kształt. Dla każdej napotkanej pary pikseli obliczana jest ich różnica jasności, a następnie na jej
+    podstawie wyznaczana jest ilość bitów które zostaną podmienione na treść ukrywanej wartości. Ilość ukrytych bitów jest proporcjonalna
+    do zmiany wartości pikseli. W ten sposób możliwe jest osiągnięcie obrazów mniej podatnych na steganoanalizę przy jednoczesnym
+    zachowaniu znacznej pojemności.
 
     %   TECHNIKI CZĘSTOTLIWOŚCIOWE
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/IntegerWaveletTransform.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/DiscreteCosineTransform.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20Novel%20Image%20Steganographic%20Method%20based%20on%20Integer%20Wavelet%20Transformation%20and%20Particle%20Swarm%20Optimization.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20steganographic%20method%20based%20upon%20JPEG%20and%20particle%20swarm%20optimization%20algorithm.pdf
+    Alternatywnym podejściem do steganografii wykorzystującej cyfrowe obrazy, są techniki oparte o częstotliwościową reprezentację obrazów.
+    Metody te polegają na transformacji obrazu w postaci bitmapy do macierzy współczynników określających amplitudę lub natężenie fal
+    o konkretnych częstotliwościach występujących w obrazie.
+    % https://www.sciencedirect.com/science/article/pii/S1665642314716128
+    Metody częstotliwościowe zyskały również na popularności w pokrewnej dziedzinie do steganografii, jaką jest oznaczanie
+    (ang. \textit{watermarking}) produktów cyfrowych. Za równo ukrywając dane poufne, jak i cyfrowe podpisy chroniące praw autorskich,
+    celem metod działających w dziedzinie częstotliwościowej jest nie tylko zachowanie możliwie najwyższej jakości medium w którym
+    zawarto dodatkowe informacje, lecz również uodpornienie ukrytego przekazu na jego manipulację i zniszczenie przez kompresję.
+
+    Jedną z transformat pozwalających na wyznaczenie częstotliwościowej reprezentacji obrazu jest \textit{Dyskretna transformata kosinusowa (DCT)}.
+    Polega ona na podziale obrazu na bloki, najczęściej rozmiaru 8x8 pikseli. Następnie wyznaczana jest macierz współczynników za pomocą wzoru XYZ. % wzór 4 file:///Users/grzegorzkazana/Desktop/Stegano_Ant/DiscreteCosineTransform.pdf
+    W kontekście złożoności obliczeniowej istotny jest fakt, że macierz transformacji można wyznaczyć jednokrotnie i ponownie wykorzystać dla każdego
+    z bloków obrazu. W tym przypadku stosowane jest równanie XYZ. % wzór 5 file:///Users/grzegorzkazana/Desktop/Stegano_Ant/DiscreteCosineTransform.pdf
+    Jednym z zastosowań dyskretnej transformacji kosinusowej jest stratna kompresja danych, przykładowo w formacie JPEG.
+    Po wyznaczeniu współczynników odpowiadających kolejnym częstotliwościom następuje proces kwantyzacji - macierz współczynników zostaje skalarnie przemnożona
+    przez macierz kwantyzacji a następnie zaokrąglana. Zadaniem macierzy kwantyzacji jest przeskalowanie współczynników odpowiadających zakresom częstotliwości
+    w taki sposób, aby pasma których zmiany mają najmniejszy wpływ na subiektywną percepcję przyjęły wartości bliskie zeru. Ostatnim krokiem kompresji jest
+    zaokrąglenie uzyskanych współczynników. Poprzez odrzucenie miejsc po przecinku wszystkich współczynników końcowy obraz charakteryzuje się dużo
+    mniejszym rozmiarem. W celu rekonstrukcji wykonuje się transformację odwrotną (\textit{IDCT}).
+
+    % https://www.researchgate.net/publication/228850853_Data_hiding_in_JPEG_images
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20steganographic%20method%20based%20upon%20JPEG%20and%20particle%20swarm%20optimization%20algorithm.pdf
+    Przykładem algorytmu steganograficznego korzystającego z \texti{DCT} jest praca XYZ autorstwa XYZ. Wyznaczone współczynniki częstotliwości służą za nośnik
+    tekstu jawnego - współczynnikom z eksperymentalnie dobranych pasm częstotliwości zostają podmienione najmniej znaczące bity, podobnie jak w przestrzennych
+    metodach \textit{LSB}. W celu osiągnięcia dużo większej odporności steganogramu na kompresję, XYZ zaproponował metodę opartą o manipulację znaków współczynników,
+    w odróżnieniu do manipulacji ich wartościami. % https://ieeexplore.ieee.org/abstract/document/8901147
+
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/ICME05-Lossless20Data20Hiding20Using20Integer20Wavelet20Transform20and20Threshold20Embedding20Technique.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20Novel%20Image%20Steganographic%20Method%20based%20on%20Integer%20Wavelet%20Transformation%20and%20Particle%20Swarm%20Optimization.pdf
+    Inną transformacją wykorzystywaną w steganografii jest \textit{Dyskretna transformata falkowa} (ang. \textit{Discrete wavelet transform (DWT)}) oraz jej odpowiednik
+    pozwalający na bezstratną transformację odwrotną - \textit{Całkowitoliczbowa transformata falkowa} (ang. \textit{Integer wavelet transform (IWT)}).
+    % http://home.agh.edu.pl/~jsw/oso/FT.pdf
+    Jedną z możliwości transformaty falkowej jest wyodrębnienie części obrazu w której skład wchodzą osobno wysokie i niskie pasma częstotliwości.
+    Obraz zostaje kolejno przekształcany wierszami i kolumnami przez filtr dolnoprzepustowy (wykonujący operację uśredniania) i górnoprzepustowy (obliczający różnicę).
+    % TU DODAĆ JAKIŚ SZTOSOWY OBRAZ IWT, http://bigwww.epfl.ch/demo/ip/demos/wavelets/
+    Po pierwszej iteracji oryginalny obraz zostaje podzielony na sekcje:
+    \begin{itemize}
+        \item LL - filter dolnoprzepustowy zaaplikowany do wierszy i kolumn
+        \item LH - filter dolnoprzepustowy zaaplikowany do wierszy, górnoprzepustowy dla kolumn
+        \item HL - filter górnoprzepustowy zaaplikowany do wierszy, dolnoprzepustowy dla kolumn
+        \item HH - filter górnoprzepustowy zaaplikowany do wierszy i kolumn.
+    \end{itemize}
+
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/ICME05-Lossless20Data20Hiding20Using20Integer20Wavelet20Transform20and20Threshold20Embedding20Technique.pdf
+    W artykule XYZ opisano metodę ukrywania bitów wiadomości w najmniej znaczących bitach współczynników odpowiadających pasmom wysokiej częstotliwości.
+    Wyniki eksperymentalne, względem innych metod, wykazały znaczący wzrost pojemności obrazu przy zachowaniu tego samego współczynnika szczytowego
+    stosunku sygnału do szumu.
+
+    % PRACE WSPOMINAJĄCE O UKRYWANIU W 'COMPLEX REGIONS'
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/ASteganographicMethodForImagesByPixelValueDifferencing.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20ACO%20based%20Data%20Hiding%20in%20Image%20Complex%20Region.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Edge-based_image_steganography.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/ICME05-Lossless20Data20Hiding20Using20Integer20Wavelet20Transform20and20Threshold20Embedding20Technique.pdf
 }
 
 % steganogram - nośnik + ukrywana wiadomość
