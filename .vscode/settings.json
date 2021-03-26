@@ -1,5 +1,5 @@
 {
-    "spellright.language": ["pl", "en"],
+    "spellright.language": ["en", "pl"],
     "spellright.documentTypes": ["markdown", "plaintext", "latex"],
     "spellright.latexSpellParameters": [
         "author",
@@ -27,5 +27,12 @@
         "framesubtitle",
         "begin\\{frame\\}",
         "label"
-    ]
+    ],
+    "[latex]": {
+        "editor.rulers": [120],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wrappingIndent": "same",
+        "editor.wordWrapColumn": 120,
+        "rewrap.autoWrap.enabled": true
+    }
 }
