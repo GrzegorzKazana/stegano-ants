@@ -23,7 +23,7 @@ impl MaskImageEmbedder {
         MaskImageEmbedder { mask: mask.clone() }
     }
 
-    pub fn scale_mask_to_fit(self, target_bits: usize) -> Self {
+    pub fn scale_mask_to_fit(self, target_bits: usize) -> PixelMap {
         let embeddable_bits = self.estimate_embeddable_bits();
         let ratio = target_bits as f32 / embeddable_bits as f32;
         // since `calculate_n_of_bits_to_embed` splits byte range into 32 bit bins
@@ -31,9 +31,7 @@ impl MaskImageEmbedder {
         // addiional 16 to roughly compensate that. For upscaling we do the opposite.
         let increment = iif!(ratio > 1.0, -16, 16);
 
-        MaskImageEmbedder {
-            mask: self.mask.scale(ratio).increment(increment),
-        }
+        self.mask.scale(ratio).increment(increment)
     }
 
     fn calculate_n_of_bits_to_embed(mask_byte: Byte) -> usize {

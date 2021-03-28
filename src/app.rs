@@ -47,12 +47,14 @@ impl<'a> App<'a> {
         let data = self.load_data(&embed_opts.data)?;
         let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
-        let embedder = Self::prepare_embedder(&self.opts, &pheromone_image);
+        let (embedder, scaled_pheromone) =
+            Self::prepare_embedder_and_mask(&self.opts, &pheromone_image);
 
         let mut bits_iter = data.iter_bits();
         let steganogram = embedder.embed(&mut bits_iter, &transport_image);
 
         let _ = self.save_pheromone_image(img_name, &pheromone_image)?;
+        let _ = self.save_scaled_pheromone_image(img_name, &scaled_pheromone)?;
         let output_path = self.save_steg_image(img_name, &steganogram)?;
 
         let summary = EmbeddingSummary::new(
@@ -75,7 +77,7 @@ impl<'a> App<'a> {
 
         let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
-        let embedder = Self::prepare_embedder(&self.opts, &pheromone_image);
+        let (embedder, _) = Self::prepare_embedder_and_mask(&self.opts, &pheromone_image);
         let extracted = embedder.extract(&steg_image);
 
         let summary = ExtractionSummary::new(extracted);
@@ -164,11 +166,20 @@ impl<'a> App<'a> {
         .map_err(AppError::IoError)
     }
 
-    fn prepare_embedder(opts: &Opts, pheromone_image: &PixelMap) -> MaskImageEmbedder {
-        opts.target_capacity.map_or_else(
-            || MaskImageEmbedder::new(&pheromone_image),
-            |capacity| MaskImageEmbedder::new(&pheromone_image).scale_mask_to_fit(capacity.bits()),
-        )
+    fn prepare_embedder_and_mask(
+        opts: &Opts,
+        pheromone_image: &PixelMap,
+    ) -> (MaskImageEmbedder, PixelMap) {
+        let embedder = MaskImageEmbedder::new(&pheromone_image);
+
+        match opts.target_capacity {
+            Option::Some(capacity) => {
+                let scaled_image = embedder.scale_mask_to_fit(capacity.bits());
+
+                (MaskImageEmbedder::new(&scaled_image), scaled_image)
+            }
+            Option::None => (embedder, pheromone_image.clone()),
+        }
     }
 
     fn load_image(&self, path: &str) -> AppResult<PixelMap> {
@@ -195,6 +206,13 @@ impl<'a> App<'a> {
 
     fn save_pheromone_image(&self, name: &str, pixel_map: &PixelMap) -> AppResult<String> {
         extend_basename(name, "_pher")
+            .ok_or(format!("Failed to generate file with extension."))
+            .map_err(AppError::IoError)
+            .and_then(|name_ext| self.save_image(&name_ext, pixel_map))
+    }
+
+    fn save_scaled_pheromone_image(&self, name: &str, pixel_map: &PixelMap) -> AppResult<String> {
+        extend_basename(name, "_pher_scaled")
             .ok_or(format!("Failed to generate file with extension."))
             .map_err(AppError::IoError)
             .and_then(|name_ext| self.save_image(&name_ext, pixel_map))
