@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::common::utils::ExactChainExt;
+use crate::common::utils::{ExactChainExt, MapAccumExt};
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
 use crate::steganography::data::{BitIterator, Byte, Data, ExactBitIterator};
@@ -30,10 +30,10 @@ impl MaskImageEmbedder {
             .mask
             .pixels()
             .iter()
-            .scan(
+            .map_accum(
                 (embeddable_bits_in_image, target_bits),
                 |(remaining_to_embed, remaining_to_target), pixel| {
-                    let ratio = *remaining_to_target as f32 / *remaining_to_embed as f32;
+                    let ratio = remaining_to_target as f32 / remaining_to_embed as f32;
                     // since `calculate_n_of_bits_to_embed` splits byte range into 32 bit bins
                     // we risk loosing to much capacity by scaling down. Therefore we add
                     // addiional 16 to roughly compensate that. For upscaling we do the opposite.
@@ -44,10 +44,12 @@ impl MaskImageEmbedder {
                     let scaled_pixel_capacity =
                         Self::calculate_n_bits_to_embed_in_pixel(&scaled_pixel);
 
-                    *remaining_to_embed -= capacity;
-                    *remaining_to_target -= scaled_pixel_capacity;
+                    let new_accumulator = (
+                        remaining_to_embed - capacity,
+                        remaining_to_target - scaled_pixel_capacity,
+                    );
 
-                    Option::Some(scaled_pixel)
+                    (new_accumulator, scaled_pixel)
                 },
             )
             .collect::<Vec<_>>();
