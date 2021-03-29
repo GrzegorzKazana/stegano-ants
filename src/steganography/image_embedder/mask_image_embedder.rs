@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::common::utils::ExactChainExt;
+use crate::common::utils::{ExactChainExt, MapAccumExt};
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
 use crate::steganography::data::{BitIterator, Byte, Data, ExactBitIterator};
@@ -23,24 +23,51 @@ impl MaskImageEmbedder {
         MaskImageEmbedder { mask: mask.clone() }
     }
 
-    pub fn scale_mask_to_fit(self, target_bits: usize) -> Self {
-        let embeddable_bits = self.estimate_embeddable_bits();
-        let ratio = target_bits as f32 / embeddable_bits as f32;
-        // since `calculate_n_of_bits_to_embed` splits byte range into 32 bit bins
-        // we risk loosing to much capacity by scaling down. Therefore we add
-        // addiional 16 to roughly compensate that. For upscaling we do the opposite.
-        let increment = iif!(ratio > 1.0, -16, 16);
+    pub fn scale_mask_to_fit(self, target_bits: usize) -> PixelMap {
+        let embeddable_bits_in_image = self.estimate_embeddable_bits();
 
-        MaskImageEmbedder {
-            mask: self.mask.scale(ratio).increment(increment),
-        }
+        let pixels = self
+            .mask
+            .pixels()
+            .iter()
+            .map_accum(
+                (embeddable_bits_in_image, target_bits),
+                |(remaining_to_embed, remaining_to_target), pixel| {
+                    let ratio = remaining_to_target as f32 / remaining_to_embed as f32;
+                    // since `calculate_n_of_bits_to_embed` splits byte range into 32 bit bins
+                    // we risk loosing to much capacity by scaling down. Therefore we add
+                    // addiional 16 to roughly compensate that. For upscaling we do the opposite.
+                    let increment = iif!(ratio > 1.0, -16, 16);
+                    let capacity = Self::calculate_n_bits_to_embed_in_pixel(pixel);
+
+                    let scaled_pixel = pixel.scale(ratio).increment(increment);
+                    let scaled_pixel_capacity =
+                        Self::calculate_n_bits_to_embed_in_pixel(&scaled_pixel);
+
+                    let new_accumulator = (
+                        remaining_to_embed - capacity,
+                        remaining_to_target - scaled_pixel_capacity,
+                    );
+
+                    (new_accumulator, scaled_pixel)
+                },
+            )
+            .collect::<Vec<_>>();
+
+        PixelMap::new(self.mask.height, self.mask.width, pixels)
     }
 
-    fn calculate_n_of_bits_to_embed(mask_byte: Byte) -> usize {
+    fn calculate_n_of_bits_to_embed_in_byte(mask_byte: Byte) -> usize {
         let max_number_of_bits = 8;
         let bin_size = 256 / max_number_of_bits;
 
         mask_byte as usize / bin_size
+    }
+
+    fn calculate_n_bits_to_embed_in_pixel(mask_pixel: &Pixel) -> usize {
+        Self::calculate_n_of_bits_to_embed_in_byte(mask_pixel.r)
+            + Self::calculate_n_of_bits_to_embed_in_byte(mask_pixel.g)
+            + Self::calculate_n_of_bits_to_embed_in_byte(mask_pixel.b)
     }
 
     fn embed_n_bits_in_byte<I: ExactBitIterator>(
@@ -74,7 +101,7 @@ impl MaskImageEmbedder {
         transport_pixel_channel: Byte,
         mask_pixel_channel: Byte,
     ) -> Byte {
-        let n_bits_to_embed = Self::calculate_n_of_bits_to_embed(mask_pixel_channel);
+        let n_bits_to_embed = Self::calculate_n_of_bits_to_embed_in_byte(mask_pixel_channel);
 
         Self::embed_n_bits_in_byte(bits_iter, n_bits_to_embed, transport_pixel_channel)
     }
@@ -97,7 +124,7 @@ impl MaskImageEmbedder {
         transport_pixel_channel: Byte,
         mask_pixel_channel: Byte,
     ) -> impl BitIterator {
-        let n_bits_to_extract = Self::calculate_n_of_bits_to_embed(mask_pixel_channel);
+        let n_bits_to_extract = Self::calculate_n_of_bits_to_embed_in_byte(mask_pixel_channel);
 
         Data::byte_to_bits_iter(transport_pixel_channel)
             .rev()
@@ -117,11 +144,7 @@ impl EmbedInImage for MaskImageEmbedder {
         self.mask
             .pixels()
             .iter()
-            .map(|pixel| {
-                Self::calculate_n_of_bits_to_embed(pixel.r)
-                    + Self::calculate_n_of_bits_to_embed(pixel.g)
-                    + Self::calculate_n_of_bits_to_embed(pixel.b)
-            })
+            .map(Self::calculate_n_bits_to_embed_in_pixel)
             .sum()
     }
 
