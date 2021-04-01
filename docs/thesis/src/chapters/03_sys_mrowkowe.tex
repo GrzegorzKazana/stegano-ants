@@ -37,19 +37,90 @@
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/MODEL%20TEORETYCZNY%20ALGORYTMU%20MRO%CC%81WKOWEGO%20SAS.pdf
     % https://www.diva-portal.org/smash/get/diva2:1214402/FULLTEXT01.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/TheAntColonyOptimizationMetaheuristic_AlgorithmsApplicationsandAdvances.pdf
+    Systemy mrówkowe (ang. \textit{Ant System - AS}) oraz systemy mrowiskowe (ang. \textit{Ant Colony System - ACS}) są
+    metaheurystykami wykorzystywanymi do rozwiązywania trudnych problemów optymalizacyjnych. Ich fundamenty wywodzą się
+    z pracy z 1991 roku, zaproponowanej przez M. Dorgio, V. Maniezzo i A. Colorni\cite{Dorigo1991AntSA}. Jej autorzy
+    przedstawili ideę oraz zastosowania algorytmu wzorującego się na zachowaniu mrówek poszukujących pożywania. Od tego
+    czasu przedstawiono wiele wariacji oraz ulepszeń algorytmu mrówkowego, a wiele z nich jest obecnie używanych do
+    rozwiązywania problemów w bardzo szerokim zakresie dziedzin.
+
+    Ogólna zasada działania systemów mrówkowych opiera się na obserwacji zachowania prawdziwych mrówek eksplorujących
+    otoczenie w celu odnalezienie pożywienia. Początkowo, każda mrówka porusza się w chaotyczny i losowy sposób
+    przeszukuje najbliższe otoczenie mrowiska. W przypadku, w którym mrówka odnajduje pożywienie, zaczyna ona drogę
+    powrotną do mrowiska. Podczas jej przebywania, mrówka niosąca pokarm nanosi na ścieżkę ślad feromonowy. Ma to na
+    celu umożliwienie powrotu do obszaru w którym pokarm został znaleziony. Za równo mrówka która odniosła zdobytą
+    żywność, jak i pozostałe mrówki w okolicy podczas swojej losowej wędrówki, zaczynają faworyzować trasy oznaczone
+    śladem feromonowym. Jeśli na jego końcu ponownie zostanie znalezione pożywienie, na drogę powrotną zostanie nałożona
+    kolejna jego warstwa. Końcowym efektem tego zjawiska jest efekt pozytywnego sprzężenia zwrotnego, gdyż trasy
+    obierana przez mrówki jednocześnie stają się dla nich bardziej atrakcyjne.
+
+    Istotnym aspektem w zjawisku odkładania śladu feromonowego jest jego wyparowywanie pod upływem czasu. Jest to
+    kluczowa właściwość, przyczyniająca się do zbieżności tras obieranych przez mrówki do optymalnej (najkrótszej) drogi
+    prowadzącej do pożywienia. Taki stanu rzeczy może być wytłumaczony poprzez analizę ruchu większej ilości mrówek w
+    pewnym okresie czasu. Ponieważ przebycie dłuższej ścieżki wymaga więcej czasu, średnio mniej mrówek będzie się nią
+    poruszać w stosunku do jednostki odległości. To bezpośrednio przekłada się na mniejszą ilość odłożonego śladu oraz
+    jego szybsze odparowanie.
 
 
     % SYSTEMY WIELOAGENTOWE
     % http://www.masfoundations.org/mas.pdf
+    % https://www.researchgate.net/publication/226165258_An_Introduction_to_Multi-Agent_Systems - Balaji2010AnIT
+    % https://link.springer.com/content/pdf/10.1007%2F1-4020-8159-6_9.pdf - Oprea2004ApplicationsOM
+    Ponieważ systemy mrówkowe oraz mrowiskowe można zaliczyć do grupy systemów wieloagentowych (ang. \textit{Multi Agent
+    System - MAS}), istotne jest zrozumienie celów, trudności, zalet oraz ograniczeń tej klasy rozwiązań. Fundamentem
+    systemów wieloagentowych jest pojedynczy agent wchodzący w interakcję z starannie zaprojektowanym środowiskiem.
+    Pomimo braku ścisłej definicji agenta która byłaby w stanie objąć wszystkie istotne przykłady oraz zastosowania
+    systemów, agent musi spełniać następujące kryteria\cite{Balaji2010AnIT}.
+
+    \begin{itemize}
+        \item Zdolność percepcji otoczenia. Sposób postrzegania oraz zakres odbieranych informacji zależy od
+        rozwiązywanego problemu i jest proporcjonalny do poziomu złożoności rozwiązywanego problemu.
+        \item Autonomia. Każdy agent samoistnie dąży do realizacji swoich celów, nie wymaga interakcji z innymi agentami
+        ani zewnętrznej ingerencji człowieka w działanie systemu.
+        \item Responsywność i proaktywność. Agent pod wpływem bodźców odbieranych z środowiska podejmuje decyzje
+        pozwalające przybliżające go do realizacji celu.
+        \item Komunikacja i zachowanie społeczne. Interakcja pomiędzy osobnikami jest kluczowym elementem systemów
+        wieloagentowych. Pomimo że osobniki są w stanie działać autonomicznie, komunikacja pozwala na dzielnie się
+        wiedzą i zdobytym doświadczeniem, co przekłada się na szybsze dążenie do lepszych rozwiązań systemu jako
+        całości.
+        \item Lokalność celu. Agent nie jest w pełni świadomy stanu całego systemu, ani ostatecznego celu jego
+        działania. Przeciwnie, agentom przydzielane jest realizacja lokalnych celów, które są dużo prostsze do
+        osiągnięcia niż globalny cel działania całego systemu. Poprzez interakcję oraz mnogość agentów osiąganie
+        lokalnych celów przekłada się na odkrywanie coraz to lepszych rozwiązań globalnego problemu.
+    \end{itemize}
+
+    Ze względu na powyższą charakterystykę oraz ogólną koncepcję systemów wieloagentowych, posiadają one wiele zalet
+    których pozbawione są scentralizowane metody rozwiązywania problemów. Autonomia agentów pozawala na zastosowanie
+    metodyk programowania równoległego i lepszego wykorzystania dostępnych zasobów procesora. Zapewniają również lepszą
+    skalowalność pod kątem rozmiaru problemu - dla większych danych wejściowych możliwe jest uruchomienie większej
+    liczby agentów zaangażowanych w rozwiązanie zadanego problemu. Lokalność i niezależność agentów pozwala na
+    wykorzystanie rozproszonych systemów komputerowych, na przykład klastrów - to z kolej przekłada się na większą
+    niezawodność systemów, gdyż błąd działania pojedynczego agenta nie powoduje awarii całego systemu. Rozproszone
+    systemy wieloagentowe mają również swoje wady, należą do nich narzut komunikacji agentów który może utrudniać
+    równoległe wykonywanie operacji, oraz brak gwarancji osiągnięcia globalnego celu\cite{Dorri2018MultiAgentSA, Balaji2010AnIT}.
+    % PRZYKŁADY/ZASTOSOWANIA
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/TheAntColonyOptimizationMetaheuristic_AlgorithmsApplicationsandAdvances.pdf
+    % https://www.researchgate.net/publication/235439153_Ant_sytem_Optimization_by_a_colony_of_cooperating_agents
     % https://www.researchgate.net/publication/226165258_An_Introduction_to_Multi-Agent_Systems
+    % https://en.wikipedia.org/wiki/Multi-agent_system
+    % https://link.springer.com/content/pdf/10.1007%2F1-4020-8159-6_9.pdf
+    W związku z szerokim wachlarzem zalet, systemy wieloagentowe znajdują zastosowanie w rozległym spektrum dziedzin i
+    aplikacji. Ich przeznaczenia można zaobserwować poczynając od modelowania problemów zbyt złożonych do klasycznej
+    analizy, rozwiązywania zadań wyznaczania drogi, za równo w logistycznych łańcuchach zaopatrzeń jak i w trasowaniu
+    pakietów w sieciach IP, oraz zarządzania i monitorowania systemami takimi jak sieci energetyczne lub platformy
+    chmurowe\cite{Dorri2018MultiAgentSA, Oprea2004ApplicationsOM}.
 
 
     % SYS MRÓWKOWE JAKO SYS WIELOAGENTOWE
     % ten odwalony link na samym dole
-
-
-
-    % (PODOBIEŃSTWA DO ALG GENERYCZNYCH ?)
+    Na podstawie omówionych cech systemów wieloagentowych, możemy wysnuć wiele paralel pomiędzy nimi i systemami
+    mrówkowymi. Pojedynczymi agentami są mrówki, które postrzegają środowisko w określony i charakterystyczny sposób dla
+    natury problemu. Ich percepcja ogranicza się do postrzegania ich położenia, dostępnych ścieżek oraz śladu
+    feromonowego z nimi związanym. Każda mrówka jest w pełni autonomiczna, gdyż nie wymaga dodatkowej interakcji do
+    wykonywania działań prowadzących do realizacji lokalnego celu. Mrówki przejawiają zachowania społeczne oraz
+    komunikują się za pomocą nanoszonego śladu feromonowego na ścieżki prowadzące do pożywienia. Dzięki tym cechom,
+    agenci realizujący lokalne cele, czyli znalezienie pożywienia, przyczyniają się do wspólnego osiągnięcia celu
+    globalnego, jakim jest wyznaczenie najkrótszej drogi do niego prowadzącej.
 
 
     % ZASTOSOWANIE
@@ -70,8 +141,8 @@
 
     % SYS MRÓWKOWY
     % http://www.cs.unibo.it/babaoglu/courses/cas05-06/tutorials/Ant_Colony_Optimization.pdf - Dorigo1996AntSO
-    
-    
+
+
     % SYS MROWISKOWY
     % https://people.idsia.ch//~luca/acs-ec97.pdf - Dorigo1997AntCS
 
@@ -87,8 +158,8 @@
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20To%20Enhance%20Image%20Steganography.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/HIGH%20CAPACITY%20AND%20OPTIMIZED%20IMAGE%20STEGANOGRAPHY%20TECHNIQUE%20BASED%20ON%20ANT%20COLONY%20OPTIMIZATION%20ALGORITHM.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/New%20steganography%20algorithm%20to%20conceal%20a%20large%20amount%20of%20secret%20message%20using%20hybrid%20adaptive%20neural.pdf
-    
-    
+
+
 }
 
 % https://pdf.sciencedirectassets.com/271600/1-s2.0-S0167642313X00048/1-s2.0-S0167642311001717/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAIaCXVzLWVhc3QtMSJHMEUCIQCjcGjhHTstSrNGwhf6SVCRs6Dej2Fh6Agvtmuq2jQDGAIgLBWfgeKnXC2bHHsGU20tU9w%2BJkP0Ie31hFqBXgkxnSkqtAMISxADGgwwNTkwMDM1NDY4NjUiDMnsCkIwDuEa%2F%2Fi%2BoyqRA%2FE99i22aNvLXJMoNoEmfnZ8pWVy9%2FEWmZ2%2FDBJDOrj7SHS5CJskr8CetCaPXHPmInsE%2Fcyv1ptIsJ66kGN057UoIEvHrvKjHWsBmkra1QiJLRiEf7tFHxqx%2BNL%2B7UoIyYtj1Xay%2BDvNwcpHeRID6AZ0puu0nqdvUL4zYn01iuzhKn%2FZyFWujfUng69MT3BZsZfbz9ekv5aeVZSdIhFIcOG61203zTEL%2Bu543MLENf0NDNf8wWA%2BHPy6eXs4sesmIlxU%2FwUCglh6nLsTmaArQb%2BKLlH7VrP6%2BYMM0KtJlN869H6e2pYnE1Nri8HHmCrVtMbs08WodhRisqVXrWRpwCjeLNhFqt%2FlcB4QKJcoq%2Bue9t6dcYUZl0MTC2sV6KlqW7U845w7BeC8%2F3HNHwxlo3kbrltFMjwMAX7DspAJWoL2lJwAWwEzQogQvOjP%2FhSKIiQ2cjM8SpPNVeeot1R%2BLX5ALD7k82oBMm2f9hc2mFus9mgit1F9fMktcstMK0JK6lkJISCHUht2dKehz0FPDVq9MLD5goMGOusBCqFJRcy8Sb%2BOIHyJXFWQJn%2B%2BXRfvVUpqcO9fPBbSl7Pk%2BAym7vgW%2FQwgi0X0hDIVX7bDeW1n2oGq1rNPq3iGPEqNFUXOjuQTBqOAUqCnIS0%2F0SQIBGfaXQc%2Bp0ejsXsIqNAS1oNv1eWJOFTpO1%2BkTvh3MsG1lPoExB85s5jcz3p8LQxY%2FFnN%2BAXnCx0IQZucqhtJfyfoyA6qh%2Bi%2BcO%2FkuK%2Fn6l2s0ReIQy7N%2F%2BtrLkR4%2FUsLPHjn%2FmgzB0WtlEfbNniW8SDhbUOPSvP0nNyKdf76G69JJmgOLAd%2Fkixu3JASXTlz6eVDg4Pvbw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210328T182510Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4AWMJDU5%2F20210328%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=edc2e75f201ad5f07d1850ac3e14fda73e4200d044060353e80def5e76ded6ff&hash=059880ecd891537c848d8afd6720b2e968ca2e4a7923ecaee6639d01ddbeb4ea&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0167642311001717&tid=spdf-9d51f58e-58ea-4a67-aa52-1184c7c75bf8&sid=b44e5dfe508e9742d4980c82e3dfe263927egxrqb&type=client
