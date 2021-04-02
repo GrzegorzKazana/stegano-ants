@@ -59,7 +59,15 @@
     prowadzącej do pożywienia. Taki stanu rzeczy może być wytłumaczony poprzez analizę ruchu większej ilości mrówek w
     pewnym okresie czasu. Ponieważ przebycie dłuższej ścieżki wymaga więcej czasu, średnio mniej mrówek będzie się nią
     poruszać w stosunku do jednostki odległości. To bezpośrednio przekłada się na mniejszą ilość odłożonego śladu oraz
-    jego szybsze odparowanie.
+    jego szybsze odparowanie. Pomysłodawcy systemów mrówkowych podsumowują ich ogólne właściwości wyszczególniając
+    następujące cechy\cite{Dorigo1991AntSA}:
+
+    \begin{itemize}
+        \item pozytywne sprzężenie zwrotne pozwalające na szybkie odkrywanie dobrych rozwiązań,
+        \item rozproszony charakter obliczeń zapobiega przedwczesnej zbieżności do lokalnego minimum,
+        \item zachłanne postępowanie każdej mrówki przyczynia się do znajdowania akceptowalnych rozwiązań w bardzo
+        krótkim czasie.
+    \end{itemize}
 
 
     % SYSTEMY WIELOAGENTOWE
@@ -124,7 +132,49 @@
 
 
     % ZASTOSOWANIE
-    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/TheAntColonyOptimizationMetaheuristic_AlgorithmsApplicationsandAdvances.pdf
+    % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/TheAntColonyOptimizationMetaheuristic_AlgorithmsApplicationsandAdvances.pdf-Dorigo2003TheAC
+    Ponieważ metaheurystyka systemu mrówkowego jest oparta o zachowanie mrówek poszukujących najkrótszej drogi do
+    pożywienia, oczywiste zdają się być próby zaaplikowania jej do problemu komiwojażera, znanego w anglojęzycznej
+    literaturze jako \textit{Travelling Salesman Problem - TSP}. Zadaniem postawionym przed algorytmem poszukującym
+    rozwiązania \textit{TSP} jest znalezienie najkrótszej drogi łączącej wszystkie $n$ miast, w taki sposób że każde
+    miasto zostanie odwiedzone jednokrotnie. Problem komiwojażera jest problemem \textit{NP trudnym}, a asymptotyczna
+    złożoność algorytmu przeszukiwania wyczerpującego wynosi $O(n!)$. \textit{TSP} zawdzięcza swoją popularność
+    prostocie jego opisu, będącej w opozycji do trudności realizacji jego rozwiązania. Jego pierwsza formalna definicja
+    została przedstawiona przez matematyka K. Mengera w roku 1930\cite{Mazidi2017MetaHeuristicAF}. Od tego czasu
+    naukowcy z wielu dziedzin starali się zaproponować algorytmy i heurystyki pozwalające na znalezienie dobrych
+    rozwiązań w czasie wielomianowym. Pomimo braku sukcesu w odkryciu algorytmu pozwalającego na znalezienie optymalnego
+    rozwiązania w czasie wielomianowym, poczyniono istotny postęp w tworzeniu algorytmów skupionych na odkrywaniu
+    akceptowalnych rozwiązań w krótszym czasie.
+
+    Jednym z najważniejszych przełomów w badaniach \textit{TSP}, był algorytm zaproponowany przez N. Christofides w roku
+    1976. Odkryte rozwiązanie gwarantuje znalezienie drogi nie dłuższej od optymalnej o $50\%$ w czasie
+    $O(n^3)$\cite{Christofides1976WorstCaseAO}. Od tego czasu, powstawało wiele alternatywnych rozwiązań, lecz żadne z
+    nich nie zdołało obniżyć górnej granicy długości drogi w znaczący sposób.
+
+    Alternatywnym podejściem do problemu komiwojażera oraz innych problemów z klasy \textit{NP trudnych}, które zyskało
+    na popularności jest stosowanie metaheurystyk, czyli ogólnych schematów i metod przeznaczonych do rozwiązywania
+    szerokiej gamy problemów algorytmicznych. Metaheurystyki są najczęściej inspirowane systemami występującymi w
+    naturze, i dają dobre rezultaty w problemach optymalizacyjnych problemów o charakterze losowym i
+    dynamicznym\cite{Bianchi2008ASO}. Do najszerzej stosowanych należą symulowane wyżarzanie (ang. \textit{Simulated
+    Annealing})\cite{Kirkpatrick1983OptimizationBS}, algorytmy genetyczne (ang. \textit{Genetic
+    Algorithms})\cite{Fraser1957SimulationOG}, metody optymalizacji cząsteczkowej (ang. \textit{Particle swarm
+    optimization})\cite{Poli2007ParticleSO} oraz opisywane w tym rozdziale systemy mrówkowe o mrowiskowe. Wszystkie z
+    wymienionych metod były wykorzystywane w rozwiązywaniu problemu komiwojażera\cite{Prabakaran2019ASO,
+    Mazidi2017MetaHeuristicAF}.
+
+    Pomimo niesprzecznej wagi i istotności \textit{TSP}, systemy mrówkowe i mrowiskowe znalazły zastosowanie w wielu
+    innych problemach. Kluczowym etapem decydującym o możliwości i efektywności rozwiązania zadanego problemu przez
+    system mrówkowy lub mrowiskowy jest wyznaczenie jego odpowiedniej reprezentacji grafowej\cite{Dorigo1991AntSA}.
+    Dodatkową zaletą wynikającą z zastosowania tego rodzaju metaheurystyki jest możliwość rozwiązywania problemów
+    dynamicznych, w których warunki ulegają zmianom w trakcie pracy algorytmu. Do problemów rozwiązywanych przez systemy
+    mrówkowe możemy zaliczyć między innymi:
+
+    \begin{itemize}
+        \item kwadratowe zagadnienie przydziału (ang. \textit{quadratic assignment problem})\cite{Maniezzo1999TheAS, Gambardella1999AntCF},
+        \item harmonogramowanie (ang. \textit{scheduling})\cite{JSSchedulingColoroni94, Merkle2002AntCO},
+        \item marszrutyzacja (ang. \textit{vehicle routing problem})\cite{Bullnheimer1999ApplyingTA},
+        \item trasowanie w sieciach (ang. \textit{routing})\cite{Caro1999AntNetAM, Bonabeau1998RoutingIT}.
+    \end{itemize}
 
 
     % ZASADA DZIAŁANIA
@@ -132,16 +182,131 @@
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ro%CC%81zne%20reprezentacje%20mapy%20feromonowej...jd_aco_mkp_promotor-Boryczko.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/MODEL%20TEORETYCZNY%20ALGORYTMU%20MRO%CC%81WKOWEGO%20SAS.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/AlgorytmyIProgramownieMrowiskowe.pdf
+    Ponieważ zachowanie mrówek poszukujących najkrótszej ścieżki do pożywienia najłatwiej i najbardziej intuicyjnie jest
+    analizować w odniesieniu do problemu komiwojażera, zdecydowano się stosować słownictwo oparte o problem poruszania
+    się po mapie złożonej z miast połączonych drogami o znanej długości. Ważne jest jednak mieć na uwadze fakt, że
+    jest to tylko przykład dydaktyczny, a działanie algorytmu można równie trafnie opisać posługując się pojęciami
+    grafu, wierzchołków i krawędzi je łączących.
 
+    Pierwszym etapem algorytmu jest umieszczenie mrówek na mapie oraz inicjalizacja struktury reprezentującej ślad
+    feromonowy. Mrówki są przydzielane do miast w losowy sposób, a ślad jest inicjowany wartością $\tau_0$. Każda z
+    mrówek inicjalizuje strukturę służącą do przechowywania informacji o uprzednio odwiedzonych miastach. Zostaje do
+    niej swoje miasto początkowe. Następnie każda mrówka wybiera drogę prowadzącą z bieżącego miasta $i$ do kolejnego
+    miasta $j$, pod warunkiem że miasto $j$ nie zostało już odwiedzone. Prawdopodobieństwo każdego przejścia w kroku $t$
+    jest określone funkcją $P_{ij}(t)$. Po wykonaniu pojedynczego kroku przez każdą mrówkę, może nastąpić następuje
+    proces nakładania śladu feromonowego. Natężenie nakładanego śladu jest określone za pomocą funkcji
+    $\Delta\tau_{ij}(t, t+1)$. Proces wyboru kolejnego miasta i nanoszenia śladu feromonowego jest powtarzany aż do
+    momentu w którym mrówki odwiedziły już wszystkie miasta, lub został osiągnięty warunek końcowy. Po zakończeniu
+    iteracji, która w przypadku zadań polegających na odwiedzeniu wszystkich miast nazywana jest cyklem, następuje
+    naniesienie śladu feromonowego. Algorytm jest wykonywany do momentu realizacji ustalonej liczby iteracji lub braku
+    poprawy rozwiązania\cite{Dorigo1991AntSA}.
 
-    % RODZAJE ALGORYTMÓW MRÓWKOWYCH
+    Ogólna postać algorytmu może zostać podsumowana w następujący sposób:
+
+    \begin{enumerate}
+        \item \label{step:place} Umieść mrówki na wierzchołkach grafu.
+        \item \label{step:dispatch} Każda mrówka dokonuje wyboru kolejnego nieodwiedzonego miasta zgodnie z ustaloną funkcją
+        prawdopodobieństwa $P_{ij}(t)$.
+        \item \label{step:update} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+1)$.
+        \item Powtórz kroki \ref{step:dispatch}-\label{step:update} do momentu odwiedzenia wszyskich wierzchołków przez
+        każdą mrówkę
+        \item \label{step:update_cycle} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+1)$.
+        \item Powtórz kroki \ref{step:place}-\ref{step:update_cycle}.
+    \end{enumerate}
+
+    % RODZAJE SYS MRÓWKOWYCH
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/MODEL%20TEORETYCZNY%20ALGORYTMU%20MRO%CC%81WKOWEGO%20SAS.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/AlgorytmyIProgramownieMrowiskowe.pdf
+    % ant cycle i tym podobne
+    % https://www.researchgate.net/publication/239566982_Ant_System_An_Autocatalytic_Optimizing_Process_Technical_Report_91-016
+    Pomysłodawcy systemów mrówkowych, M. Dorgio, V. Maniezzo i A. Colorni, zaproponowali trzy wariacje systemu. Każda z
+    nich różni się pod kątem sposobu aktualizacji śladu feromonowego. Są to modele \textit{Ant Density}, \textit{Ant
+    Quantity} oraz \textit{Ant cycle}. W dalszych częściach pracy pozwolono sobie stosować odpowiednio nazwy modelu o
+    feromonie stałym, średnim oraz cyklicznym.
 
+    Cechą wspólną powyższych modeli jest metoda wyboru krawędzi w kroku $t$. Prawdopodobieństwo, że mrówka znajdująca
+    się w wierzchołku $i$ wybierze krawędź prowadzącą do wierzchołka $j$ jest określona następującym wzorem
+    \ref{eqt:edge_dispatch_propab}.
 
-    % SYS MRÓWKOWY
-    % http://www.cs.unibo.it/babaoglu/courses/cas05-06/tutorials/Ant_Colony_Optimization.pdf - Dorigo1996AntSO
+    \begin{equation}\label{eqt:edge_dispatch_propab}
+        P_{ij}(t) = \left\{\begin{matrix}
+            0 & j \not\in J\\
+            \frac{[\tau_{ij}(t))]^\alpha [\eta_{ij}]^\beta}{\sum_{j\in J} {[\tau_{ij}(t))]^\alpha [\eta_{ij}]^\beta} } & j \in J
+            \end{matrix}\right.
+    \end{equation}
 
+    gdzie
+    \begin{itemize}
+        \item $J$ jest zbiorem wierzchołków połączonych krawędzią z wierzchołkiem $i$, które nie zostały jeszcze
+        odwiedzone przez mrówkę podejmującą decyzję,
+        \item $\tau_{ij}(t)$ jest natężeniem śladu feromonowego krawędzi pomiędzy wierzchołkami $i$ i $j$ w kroku $t$,
+        \item $\eta_{ij}$ jest współczynnikiem widoczności wierzchołka $j$ z perspektywy wierzchołka $i$. Jego wartość
+        jest obliczana jako odwrotność długości krawędzi $\eta_{ij} = \frac{1}{d_{ij}}$,
+        \item $\alpha$ i $\beta$ są współczynnikami pozwalającymi kontrolować istotność śladu feromonowego względem
+        widoczności.
+    \end{itemize}
+
+    Ogólną zasadę śladu feromonowego aktualizacji wyraża wzór \ref{eqt:pheromone_update}. Współczynnik $\rho$ jest
+    odpowiedzialny za wyparowywanie śladu, co chroni przez nieskończoną jego akumulacją. Istotne jest, aby jego wartość
+    była dodatnia, lecz mniejsza niż jeden $0 < \rho < 1$. Wartość $1 - \rho$ mianuje się współczynnikiem wyparowania.
+
+    \begin{equation}\label{eqt:pheromone_update}
+        \Delta\tau_{ij}(t + 1) = \rho\tau_{ij}(t) + \Delta\tau_{ij}(t, t + 1)
+    \end{equation}
+
+    To co rozróżnia opisywane metody, jest reguła wyznaczania przyrostu śladu feromonowego $\Delta\tau_{ij}(t, t + 1)$.
+
+    W przypadku modelu o feromonie stałym, przyrost jest stałą wartością $Q$ dla krawędzi którą mrówka zdecyduje się
+    przebyć w drodze pomiędzy wierzchołkami $i$ i $j$. Po zakończeniu kroku lub cyklu, wartości te są sumowane dla
+    każdej z $m$ mrówek - jeśli krawędź została przemierzona przez więcej niż jedną mrówkę, przyrost śladu feromonowego
+    będzie proporcjonalnie większy i jest wyrażony wzorem \ref{eqt:pheromone-density}.
+
+    \begin{equation}\label{eqt:pheromone-density}
+        \Delta\tau_{ij}^k(t, t + 1) = \sum_{k=1}^m \left\{
+                \begin{matrix}
+                    Q & (i, j) \in V_k\\
+                    0 & w\ przeciwnym\ wypadku
+                \end{matrix}
+            \right.
+    \end{equation}
+    gdzie $V_k$ jest krawędzią wybrana przez $k$ mrówkę w kroku $t$.
+
+    W modelu o feromonie średnim (\textit{Ant Quantity}), przyrost śladu feromonowego jest odwrotnie proporcjonalny do
+    długości krawędzi łączącej wierzchołki\ref{eqt:pheromone-quantity}. Powoduje to dodatkowe faworyzowanie widoczności
+    przy wyborze krawędzi, gdyż krótsze krawędzie będą stawać się bardziej atrakcyjne dla innych mrówek.
+
+    \begin{equation}\label{eqt:pheromone-quantity}
+        \Delta\tau_{ij}^k(t, t + 1) = \sum_{k=1}^m \left\{
+                \begin{matrix}
+                    \frac{Q}{d_{ij}} & (i, j) \in V_k\\
+                    0 & w\ przeciwnym\ wypadku
+                \end{matrix}
+            \right.
+    \end{equation}
+
+    Ostatnim zaproponowanym wariantem systemu mrówkowego jest model feromonu cyklicznego (\textit{Ant Cycle}). Różni się
+    on znacząco od poprzednich, gdyż feromon jest aktualizowany jednokrotnie w każdej iteracji algorytmu, a nie po
+    każdorazowym kroku. Wyznaczenie nowego śladu następuje po $n$ krokach, gdzie $n$ jest długością cykli pokonywanych
+    przez mrówki. Przyrost śladu feromonowego $\Delta\tau_{ij}^k(t, t + 1)$ jest obliczany dla każdej krawędzi trasy
+    pokonanej przez każdą z $m$ mrówek, i jest odwrotnie proporcjonalny do długości całej trasy. Uzasadnieniem takiego
+    postępowania jest intuicja mówiąca, że znajomość globalnej oceny trasy (jej długości) pozwoli lepiej ocenić każde z
+    należących do niej kroków. Regułę obliczania przyrostu śladu wyraża wzór \ref{eqt:pheromone-cycle}. $L_k$
+    oznacza zbiór krawędzi należących do trasy pokonanej przez mrówkę $k$.
+
+    \begin{equation}\label{eqt:pheromone-cycle}
+        \Delta\tau_{ij}^k(t, t + n) = \sum_{k=1}^m \left\{
+                \begin{matrix}
+                    \frac{Q}{|L^k|} & (i, j) \in L_k\\
+                    0 & w\ przeciwnym\ wypadku
+                \end{matrix}
+            \right.
+    \end{equation}
+
+    Twórcy powyższych algorytmów z powodzeniem przeprowadzili eksperymenty, których celem było zbadanie ich efektywności
+    w rozwiązywaniu problemu komiwojażera. W przypadku każdego z modeli osiągnięto zadowalające wyniki, lecz najszybszą
+    zbieżność do optymalnych rozwiązań zaobserwowano w modelu z feromonem cyklicznym. Zwrócono jednocześnie uwagę na
+    istotność procesu doboru parametrów algorytmu, takich jak ilość mrówek i współczynnik wyparowania śladu
+    feromonowego.
 
     % SYS MROWISKOWY
     % https://people.idsia.ch//~luca/acs-ec97.pdf - Dorigo1997AntCS
@@ -151,6 +316,9 @@
     % https://www.cs.ubc.ca/~hoos/Publ/fgcs00.pdf - Sttzle2000MAXMINAS
 
 
+
+
+}
     % ALG MRÓWKOWE W STEGANOGRAFII
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20colony%20optimization%20with%20horizontal%20and%20vertical%20crossover%20search%20Fundamental%20visions%20for%20multi-thres.image%20segmentation.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20Novel%20Technique%20for%20Steganography%20Method%20Based%20on.pdf
@@ -158,8 +326,5 @@
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20To%20Enhance%20Image%20Steganography.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/HIGH%20CAPACITY%20AND%20OPTIMIZED%20IMAGE%20STEGANOGRAPHY%20TECHNIQUE%20BASED%20ON%20ANT%20COLONY%20OPTIMIZATION%20ALGORITHM.pdf
     % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/New%20steganography%20algorithm%20to%20conceal%20a%20large%20amount%20of%20secret%20message%20using%20hybrid%20adaptive%20neural.pdf
-
-
-}
 
 % https://pdf.sciencedirectassets.com/271600/1-s2.0-S0167642313X00048/1-s2.0-S0167642311001717/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAIaCXVzLWVhc3QtMSJHMEUCIQCjcGjhHTstSrNGwhf6SVCRs6Dej2Fh6Agvtmuq2jQDGAIgLBWfgeKnXC2bHHsGU20tU9w%2BJkP0Ie31hFqBXgkxnSkqtAMISxADGgwwNTkwMDM1NDY4NjUiDMnsCkIwDuEa%2F%2Fi%2BoyqRA%2FE99i22aNvLXJMoNoEmfnZ8pWVy9%2FEWmZ2%2FDBJDOrj7SHS5CJskr8CetCaPXHPmInsE%2Fcyv1ptIsJ66kGN057UoIEvHrvKjHWsBmkra1QiJLRiEf7tFHxqx%2BNL%2B7UoIyYtj1Xay%2BDvNwcpHeRID6AZ0puu0nqdvUL4zYn01iuzhKn%2FZyFWujfUng69MT3BZsZfbz9ekv5aeVZSdIhFIcOG61203zTEL%2Bu543MLENf0NDNf8wWA%2BHPy6eXs4sesmIlxU%2FwUCglh6nLsTmaArQb%2BKLlH7VrP6%2BYMM0KtJlN869H6e2pYnE1Nri8HHmCrVtMbs08WodhRisqVXrWRpwCjeLNhFqt%2FlcB4QKJcoq%2Bue9t6dcYUZl0MTC2sV6KlqW7U845w7BeC8%2F3HNHwxlo3kbrltFMjwMAX7DspAJWoL2lJwAWwEzQogQvOjP%2FhSKIiQ2cjM8SpPNVeeot1R%2BLX5ALD7k82oBMm2f9hc2mFus9mgit1F9fMktcstMK0JK6lkJISCHUht2dKehz0FPDVq9MLD5goMGOusBCqFJRcy8Sb%2BOIHyJXFWQJn%2B%2BXRfvVUpqcO9fPBbSl7Pk%2BAym7vgW%2FQwgi0X0hDIVX7bDeW1n2oGq1rNPq3iGPEqNFUXOjuQTBqOAUqCnIS0%2F0SQIBGfaXQc%2Bp0ejsXsIqNAS1oNv1eWJOFTpO1%2BkTvh3MsG1lPoExB85s5jcz3p8LQxY%2FFnN%2BAXnCx0IQZucqhtJfyfoyA6qh%2Bi%2BcO%2FkuK%2Fn6l2s0ReIQy7N%2F%2BtrLkR4%2FUsLPHjn%2FmgzB0WtlEfbNniW8SDhbUOPSvP0nNyKdf76G69JJmgOLAd%2Fkixu3JASXTlz6eVDg4Pvbw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210328T182510Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4AWMJDU5%2F20210328%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=edc2e75f201ad5f07d1850ac3e14fda73e4200d044060353e80def5e76ded6ff&hash=059880ecd891537c848d8afd6720b2e968ca2e4a7923ecaee6639d01ddbeb4ea&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S0167642311001717&tid=spdf-9d51f58e-58ea-4a67-aa52-1184c7c75bf8&sid=b44e5dfe508e9742d4980c82e3dfe263927egxrqb&type=client
