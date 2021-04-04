@@ -21,10 +21,9 @@ impl LikelihoodAntDispatcher for BasicAntDispatcher {
         possible_next_edges
             .iter()
             .map(|edge| {
-                let visibility = 1.0 / edge.distance;
                 let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-                visibility * pheromone_level + stability_factor!()
+                edge.visibility * pheromone_level + stability_factor!()
             })
             .collect::<Vec<_>>()
     }

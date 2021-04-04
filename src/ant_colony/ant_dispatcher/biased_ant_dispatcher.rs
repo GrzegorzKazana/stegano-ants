@@ -34,10 +34,10 @@ impl LikelihoodAntDispatcher for BiasedAntDispatcher {
         possible_next_edges
             .iter()
             .map(|edge| {
-                let visibility = 1.0 / edge.distance;
                 let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-                visibility.powf(self.visibility_bias) * pheromone_level.powf(self.pheromone_bias)
+                edge.visibility.powf(self.visibility_bias)
+                    * pheromone_level.powf(self.pheromone_bias)
                     + stability_factor!()
             })
             .collect::<Vec<_>>()

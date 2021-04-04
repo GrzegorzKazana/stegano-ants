@@ -16,18 +16,21 @@ mod pheromone_updater_tests {
                 from: 0,
                 to: 0,
                 distance: 1.0,
+                visibility: 1.0,
             },
             AdjacencyListEntry {
                 key: 1,
                 from: 0,
                 to: 0,
                 distance: 2.0,
+                visibility: 0.5,
             },
             AdjacencyListEntry {
                 key: 2,
                 from: 0,
                 to: 0,
                 distance: 3.0,
+                visibility: 0.333,
             },
         ]
     }
