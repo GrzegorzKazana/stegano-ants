@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
+use crate::ant_colony::guided_configuration::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
@@ -65,6 +66,8 @@ impl PheromoneUpdater for SystemPheromoneUpdater {
         }
     }
 }
+
+impl WithGuidingConfig for SystemPheromoneUpdater {}
 
 impl Display for SystemPheromoneUpdater {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

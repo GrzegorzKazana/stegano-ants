@@ -7,7 +7,7 @@ use crate::ant_colony::graph::Graph;
 ///
 /// Used for _smart_ estimation of hyperparameters
 /// based on some heuristics
-pub struct GuidedConfiguration {
+pub struct GuidingConfig {
     pub ant_count: usize,
     pub num_of_steps_per_cycle: usize,
     pub graph_node_count: usize,
@@ -17,9 +17,9 @@ pub struct GuidedConfiguration {
     pub graph_avg_distance: f32,
 }
 
-impl GuidedConfiguration {
+impl GuidingConfig {
     pub fn from_graph(ant_count: usize, num_of_steps_per_cycle: usize, graph: &Graph) -> Self {
-        GuidedConfiguration {
+        GuidingConfig {
             ant_count,
             num_of_steps_per_cycle,
             graph_node_count: graph.get_amount_of_nodes(),
@@ -31,7 +31,13 @@ impl GuidedConfiguration {
     }
 }
 
-impl Display for GuidedConfiguration {
+pub trait WithGuidingConfig: Sized {
+    fn guided(_guide: &GuidingConfig) -> Option<Self> {
+        Option::None
+    }
+}
+
+impl Display for GuidingConfig {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use crate::ant_colony::graph::AdjacencyListEntry;
+use crate::ant_colony::guided_configuration::WithGuidingConfig;
 use crate::ant_colony::pheromone::Pheromone;
 
 use super::LikelihoodAntDispatcher;
@@ -28,6 +29,8 @@ impl LikelihoodAntDispatcher for BasicAntDispatcher {
             .collect::<Vec<_>>()
     }
 }
+
+impl WithGuidingConfig for BasicAntDispatcher {}
 
 impl Display for BasicAntDispatcher {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

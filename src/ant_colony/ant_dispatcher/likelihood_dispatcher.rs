@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
+use crate::ant_colony::guided_configuration::WithGuidingConfig;
 use crate::ant_colony::pheromone::Pheromone;
 use crate::common::utils::weighted_sample;
 
@@ -21,7 +22,7 @@ pub trait LikelihoodAntDispatcher: Display + Send + Sync {
     ) -> Vec<f32>;
 }
 
-impl<D: LikelihoodAntDispatcher> AntDispatcher for D {
+impl<D: LikelihoodAntDispatcher + WithGuidingConfig> AntDispatcher for D {
     #[cfg_attr(feature = "profiler", flame)]
     fn select_next_edge(
         &self,

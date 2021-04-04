@@ -8,6 +8,7 @@ mod system_pheromone_updater;
 use std::fmt::Display;
 
 use crate::ant_colony::graph::{RouteBatch, RouteBatchWithHoles, RouteCollection};
+use crate::ant_colony::guided_configuration::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 pub use _union::Updaters;
@@ -16,7 +17,7 @@ pub use constant_pheromone_updater::ConstantPheromoneUpdater;
 pub use cyclical_pheromone_updater::CyclicalPheromoneUpdater;
 pub use system_pheromone_updater::SystemPheromoneUpdater;
 
-pub trait PheromoneUpdater: Display {
+pub trait PheromoneUpdater: WithGuidingConfig + Display + Sized {
     fn get_initial_value(&self) -> PheromoneLevel;
 
     fn initialize(&self, init_pheromone: Pheromone, edges: &RouteBatch) -> Pheromone {

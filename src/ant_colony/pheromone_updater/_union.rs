@@ -2,13 +2,14 @@ use itertools::Itertools;
 use std::{fmt::Display, str::FromStr};
 
 use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
+use crate::ant_colony::guided_configuration::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::{
     AveragePheromoneUpdater, ConstantPheromoneUpdater, CyclicalPheromoneUpdater, PheromoneUpdater,
     SystemPheromoneUpdater,
 };
-use crate::ant_colony::guided_configuration::GuidedConfiguration;
+use crate::ant_colony::guided_configuration::GuidingConfig;
 
 /// using an enum instead of run-time
 /// polymorhism to avoid cost of dynamic dispatch
@@ -48,6 +49,8 @@ impl PheromoneUpdater for Updaters {
     }
 }
 
+impl WithGuidingConfig for Updaters {}
+
 impl Display for Updaters {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -60,11 +63,16 @@ impl Display for Updaters {
 }
 
 impl Updaters {
-    pub fn from_string(config: &str, guide: Option<&GuidedConfiguration>) -> Option<Updaters> {
+    pub fn from_string(config: &str, maybe_guide: Option<&GuidingConfig>) -> Option<Updaters> {
         let mut config_iter = config.split(":");
         let name = config_iter.next().unwrap_or_default();
         let opts = config_iter.next().unwrap_or_default();
 
+        Self::from_string_with_opts(name, opts)
+            .or_else(|| maybe_guide.and_then(|guide| Self::from_string_with_guide(name, guide)))
+    }
+
+    fn from_string_with_opts(name: &str, opts: &str) -> Option<Self> {
         match name {
             "avg" => {
                 let (initial_value_str, evaporation_rate_str, increment_str): (&str, &str, &str) =
@@ -77,7 +85,7 @@ impl Updaters {
                 let updater =
                     AveragePheromoneUpdater::new(initial_value, evaporation_rate, increment);
 
-                Option::Some(Updaters::Average(updater))
+                Option::Some(Self::Average(updater))
             }
 
             "const" => {
@@ -91,7 +99,7 @@ impl Updaters {
                 let updater =
                     ConstantPheromoneUpdater::new(initial_value, evaporation_rate, increment);
 
-                Option::Some(Updaters::Const(updater))
+                Option::Some(Self::Const(updater))
             }
 
             "cycle" => {
@@ -105,7 +113,7 @@ impl Updaters {
                 let updater =
                     CyclicalPheromoneUpdater::new(initial_value, evaporation_rate, increment);
 
-                Option::Some(Updaters::Cyclical(updater))
+                Option::Some(Self::Cyclical(updater))
             }
 
             "system" => {
@@ -117,9 +125,19 @@ impl Updaters {
 
                 let updater = SystemPheromoneUpdater::new(initial_value, evaporation_rate);
 
-                Option::Some(Updaters::System(updater))
+                Option::Some(Self::System(updater))
             }
 
+            _ => Option::None,
+        }
+    }
+
+    fn from_string_with_guide(name: &str, guide: &GuidingConfig) -> Option<Self> {
+        match name {
+            "avg" => AveragePheromoneUpdater::guided(guide).map(Self::Average),
+            "const" => ConstantPheromoneUpdater::guided(guide).map(Self::Const),
+            "cycle" => CyclicalPheromoneUpdater::guided(guide).map(Self::Cyclical),
+            "system" => SystemPheromoneUpdater::guided(guide).map(Self::System),
             _ => Option::None,
         }
     }
