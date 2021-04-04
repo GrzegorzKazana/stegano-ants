@@ -10,6 +10,7 @@ use std::fmt::Display;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
+use crate::ant_colony::guided_configuration::GuidedConfiguration;
 use crate::ant_colony::pheromone::Pheromone;
 
 pub use _union::Dispatchers;
@@ -66,4 +67,6 @@ pub trait AntDispatcher: Display + Send + Sync {
 
         edge_leading_to_inital_node.map_or(possible_next_edges, |edge| vec![edge])
     }
+
+    fn new_with_guided_params(guide: &GuidedConfiguration) -> Self;
 }

@@ -8,6 +8,7 @@ use crate::common::utils::extend_basename;
 
 use crate::ant_colony::ant_dispatcher::Dispatchers;
 use crate::ant_colony::colony::{Colony, Config, ConfigurableColony, StepwiseParallelColony};
+use crate::ant_colony::guided_configuration::GuidedConfiguration;
 use crate::ant_colony::pheromone_updater::Updaters;
 use crate::ant_colony::runner::ColonyRunner;
 
@@ -97,8 +98,9 @@ impl<'a> App<'a> {
         let img_graph_converter = EdgeChangeConverter::new(&downscaled_transport_image);
         let graph = img_graph_converter.img_to_graph();
 
-        let ant_dispatcher = Self::parse_dispatcher(&opts)?;
-        let pheromone_updater = Self::parse_pheromone_updater(&opts)?;
+        let guide = GuidedConfiguration::from_graph(opts.ants, opts.steps, &graph);
+        let ant_dispatcher = Self::parse_dispatcher(&opts, &guide)?;
+        let pheromone_updater = Self::parse_pheromone_updater(&opts, &guide)?;
 
         let config = Config {
             ant_count: opts.ants,
@@ -139,14 +141,14 @@ impl<'a> App<'a> {
         }
     }
 
-    fn parse_dispatcher(opts: &Opts) -> AppResult<Dispatchers> {
-        Dispatchers::from_string(&opts.dispatcher)
+    fn parse_dispatcher(opts: &Opts, guide: &GuidedConfiguration) -> AppResult<Dispatchers> {
+        Dispatchers::from_string(&opts.dispatcher, Option::Some(guide))
             .ok_or(format!("invalid dispatcher arg {}", opts.dispatcher))
             .map_err(AppError::IoError)
     }
 
-    fn parse_pheromone_updater(opts: &Opts) -> AppResult<Updaters> {
-        Updaters::from_string(&opts.updater)
+    fn parse_pheromone_updater(opts: &Opts, guide: &GuidedConfiguration) -> AppResult<Updaters> {
+        Updaters::from_string(&opts.updater, Option::Some(guide))
             .ok_or(format!("invalid updater arg {}", opts.updater))
             .map_err(AppError::IoError)
     }

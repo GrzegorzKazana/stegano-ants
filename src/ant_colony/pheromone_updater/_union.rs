@@ -8,6 +8,7 @@ use super::{
     AveragePheromoneUpdater, ConstantPheromoneUpdater, CyclicalPheromoneUpdater, PheromoneUpdater,
     SystemPheromoneUpdater,
 };
+use crate::ant_colony::guided_configuration::GuidedConfiguration;
 
 /// using an enum instead of run-time
 /// polymorhism to avoid cost of dynamic dispatch
@@ -59,8 +60,10 @@ impl Display for Updaters {
 }
 
 impl Updaters {
-    pub fn from_string(config: &str) -> Option<Updaters> {
-        let (name, opts): (&str, &str) = config.splitn(2, ':').collect_tuple()?;
+    pub fn from_string(config: &str, guide: Option<&GuidedConfiguration>) -> Option<Updaters> {
+        let mut config_iter = config.split(":");
+        let name = config_iter.next().unwrap_or_default();
+        let opts = config_iter.next().unwrap_or_default();
 
         match name {
             "avg" => {
@@ -126,6 +129,6 @@ impl FromStr for Updaters {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Self::from_string(s).ok_or("Failed to parse Updater")
+        Self::from_string(s, Option::None).ok_or("Failed to parse Updater")
     }
 }

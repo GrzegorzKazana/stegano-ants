@@ -7,6 +7,7 @@ use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 use crate::ant_colony::pheromone::Pheromone;
 
 use super::{AntDispatcher, BasicAntDispatcher, BiasedAntDispatcher, SystemAntDispatcher};
+use crate::ant_colony::guided_configuration::GuidedConfiguration;
 
 /// using an enum instead of run-time
 /// polymorhism to avoid cost of dynamic dispatch
@@ -47,12 +48,26 @@ impl AntDispatcher for Dispatchers {
             }
         }
     }
+
+    fn new_with_guided_params(guide: &GuidedConfiguration) -> Self {
+        // completely arbitrary, just for fulfilling the contract
+        Dispatchers::Basic(BasicAntDispatcher::new_with_guided_params(guide))
+    }
 }
 
 impl Dispatchers {
-    pub fn from_string(config: &str) -> Option<Dispatchers> {
-        let (name, opts): (&str, &str) = config.splitn(2, ':').collect_tuple()?;
+    pub fn from_string(
+        config: &str,
+        maybe_guide: Option<&GuidedConfiguration>,
+    ) -> Option<Dispatchers> {
+        let mut config_iter = config.split(":");
+        let name = config_iter.next().unwrap_or_default();
+        let opts = config_iter.next().unwrap_or_default();
 
+        Self::from_string_with_opts(name, opts)
+    }
+
+    fn from_string_with_opts(name: &str, opts: &str) -> Option<Dispatchers> {
         match name {
             "basic" => Option::Some(Dispatchers::Basic(BasicAntDispatcher)),
 
@@ -81,12 +96,27 @@ impl Dispatchers {
             _ => Option::None,
         }
     }
+
+    fn from_string_with_guide(name: &str, guide: &GuidedConfiguration) -> Option<Dispatchers> {
+        match name {
+            "basic" => Option::Some(BasicAntDispatcher::new_with_guided_params(guide))
+                .map(Dispatchers::Basic),
+
+            "biased" => Option::Some(BiasedAntDispatcher::new_with_guided_params(guide))
+                .map(Dispatchers::Biased),
+
+            "system" => Option::Some(SystemAntDispatcher::new_with_guided_params(guide))
+                .map(Dispatchers::System),
+
+            _ => Option::None,
+        }
+    }
 }
 
 impl FromStr for Dispatchers {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Dispatchers::from_string(s).ok_or("Failed to parse Dispatcher")
+        Dispatchers::from_string(s, Option::None).ok_or("Failed to parse Dispatcher")
     }
 }
