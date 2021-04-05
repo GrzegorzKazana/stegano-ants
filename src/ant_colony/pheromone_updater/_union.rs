@@ -103,15 +103,24 @@ impl Updaters {
             }
 
             "cycle" => {
-                let (initial_value_str, evaporation_rate_str, increment_str): (&str, &str, &str) =
-                    opts.splitn(3, ',').collect_tuple()?;
+                let (initial_value_str, evaporation_rate_str, increment_str, target_len_str): (
+                    &str,
+                    &str,
+                    &str,
+                    &str,
+                ) = opts.splitn(4, ',').collect_tuple()?;
 
                 let initial_value = initial_value_str.parse().ok()?;
                 let evaporation_rate = evaporation_rate_str.parse().ok()?;
                 let increment = increment_str.parse().ok()?;
+                let target_len = target_len_str.parse().ok()?;
 
-                let updater =
-                    CyclicalPheromoneUpdater::new(initial_value, evaporation_rate, increment);
+                let updater = CyclicalPheromoneUpdater::new(
+                    initial_value,
+                    evaporation_rate,
+                    increment,
+                    target_len,
+                );
 
                 Option::Some(Self::Cyclical(updater))
             }

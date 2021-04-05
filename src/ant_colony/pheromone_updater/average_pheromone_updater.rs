@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
+use crate::ant_colony::graph::RouteBatchWithHoles;
 use crate::ant_colony::guiding_config::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
@@ -46,10 +46,6 @@ impl PheromoneUpdater for AveragePheromoneUpdater {
                 updated_pheromone.increase_pheromone_value(taken_edge.key, increment)
             },
         )
-    }
-
-    fn on_after_cycle(&self, pheromone: Pheromone, _taken_routes: &RouteCollection) -> Pheromone {
-        pheromone
     }
 }
 

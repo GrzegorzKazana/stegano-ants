@@ -28,7 +28,11 @@ pub trait PheromoneUpdater: WithGuidingConfig + Display + Sized {
         })
     }
 
-    fn on_after_step(&self, pheromone: Pheromone, taken_edges: &RouteBatchWithHoles) -> Pheromone;
+    fn on_after_step(&self, pheromone: Pheromone, _taken_edges: &RouteBatchWithHoles) -> Pheromone {
+        pheromone
+    }
 
-    fn on_after_cycle(&self, pheromone: Pheromone, taken_routes: &RouteCollection) -> Pheromone;
+    fn on_after_cycle(&self, pheromone: Pheromone, _taken_routes: &RouteCollection) -> Pheromone {
+        pheromone
+    }
 }

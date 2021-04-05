@@ -171,7 +171,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn cyclical_updater_correctly_inits_the_pheromone() {
-        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2);
+        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_initialization(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -185,7 +185,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn cyclical_updater_correctly_updates_the_pheromone_after_step() {
-        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2);
+        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_step_update(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -199,7 +199,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn cyclical_updater_correctly_updates_the_pheromone_after_cycle() {
-        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2);
+        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_cycle_update(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
