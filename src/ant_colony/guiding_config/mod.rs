@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use crate::ant_colony::graph::Graph;
+use crate::ant_colony::pheromone_updater::UpdaterStringConfig;
 
 /// Common configuration context
 /// for pheromone updater and ant dispatcher
@@ -10,6 +11,7 @@ use crate::ant_colony::graph::Graph;
 pub struct GuidingConfig {
     pub ant_count: usize,
     pub num_of_steps_per_cycle: usize,
+    pub pheromone_updater_type: UpdaterStringConfig,
     pub graph_node_count: usize,
     pub graph_edge_count: usize,
     pub graph_min_distance: f32,
@@ -18,10 +20,16 @@ pub struct GuidingConfig {
 }
 
 impl GuidingConfig {
-    pub fn from_graph(ant_count: usize, num_of_steps_per_cycle: usize, graph: &Graph) -> Self {
+    pub fn from_graph(
+        ant_count: usize,
+        num_of_steps_per_cycle: usize,
+        pheromone_updater_type: UpdaterStringConfig,
+        graph: &Graph,
+    ) -> Self {
         GuidingConfig {
             ant_count,
             num_of_steps_per_cycle,
+            pheromone_updater_type,
             graph_node_count: graph.get_amount_of_nodes(),
             graph_edge_count: graph.get_amount_of_edges(),
             graph_min_distance: graph.min_edge_length(),

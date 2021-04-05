@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
@@ -14,7 +15,7 @@ use super::AntDispatcher;
 ///
 /// Dispatcher implementing the trait are only required to calculate a vector
 /// of probabilities coresponding to given edges.
-pub trait LikelihoodAntDispatcher: Display + Send + Sync {
+pub trait LikelihoodAntDispatcher: WithGuidingConfig + Display + Send + Sync + FromStr {
     fn cacluclate_node_likelihoods(
         &self,
         possible_next_edges: &[AdjacencyListEntry],
@@ -22,7 +23,7 @@ pub trait LikelihoodAntDispatcher: Display + Send + Sync {
     ) -> Vec<f32>;
 }
 
-impl<D: LikelihoodAntDispatcher + WithGuidingConfig> AntDispatcher for D {
+impl<D: LikelihoodAntDispatcher> AntDispatcher for D {
     #[cfg_attr(feature = "profiler", flame)]
     fn select_next_edge(
         &self,

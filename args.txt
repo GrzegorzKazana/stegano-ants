@@ -3,18 +3,19 @@
 # to load the args from file use the command:
 # `cargo run -q --release -- `cat args.txt | grep -v ^#``
 
-# --ants=1000
+# --ants=20
 --cycles=250
 # --stop-after=1000
 # --steps=100
---dispatcher=biased:2,2
---updater=const:1,0.001,1
+--dispatcher=biased
+--updater=cycle
+# --seed=43
 # --mask-width=100
 # --target-capacity=10000B
 tsp
 # --n-cities=100
-# --graph=./assets/tsp/oliver30.csv
---graph=./assets/tsp/kroa100.csv
+--graph=./assets/tsp/oliver30.csv
+# --graph=./assets/tsp/kroa100.csv
 # embed
 # --data assets/data/lorem_ipsum_large.txt
 # --image assets/images/house/house-m.bmp

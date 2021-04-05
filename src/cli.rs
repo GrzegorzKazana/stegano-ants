@@ -2,6 +2,9 @@ use clap::Clap;
 
 use crate::common::utils::Capacity;
 
+use crate::ant_colony::ant_dispatcher::DispatcherStringConfig;
+use crate::ant_colony::pheromone_updater::UpdaterStringConfig;
+
 #[derive(Clap, Debug)]
 #[clap(version = "1.0.0", author = "Grzegorz K. <kazana.grzegorz@gmail.com>")]
 pub struct Opts {
@@ -19,10 +22,10 @@ pub struct Opts {
     pub steps: Option<usize>,
 
     #[clap(short, long, about = "dispatcher definition in format <type>:<args>")]
-    pub dispatcher: String,
+    pub dispatcher: DispatcherStringConfig,
 
     #[clap(short, long, about = "updater type in format <type>:<args>")]
-    pub updater: String,
+    pub updater: UpdaterStringConfig,
 
     #[clap(short, long, about = "number of traning cycles")]
     pub cycles: Option<usize>,

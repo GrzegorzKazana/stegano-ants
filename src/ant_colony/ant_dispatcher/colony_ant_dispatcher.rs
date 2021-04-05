@@ -1,4 +1,6 @@
+use itertools::Itertools;
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
@@ -16,14 +18,14 @@ use super::AntDispatcher;
 ///
 /// Exploitation:
 /// selects edge with maximum score which is evaluated in the same way as in exploration mode.
-pub struct SystemAntDispatcher {
+pub struct ColonyAntDispatcher {
     exploitation_rate: f32,
     visibility_bias: f32,
 }
 
-impl SystemAntDispatcher {
+impl ColonyAntDispatcher {
     pub fn new(exploitation_rate: f32, visibility_bias: f32) -> Self {
-        SystemAntDispatcher {
+        ColonyAntDispatcher {
             exploitation_rate,
             visibility_bias,
         }
@@ -71,7 +73,7 @@ impl SystemAntDispatcher {
     }
 }
 
-impl AntDispatcher for SystemAntDispatcher {
+impl AntDispatcher for ColonyAntDispatcher {
     fn select_next_edge(
         &self,
         ant: &Ant,
@@ -87,9 +89,29 @@ impl AntDispatcher for SystemAntDispatcher {
     }
 }
 
-impl WithGuidingConfig for SystemAntDispatcher {}
+impl FromStr for ColonyAntDispatcher {
+    type Err = &'static str;
 
-impl Display for SystemAntDispatcher {
+    fn from_str(opts: &str) -> Result<Self, Self::Err> {
+        let error = "Failed to parse opts of ColonyAntDispatcher";
+
+        let (exploitation_rate_str, visibility_bias_str): (&str, &str) =
+            opts.splitn(2, ',').collect_tuple().ok_or(error)?;
+
+        let exploitation_rate = exploitation_rate_str.parse().map_err(|_| error)?;
+        let visibility_bias = visibility_bias_str.parse().map_err(|_| error)?;
+
+        Ok(ColonyAntDispatcher::new(exploitation_rate, visibility_bias))
+    }
+}
+
+impl WithGuidingConfig for ColonyAntDispatcher {
+    fn guided(_guide: &crate::ant_colony::guiding_config::GuidingConfig) -> Option<Self> {
+        Some(ColonyAntDispatcher::new(0.9, 2.0))
+    }
+}
+
+impl Display for ColonyAntDispatcher {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

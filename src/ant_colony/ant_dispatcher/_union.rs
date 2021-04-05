@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use std::fmt::Display;
 use std::str::FromStr;
 
@@ -6,7 +5,10 @@ use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 use crate::ant_colony::pheromone::Pheromone;
 use crate::ant_colony::{ant::Ant, guiding_config::WithGuidingConfig};
 
-use super::{AntDispatcher, BasicAntDispatcher, BiasedAntDispatcher, SystemAntDispatcher};
+use super::{
+    AntDispatcher, BasicAntDispatcher, BiasedAntDispatcher, ColonyAntDispatcher,
+    DispatcherStringConfig,
+};
 use crate::ant_colony::guiding_config::GuidingConfig;
 
 /// using an enum instead of run-time
@@ -14,7 +16,7 @@ use crate::ant_colony::guiding_config::GuidingConfig;
 pub enum Dispatchers {
     Basic(BasicAntDispatcher),
     Biased(BiasedAntDispatcher),
-    System(SystemAntDispatcher),
+    System(ColonyAntDispatcher),
 }
 
 impl Display for Dispatchers {
@@ -50,62 +52,38 @@ impl AntDispatcher for Dispatchers {
     }
 }
 
-impl WithGuidingConfig for Dispatchers {}
-
-impl Dispatchers {
-    pub fn from_string(config: &str, maybe_guide: Option<&GuidingConfig>) -> Option<Dispatchers> {
-        let mut config_iter = config.split(":");
-        let name = config_iter.next().unwrap_or_default();
-        let opts = config_iter.next().unwrap_or_default();
-
-        Self::from_string_with_opts(name, opts)
-            .or_else(|| maybe_guide.and_then(|guide| Self::from_string_with_guide(name, guide)))
-    }
-
-    fn from_string_with_opts(name: &str, opts: &str) -> Option<Self> {
-        match name {
-            "basic" => Option::Some(Self::Basic(BasicAntDispatcher)),
-
-            "biased" => {
-                let (pheromone_bias_str, visibility_bias_str): (&str, &str) =
-                    opts.splitn(2, ',').collect_tuple()?;
-
-                let pheromone_bias = pheromone_bias_str.parse().ok()?;
-                let visibility_bias = visibility_bias_str.parse().ok()?;
-                let dispatcher = BiasedAntDispatcher::new(pheromone_bias, visibility_bias);
-
-                Option::Some(Self::Biased(dispatcher))
-            }
-
-            "system" => {
-                let (exploitation_rate_str, visibility_bias_str): (&str, &str) =
-                    opts.splitn(2, ',').collect_tuple()?;
-
-                let exploitation_rate = exploitation_rate_str.parse().ok()?;
-                let visibility_bias = visibility_bias_str.parse().ok()?;
-                let dispatcher = SystemAntDispatcher::new(exploitation_rate, visibility_bias);
-
-                Option::Some(Self::System(dispatcher))
-            }
-
-            _ => Option::None,
-        }
-    }
-
-    fn from_string_with_guide(name: &str, guide: &GuidingConfig) -> Option<Self> {
-        match name {
-            "basic" => BasicAntDispatcher::guided(guide).map(Self::Basic),
-            "biased" => BiasedAntDispatcher::guided(guide).map(Self::Biased),
-            "system" => SystemAntDispatcher::guided(guide).map(Self::System),
-            _ => Option::None,
-        }
-    }
-}
-
 impl FromStr for Dispatchers {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Dispatchers::from_string(s, Option::None).ok_or("Failed to parse Dispatcher")
+        let config = DispatcherStringConfig::from_str(s)?;
+
+        Dispatchers::from_string_config(&config, None).ok_or("Failed to parse Dispatcher")
+    }
+}
+
+impl WithGuidingConfig for Dispatchers {}
+
+impl Dispatchers {
+    pub fn from_string_config(
+        config: &DispatcherStringConfig,
+        maybe_guide: Option<&GuidingConfig>,
+    ) -> Option<Dispatchers> {
+        match config {
+            DispatcherStringConfig::Basic(opts) => BasicAntDispatcher::from_str(opts)
+                .ok()
+                .or_else(|| maybe_guide.and_then(BasicAntDispatcher::guided))
+                .map(Self::Basic),
+
+            DispatcherStringConfig::Biased(opts) => BiasedAntDispatcher::from_str(opts)
+                .ok()
+                .or_else(|| maybe_guide.and_then(BiasedAntDispatcher::guided))
+                .map(Self::Biased),
+
+            DispatcherStringConfig::Colony(opts) => ColonyAntDispatcher::from_str(opts)
+                .ok()
+                .or_else(|| maybe_guide.and_then(ColonyAntDispatcher::guided))
+                .map(Self::System),
+        }
     }
 }

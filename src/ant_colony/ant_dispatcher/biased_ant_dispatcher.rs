@@ -1,8 +1,11 @@
+use itertools::Itertools;
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::graph::AdjacencyListEntry;
-use crate::ant_colony::guiding_config::WithGuidingConfig;
+use crate::ant_colony::guiding_config::{GuidingConfig, WithGuidingConfig};
 use crate::ant_colony::pheromone::Pheromone;
+use crate::ant_colony::pheromone_updater::UpdaterStringConfig;
 
 use super::LikelihoodAntDispatcher;
 
@@ -43,7 +46,35 @@ impl LikelihoodAntDispatcher for BiasedAntDispatcher {
     }
 }
 
-impl WithGuidingConfig for BiasedAntDispatcher {}
+impl FromStr for BiasedAntDispatcher {
+    type Err = &'static str;
+
+    fn from_str(opts: &str) -> Result<Self, Self::Err> {
+        let error = "Failed to parse opts of BiasedAntDispatcher";
+
+        let (pheromone_bias_str, visibility_bias_str): (&str, &str) =
+            opts.splitn(2, ',').collect_tuple().ok_or(error)?;
+
+        let pheromone_bias = pheromone_bias_str.parse().map_err(|_| error)?;
+        let visibility_bias = visibility_bias_str.parse().map_err(|_| error)?;
+
+        Ok(BiasedAntDispatcher::new(pheromone_bias, visibility_bias))
+    }
+}
+
+impl WithGuidingConfig for BiasedAntDispatcher {
+    fn guided(guide: &GuidingConfig) -> Option<Self> {
+        // values based on experiments and `Dorigo1991AntSA`
+        let (pheromone_bias, visibility_bias) = match guide.pheromone_updater_type {
+            UpdaterStringConfig::Const(_) => (2.0, 2.0),
+            UpdaterStringConfig::Average(_) => (1.0, 1.0),
+            UpdaterStringConfig::Cyclical(_) => (1.0, 2.5),
+            _ => (1.0, 1.0),
+        };
+
+        Some(BiasedAntDispatcher::new(pheromone_bias, visibility_bias))
+    }
+}
 
 impl Display for BiasedAntDispatcher {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

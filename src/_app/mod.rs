@@ -138,7 +138,12 @@ impl App {
         let graph = Rc::new(graph);
         let ant_count = opts.ants.unwrap_or(graph.get_amount_of_nodes());
         let num_of_steps_per_cycle = opts.steps.unwrap_or(graph.get_amount_of_nodes());
-        let guide = GuidingConfig::from_graph(ant_count, num_of_steps_per_cycle, &graph);
+        let guide = GuidingConfig::from_graph(
+            ant_count,
+            num_of_steps_per_cycle,
+            opts.updater.clone(),
+            &graph,
+        );
         let ant_dispatcher = Self::parse_dispatcher(&opts, &guide)?;
         let pheromone_updater = Self::parse_pheromone_updater(&opts, &guide)?;
 
@@ -176,14 +181,14 @@ impl App {
     }
 
     fn parse_dispatcher(opts: &Opts, guide: &GuidingConfig) -> AppResult<Dispatchers> {
-        Dispatchers::from_string(&opts.dispatcher, Option::Some(guide))
-            .ok_or(format!("invalid dispatcher arg {}", opts.dispatcher))
+        Dispatchers::from_string_config(&opts.dispatcher, Option::Some(guide))
+            .ok_or(format!("invalid dispatcher arg"))
             .map_err(AppError::IoError)
     }
 
     fn parse_pheromone_updater(opts: &Opts, guide: &GuidingConfig) -> AppResult<Updaters> {
-        Updaters::from_string(&opts.updater, Option::Some(guide))
-            .ok_or(format!("invalid updater arg {}", opts.updater))
+        Updaters::from_string_config(&opts.updater, Option::Some(guide))
+            .ok_or(format!("invalid updater arg"))
             .map_err(AppError::IoError)
     }
 

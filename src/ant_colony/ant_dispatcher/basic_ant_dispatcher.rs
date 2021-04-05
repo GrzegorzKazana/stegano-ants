@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::graph::AdjacencyListEntry;
 use crate::ant_colony::guiding_config::WithGuidingConfig;
@@ -26,6 +27,14 @@ impl LikelihoodAntDispatcher for BasicAntDispatcher {
                 edge.visibility * pheromone_level
             })
             .collect::<Vec<_>>()
+    }
+}
+
+impl FromStr for BasicAntDispatcher {
+    type Err = &'static str;
+
+    fn from_str(_: &str) -> Result<Self, Self::Err> {
+        Ok(BasicAntDispatcher)
     }
 }
 

@@ -1,4 +1,5 @@
-use std::fmt::Display;
+use itertools::Itertools;
+use std::{fmt::Display, str::FromStr};
 
 use crate::ant_colony::graph::RouteBatchWithHoles;
 use crate::ant_colony::guiding_config::WithGuidingConfig;
@@ -49,7 +50,32 @@ impl PheromoneUpdater for AveragePheromoneUpdater {
     }
 }
 
-impl WithGuidingConfig for AveragePheromoneUpdater {}
+impl FromStr for AveragePheromoneUpdater {
+    type Err = &'static str;
+
+    fn from_str(opts: &str) -> Result<Self, Self::Err> {
+        let error = "Failed to parse opts of AveragePheromoneUpdater";
+
+        let (initial_value_str, evaporation_rate_str, increment_str): (&str, &str, &str) =
+            opts.splitn(3, ',').collect_tuple().ok_or(error)?;
+
+        let initial_value = initial_value_str.parse().map_err(|_| error)?;
+        let evaporation_rate = evaporation_rate_str.parse().map_err(|_| error)?;
+        let increment = increment_str.parse().map_err(|_| error)?;
+
+        Ok(AveragePheromoneUpdater::new(
+            initial_value,
+            evaporation_rate,
+            increment,
+        ))
+    }
+}
+
+impl WithGuidingConfig for AveragePheromoneUpdater {
+    fn guided(_guide: &crate::ant_colony::guiding_config::GuidingConfig) -> Option<Self> {
+        Some(AveragePheromoneUpdater::new(1.0, 0.001, 1.0))
+    }
+}
 
 impl Display for AveragePheromoneUpdater {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

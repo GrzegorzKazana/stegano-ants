@@ -1,7 +1,8 @@
-use std::fmt::Display;
+use itertools::Itertools;
+use std::{fmt::Display, str::FromStr};
 
 use crate::ant_colony::graph::RouteBatchWithHoles;
-use crate::ant_colony::guiding_config::WithGuidingConfig;
+use crate::ant_colony::guiding_config::{GuidingConfig, WithGuidingConfig};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
@@ -47,7 +48,32 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
     }
 }
 
-impl WithGuidingConfig for ConstantPheromoneUpdater {}
+impl FromStr for ConstantPheromoneUpdater {
+    type Err = &'static str;
+
+    fn from_str(opts: &str) -> Result<Self, Self::Err> {
+        let error = "Failed to parse opts of ConstantPheromoneUpdater";
+
+        let (initial_value_str, evaporation_rate_str, increment_str): (&str, &str, &str) =
+            opts.splitn(3, ',').collect_tuple().ok_or(error)?;
+
+        let initial_value = initial_value_str.parse().map_err(|_| error)?;
+        let evaporation_rate = evaporation_rate_str.parse().map_err(|_| error)?;
+        let increment = increment_str.parse().map_err(|_| error)?;
+
+        Ok(ConstantPheromoneUpdater::new(
+            initial_value,
+            evaporation_rate,
+            increment,
+        ))
+    }
+}
+
+impl WithGuidingConfig for ConstantPheromoneUpdater {
+    fn guided(_guide: &GuidingConfig) -> Option<Self> {
+        Some(ConstantPheromoneUpdater::new(1.0, 0.001, 1.0))
+    }
+}
 
 impl Display for ConstantPheromoneUpdater {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

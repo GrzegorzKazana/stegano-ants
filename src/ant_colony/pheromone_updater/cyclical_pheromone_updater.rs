@@ -1,4 +1,5 @@
-use std::fmt::Display;
+use itertools::Itertools;
+use std::{fmt::Display, str::FromStr};
 
 use crate::ant_colony::graph::RouteCollection;
 use crate::ant_colony::guiding_config::WithGuidingConfig;
@@ -69,7 +70,43 @@ impl PheromoneUpdater for CyclicalPheromoneUpdater {
     }
 }
 
-impl WithGuidingConfig for CyclicalPheromoneUpdater {}
+impl FromStr for CyclicalPheromoneUpdater {
+    type Err = &'static str;
+
+    fn from_str(opts: &str) -> Result<Self, Self::Err> {
+        let error = "Failed to parse opts of CyclicalPheromoneUpdater";
+
+        let (initial_value_str, evaporation_rate_str, increment_str, target_len_str): (
+            &str,
+            &str,
+            &str,
+            &str,
+        ) = opts.splitn(4, ',').collect_tuple().ok_or(error)?;
+
+        let initial_value = initial_value_str.parse().map_err(|_| error)?;
+        let evaporation_rate = evaporation_rate_str.parse().map_err(|_| error)?;
+        let increment = increment_str.parse().map_err(|_| error)?;
+        let target_len = target_len_str.parse().map_err(|_| error)?;
+
+        Ok(CyclicalPheromoneUpdater::new(
+            initial_value,
+            evaporation_rate,
+            increment,
+            target_len,
+        ))
+    }
+}
+
+impl WithGuidingConfig for CyclicalPheromoneUpdater {
+    fn guided(guide: &crate::ant_colony::guiding_config::GuidingConfig) -> Option<Self> {
+        Some(CyclicalPheromoneUpdater::new(
+            1.0,
+            0.3,
+            1.0,
+            guide.num_of_steps_per_cycle,
+        ))
+    }
+}
 
 impl Display for CyclicalPheromoneUpdater {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
