@@ -2,14 +2,14 @@ use itertools::Itertools;
 use std::{fmt::Display, str::FromStr};
 
 use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
-use crate::ant_colony::guided_configuration::WithGuidingConfig;
+use crate::ant_colony::guiding_config::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::{
     AveragePheromoneUpdater, ConstantPheromoneUpdater, CyclicalPheromoneUpdater, PheromoneUpdater,
     SystemPheromoneUpdater,
 };
-use crate::ant_colony::guided_configuration::GuidingConfig;
+use crate::ant_colony::guiding_config::GuidingConfig;
 
 /// using an enum instead of run-time
 /// polymorhism to avoid cost of dynamic dispatch

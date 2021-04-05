@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
-use crate::ant_colony::guided_configuration::WithGuidingConfig;
+use crate::ant_colony::guiding_config::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;

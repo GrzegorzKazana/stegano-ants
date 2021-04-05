@@ -8,7 +8,7 @@ mod system_pheromone_updater;
 use std::fmt::Display;
 
 use crate::ant_colony::graph::{RouteBatch, RouteBatchWithHoles, RouteCollection};
-use crate::ant_colony::guided_configuration::WithGuidingConfig;
+use crate::ant_colony::guiding_config::WithGuidingConfig;
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 pub use _union::Updaters;

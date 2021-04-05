@@ -4,10 +4,10 @@ use std::str::FromStr;
 
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
 use crate::ant_colony::pheromone::Pheromone;
-use crate::ant_colony::{ant::Ant, guided_configuration::WithGuidingConfig};
+use crate::ant_colony::{ant::Ant, guiding_config::WithGuidingConfig};
 
 use super::{AntDispatcher, BasicAntDispatcher, BiasedAntDispatcher, SystemAntDispatcher};
-use crate::ant_colony::guided_configuration::GuidingConfig;
+use crate::ant_colony::guiding_config::GuidingConfig;
 
 /// using an enum instead of run-time
 /// polymorhism to avoid cost of dynamic dispatch

@@ -41,7 +41,7 @@ impl Display for GuidingConfig {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Guided config:\n\t\
+            "Guiding config:\n\t\
             ant count: {}\n\t\
             number of steps per cycle: {}\n\t\
             graph: {} nodes, {} edges, distances: <{}, {}> (avg: {})",

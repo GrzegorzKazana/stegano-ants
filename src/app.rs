@@ -8,7 +8,7 @@ use crate::common::utils::extend_basename;
 
 use crate::ant_colony::ant_dispatcher::Dispatchers;
 use crate::ant_colony::colony::{Colony, Config, ConfigurableColony, StepwiseParallelColony};
-use crate::ant_colony::guided_configuration::GuidingConfig;
+use crate::ant_colony::guiding_config::GuidingConfig;
 use crate::ant_colony::pheromone_updater::Updaters;
 use crate::ant_colony::runner::ColonyRunner;
 
@@ -110,6 +110,7 @@ impl<'a> App<'a> {
             rng,
         };
 
+        self.cli.print(&guide);
         self.cli.print(&config);
 
         let colony = StepwiseParallelColony::new(config, &graph);
