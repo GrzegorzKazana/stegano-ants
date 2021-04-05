@@ -1,4 +1,5 @@
 use rand::{prelude::StdRng, SeedableRng};
+use std::rc::Rc;
 
 use crate::cli::{EmbedCommand, ExtractCommand, Opts, SubCommand};
 use crate::common::cli_output::{CliOutput, CliOutputs};
@@ -22,13 +23,13 @@ use crate::steganography::quality_assessment::ImageMagick;
 
 type AppResult<T> = Result<T, AppError>;
 
-pub struct App<'a> {
+pub struct App {
     opts: Opts,
-    cli: &'a CliOutputs,
+    cli: Rc<CliOutputs>,
 }
 
-impl<'a> App<'a> {
-    pub fn new(opts: Opts, cli: &'a CliOutputs) -> Self {
+impl App {
+    pub fn new(opts: Opts, cli: Rc<CliOutputs>) -> Self {
         App { opts, cli }
     }
 
@@ -97,6 +98,7 @@ impl<'a> App<'a> {
 
         let img_graph_converter = EdgeChangeConverter::new(&downscaled_transport_image);
         let graph = img_graph_converter.img_to_graph();
+        let graph = Rc::new(graph);
 
         let guide = GuidingConfig::from_graph(opts.ants, opts.steps, &graph);
         let ant_dispatcher = Self::parse_dispatcher(&opts, &guide)?;
@@ -113,8 +115,8 @@ impl<'a> App<'a> {
         self.cli.print(&guide);
         self.cli.print(&config);
 
-        let colony = StepwiseParallelColony::new(config, &graph);
-        let runner = ColonyRunner::new(colony, &graph, self.cli);
+        let colony = StepwiseParallelColony::new(config, Rc::clone(&graph));
+        let runner = ColonyRunner::new(colony, Rc::clone(&graph), Rc::clone(&self.cli));
         let executed_runner = Self::execute_runner(runner, &opts)?;
 
         let pheromone = executed_runner.get_pheromone();
@@ -154,10 +156,10 @@ impl<'a> App<'a> {
             .map_err(AppError::IoError)
     }
 
-    fn execute_runner<'b, C: Colony, IO: CliOutput>(
-        runner: ColonyRunner<'b, C, IO>,
+    fn execute_runner<C: Colony, IO: CliOutput>(
+        runner: ColonyRunner<C, IO>,
         opts: &Opts,
-    ) -> AppResult<ColonyRunner<'b, C, IO>> {
+    ) -> AppResult<ColonyRunner<C, IO>> {
         if let Option::Some(n_cycles) = opts.cycles {
             Option::Some(runner.train(1, n_cycles))
         } else if let Option::Some(n_until) = opts.stop_after {

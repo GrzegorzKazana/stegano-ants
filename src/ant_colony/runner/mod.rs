@@ -1,5 +1,7 @@
 mod summary;
 
+use std::rc::Rc;
+
 use crate::ant_colony::colony::Colony;
 use crate::ant_colony::graph::Graph;
 use crate::ant_colony::pheromone::Pheromone;
@@ -9,16 +11,24 @@ use crate::common::utils::{measure, produce_until};
 
 pub use summary::{CycleSummary, EpochSummary};
 
-pub struct ColonyRunner<'a, C: Colony, IO: CliOutput> {
+pub struct ColonyRunner<C, IO>
+where
+    C: Colony,
+    IO: CliOutput,
+{
     colony: C,
-    graph: &'a Graph,
-    io: &'a IO,
+    graph: Rc<Graph>,
+    io: Rc<IO>,
     cycle_history: Vec<CycleSummary>,
     epoch_history: Vec<EpochSummary>,
 }
 
-impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
-    pub fn new(colony: C, graph: &'a Graph, io: &'a IO) -> Self {
+impl<C, IO> ColonyRunner<C, IO>
+where
+    C: Colony,
+    IO: CliOutput,
+{
+    pub fn new(colony: C, graph: Rc<Graph>, io: Rc<IO>) -> Self {
         ColonyRunner {
             colony,
             graph,
@@ -47,9 +57,9 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
 
         let (colony, next_cycle_history) = produce_until(
             (init_colony, Vec::new()),
-            |(colony, history), idx| ColonyRunner::train_cycle(colony, io, history, idx),
+            |(colony, history), idx| ColonyRunner::train_cycle(colony, io.as_ref(), history, idx),
             |(_, history), _| {
-                ColonyRunner::<'a, C, IO>::had_no_improvement_in_n_last_steps(history, n_until)
+                ColonyRunner::<C, IO>::had_no_improvement_in_n_last_steps(history, n_until)
             },
         );
 
@@ -88,7 +98,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
         let (colony, next_cycle_history) = (0..n_cycles).fold(
             (init_colony, Vec::with_capacity(n_cycles)),
             |(colony, summaries), cycle_idx| {
-                ColonyRunner::train_cycle(colony, io, summaries, cycle_idx)
+                ColonyRunner::train_cycle(colony, io.as_ref(), summaries, cycle_idx)
             },
         );
 
@@ -117,7 +127,7 @@ impl<'a, C: Colony, IO: CliOutput> ColonyRunner<'a, C, IO> {
 
     fn train_cycle(
         colony: C,
-        io: &'a IO,
+        io: &IO,
         mut summaries: Vec<CycleSummary>,
         cycle_idx: usize,
     ) -> (C, Vec<CycleSummary>) {

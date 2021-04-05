@@ -87,5 +87,4 @@
 -   https://en.wikipedia.org/wiki/Color_difference
 
 -   change thee pheromone cycle updater to also take account of number of steps
--   precalculate node visibility to avoid division
 -   zaimplementować min max system https://www.cs.ubc.ca/~hoos/Publ/fgcs00.pdf

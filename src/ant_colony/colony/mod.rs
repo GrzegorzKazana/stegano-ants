@@ -1,4 +1,5 @@
 use rand::Rng;
+use std::rc::Rc;
 
 mod _tests;
 mod config;
@@ -25,6 +26,11 @@ pub trait Colony {
     fn get_ants(&self) -> &[Ant];
 }
 
-pub trait ConfigurableColony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
-    fn new(config: Config<U, D, R>, graph: &'a Graph) -> Self;
+pub trait ConfigurableColony {
+    type Updater: PheromoneUpdater;
+    type Dispatcher: AntDispatcher;
+    type Random: Rng;
+
+    fn new(config: Config<Self::Updater, Self::Dispatcher, Self::Random>, graph: Rc<Graph>)
+        -> Self;
 }
