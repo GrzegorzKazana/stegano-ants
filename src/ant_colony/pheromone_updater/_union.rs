@@ -16,7 +16,7 @@ pub enum Updaters {
     Average(AveragePheromoneUpdater),
     Const(ConstantPheromoneUpdater),
     Cyclical(CyclicalPheromoneUpdater),
-    System(ColonyPheromoneUpdater),
+    Colony(ColonyPheromoneUpdater),
 }
 
 impl PheromoneUpdater for Updaters {
@@ -25,7 +25,7 @@ impl PheromoneUpdater for Updaters {
             Updaters::Average(updater) => updater.get_initial_value(),
             Updaters::Const(updater) => updater.get_initial_value(),
             Updaters::Cyclical(updater) => updater.get_initial_value(),
-            Updaters::System(updater) => updater.get_initial_value(),
+            Updaters::Colony(updater) => updater.get_initial_value(),
         }
     }
 
@@ -34,7 +34,7 @@ impl PheromoneUpdater for Updaters {
             Updaters::Average(updater) => updater.on_after_step(pheromone, taken_edges),
             Updaters::Const(updater) => updater.on_after_step(pheromone, taken_edges),
             Updaters::Cyclical(updater) => updater.on_after_step(pheromone, taken_edges),
-            Updaters::System(updater) => updater.on_after_step(pheromone, taken_edges),
+            Updaters::Colony(updater) => updater.on_after_step(pheromone, taken_edges),
         }
     }
 
@@ -43,7 +43,7 @@ impl PheromoneUpdater for Updaters {
             Updaters::Average(updater) => updater.on_after_cycle(pheromone, taken_routes),
             Updaters::Const(updater) => updater.on_after_cycle(pheromone, taken_routes),
             Updaters::Cyclical(updater) => updater.on_after_cycle(pheromone, taken_routes),
-            Updaters::System(updater) => updater.on_after_cycle(pheromone, taken_routes),
+            Updaters::Colony(updater) => updater.on_after_cycle(pheromone, taken_routes),
         }
     }
 }
@@ -66,7 +66,7 @@ impl Display for Updaters {
             Updaters::Average(updater) => updater.fmt(f),
             Updaters::Const(updater) => updater.fmt(f),
             Updaters::Cyclical(updater) => updater.fmt(f),
-            Updaters::System(updater) => updater.fmt(f),
+            Updaters::Colony(updater) => updater.fmt(f),
         }
     }
 }
@@ -95,7 +95,7 @@ impl Updaters {
             UpdaterStringConfig::Colony(opts) => ColonyPheromoneUpdater::from_str(opts)
                 .ok()
                 .or_else(|| maybe_guide.and_then(ColonyPheromoneUpdater::guided))
-                .map(Self::System),
+                .map(Self::Colony),
         }
     }
 }

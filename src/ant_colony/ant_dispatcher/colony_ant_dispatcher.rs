@@ -95,11 +95,12 @@ impl FromStr for ColonyAntDispatcher {
     fn from_str(opts: &str) -> Result<Self, Self::Err> {
         let error = "Failed to parse opts of ColonyAntDispatcher";
 
-        let (exploitation_rate_str, visibility_bias_str): (&str, &str) =
-            opts.splitn(2, ',').collect_tuple().ok_or(error)?;
-
-        let exploitation_rate = exploitation_rate_str.parse().map_err(|_| error)?;
-        let visibility_bias = visibility_bias_str.parse().map_err(|_| error)?;
+        let (exploitation_rate, visibility_bias): (f32, f32) = opts
+            .splitn(2, ',')
+            .map(str::parse)
+            .filter_map(Result::ok)
+            .collect_tuple()
+            .ok_or(error)?;
 
         Ok(ColonyAntDispatcher::new(exploitation_rate, visibility_bias))
     }

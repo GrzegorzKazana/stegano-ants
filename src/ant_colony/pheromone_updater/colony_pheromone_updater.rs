@@ -92,23 +92,22 @@ impl FromStr for ColonyPheromoneUpdater {
         let error = "Failed to parse opts of ColonyPheromoneUpdater";
 
         let (
-            initial_and_step_increment_str,
-            step_evaporation_rate_str,
-            cycle_evaporation_rate_str,
-            target_len_str,
-        ): (&str, &str, &str, &str) = opts.splitn(4, ',').collect_tuple().ok_or(error)?;
-
-        let initial_and_step_increment =
-            initial_and_step_increment_str.parse().map_err(|_| error)?;
-        let step_evaporation_rate = step_evaporation_rate_str.parse().map_err(|_| error)?;
-        let cycle_evaporation_rate = cycle_evaporation_rate_str.parse().map_err(|_| error)?;
-        let target_len = target_len_str.parse().map_err(|_| error)?;
+            initial_and_step_increment,
+            step_evaporation_rate,
+            cycle_evaporation_rate,
+            target_len,
+        ): (f32, f32, f32, f32) = opts
+            .splitn(4, ',')
+            .map(str::parse)
+            .filter_map(Result::ok)
+            .collect_tuple()
+            .ok_or(error)?;
 
         Ok(ColonyPheromoneUpdater::new(
             initial_and_step_increment,
             step_evaporation_rate,
             cycle_evaporation_rate,
-            target_len,
+            target_len as usize,
         ))
     }
 }

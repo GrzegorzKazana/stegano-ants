@@ -56,12 +56,12 @@ impl FromStr for AveragePheromoneUpdater {
     fn from_str(opts: &str) -> Result<Self, Self::Err> {
         let error = "Failed to parse opts of AveragePheromoneUpdater";
 
-        let (initial_value_str, evaporation_rate_str, increment_str): (&str, &str, &str) =
-            opts.splitn(3, ',').collect_tuple().ok_or(error)?;
-
-        let initial_value = initial_value_str.parse().map_err(|_| error)?;
-        let evaporation_rate = evaporation_rate_str.parse().map_err(|_| error)?;
-        let increment = increment_str.parse().map_err(|_| error)?;
+        let (initial_value, evaporation_rate, increment): (f32, f32, f32) = opts
+            .splitn(3, ',')
+            .map(str::parse)
+            .filter_map(Result::ok)
+            .collect_tuple()
+            .ok_or(error)?;
 
         Ok(AveragePheromoneUpdater::new(
             initial_value,

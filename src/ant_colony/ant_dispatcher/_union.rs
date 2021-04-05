@@ -16,7 +16,7 @@ use crate::ant_colony::guiding_config::GuidingConfig;
 pub enum Dispatchers {
     Basic(BasicAntDispatcher),
     Biased(BiasedAntDispatcher),
-    System(ColonyAntDispatcher),
+    Colony(ColonyAntDispatcher),
 }
 
 impl Display for Dispatchers {
@@ -24,7 +24,7 @@ impl Display for Dispatchers {
         match self {
             Dispatchers::Basic(dispatcher) => dispatcher.fmt(f),
             Dispatchers::Biased(dispatcher) => dispatcher.fmt(f),
-            Dispatchers::System(dispatcher) => dispatcher.fmt(f),
+            Dispatchers::Colony(dispatcher) => dispatcher.fmt(f),
         }
     }
 }
@@ -45,7 +45,7 @@ impl AntDispatcher for Dispatchers {
             Dispatchers::Biased(dispatcher) => {
                 dispatcher.select_next_edge(ant, graph, pheromone, sample_seed, strategy_seed)
             }
-            Dispatchers::System(dispatcher) => {
+            Dispatchers::Colony(dispatcher) => {
                 dispatcher.select_next_edge(ant, graph, pheromone, sample_seed, strategy_seed)
             }
         }
@@ -83,7 +83,7 @@ impl Dispatchers {
             DispatcherStringConfig::Colony(opts) => ColonyAntDispatcher::from_str(opts)
                 .ok()
                 .or_else(|| maybe_guide.and_then(ColonyAntDispatcher::guided))
-                .map(Self::System),
+                .map(Self::Colony),
         }
     }
 }

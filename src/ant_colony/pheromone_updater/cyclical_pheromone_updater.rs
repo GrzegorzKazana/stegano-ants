@@ -76,23 +76,18 @@ impl FromStr for CyclicalPheromoneUpdater {
     fn from_str(opts: &str) -> Result<Self, Self::Err> {
         let error = "Failed to parse opts of CyclicalPheromoneUpdater";
 
-        let (initial_value_str, evaporation_rate_str, increment_str, target_len_str): (
-            &str,
-            &str,
-            &str,
-            &str,
-        ) = opts.splitn(4, ',').collect_tuple().ok_or(error)?;
-
-        let initial_value = initial_value_str.parse().map_err(|_| error)?;
-        let evaporation_rate = evaporation_rate_str.parse().map_err(|_| error)?;
-        let increment = increment_str.parse().map_err(|_| error)?;
-        let target_len = target_len_str.parse().map_err(|_| error)?;
+        let (initial_value, evaporation_rate, increment, target_len): (f32, f32, f32, f32) = opts
+            .splitn(4, ',')
+            .map(str::parse)
+            .filter_map(Result::ok)
+            .collect_tuple()
+            .ok_or(error)?;
 
         Ok(CyclicalPheromoneUpdater::new(
             initial_value,
             evaporation_rate,
             increment,
-            target_len,
+            target_len as usize,
         ))
     }
 }
