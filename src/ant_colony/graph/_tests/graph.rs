@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod graph_tests {
-    use super::super::_mocks::{mock_graph_tuple, mock_graph_vector};
+    use super::super::_mocks::{mock_coordinates, mock_graph_tuple, mock_graph_vector};
     use crate::ant_colony::graph::Graph;
 
     #[test]
@@ -33,6 +33,14 @@ mod graph_tests {
         assert_eq!(
             Graph::from_node_vector(mock_graph_vector()),
             Graph::from_neighbour_tuples(mock_graph_tuple())
+        )
+    }
+
+    #[test]
+    fn it_supports_initialization_from_coords() {
+        assert_eq!(
+            Graph::from_node_vector(mock_graph_vector()),
+            Graph::from_coordinate_csv(mock_coordinates())
         )
     }
 }

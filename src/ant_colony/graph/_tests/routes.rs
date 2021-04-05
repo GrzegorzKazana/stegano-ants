@@ -9,18 +9,21 @@ mod graph_routes_tests {
                 from: 0,
                 to: 1,
                 distance: 1.0,
+                visibility: 1.0,
             })
             .add_step(AdjacencyListEntry {
                 key: 1,
                 from: 1,
                 to: 2,
                 distance: 2.0,
+                visibility: 0.5,
             })
             .add_step(AdjacencyListEntry {
                 key: 2,
                 from: 2,
                 to: 3,
                 distance: 3.0,
+                visibility: 0.3333,
             })
     }
 

@@ -1,9 +1,11 @@
+use crate::ant_colony::runner::{CycleSummary, EpochSummary};
 use crate::steganography::data::Data;
 use crate::steganography::quality_assessment::QualityOption;
 
 pub enum ExecutionSummary {
     Embed(EmbeddingSummary),
     Extract(ExtractionSummary),
+    Tsp(TspSummary),
 }
 
 impl ToString for ExecutionSummary {
@@ -11,6 +13,7 @@ impl ToString for ExecutionSummary {
         match self {
             ExecutionSummary::Embed(summary) => summary.to_string(),
             ExecutionSummary::Extract(summary) => summary.to_string(),
+            ExecutionSummary::Tsp(summary) => summary.to_string(),
         }
     }
 }
@@ -89,5 +92,22 @@ impl ExtractionSummary {
 impl ToString for ExtractionSummary {
     fn to_string(&self) -> String {
         format!("Extracted:\n{}", self.extracted_data.to_string())
+    }
+}
+
+pub struct TspSummary {
+    cycle: CycleSummary,
+    epoch: EpochSummary,
+}
+
+impl TspSummary {
+    pub fn new(cycle: CycleSummary, epoch: EpochSummary) -> Self {
+        TspSummary { epoch, cycle }
+    }
+}
+
+impl ToString for TspSummary {
+    fn to_string(&self) -> String {
+        format!("{}", self.epoch.to_string())
     }
 }

@@ -9,6 +9,7 @@ cfg_if! {
 
 use rand::{distributions::Uniform, Rng};
 use std::fmt::Display;
+use std::rc::Rc;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::ant_dispatcher::AntDispatcher;
@@ -19,16 +20,24 @@ use crate::common::utils::random_pair_iter;
 
 use super::{Colony, Config, ConfigurableColony};
 
-pub struct StepwiseParallelColony<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> {
+pub struct StepwiseParallelColony<U, D, R>
+where
+    U: PheromoneUpdater,
+    D: AntDispatcher,
+    R: Rng,
+{
     ants: Vec<Ant>,
-    graph: &'a Graph,
+    graph: Rc<Graph>,
     pheromone: Pheromone,
     routes: RouteCollection,
     config: Config<U, D, R>,
 }
 
-impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony
-    for StepwiseParallelColony<'a, U, D, R>
+impl<U, D, R> Colony for StepwiseParallelColony<U, D, R>
+where
+    U: PheromoneUpdater,
+    D: AntDispatcher,
+    R: Rng,
 {
     fn execute_n_cycles(self, n_cycles: usize) -> Self {
         (0..n_cycles).fold(self, StepwiseParallelColony::execute_cycle)
@@ -68,10 +77,20 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Colony
     }
 }
 
-impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> ConfigurableColony<'a, U, D, R>
-    for StepwiseParallelColony<'a, U, D, R>
+impl<U, D, R> ConfigurableColony for StepwiseParallelColony<U, D, R>
+where
+    U: PheromoneUpdater,
+    D: AntDispatcher,
+    R: Rng,
 {
-    fn new(config: Config<U, D, R>, graph: &'a Graph) -> Self {
+    type Updater = U;
+    type Dispatcher = D;
+    type Random = R;
+
+    fn new(
+        config: Config<Self::Updater, Self::Dispatcher, Self::Random>,
+        graph: Rc<Graph>,
+    ) -> Self {
         StepwiseParallelColony {
             graph,
             config,
@@ -83,7 +102,12 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> ConfigurableColony<'a, U
     }
 }
 
-impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'a, U, D, R> {
+impl<U, D, R> StepwiseParallelColony<U, D, R>
+where
+    U: PheromoneUpdater,
+    D: AntDispatcher,
+    R: Rng,
+{
     #[cfg_attr(feature = "profiler", flame)]
     fn execute_step_for_all_ants(self, _step: usize) -> Self {
         let StepwiseParallelColony {
@@ -114,11 +138,12 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
             }
         }
 
+        let shared_graph = graph.as_ref();
         let (ants, taken_edges): (Vec<Ant>, RouteBatchWithHoles) = workload
             .map(|(ant, (sample_seed, strategy_seed))| {
                 let maybe_next_edge = ant_dispatcher.select_next_edge(
                     &ant,
-                    &graph,
+                    shared_graph,
                     &init_pheromone,
                     sample_seed,
                     strategy_seed,
@@ -139,6 +164,7 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
 
         StepwiseParallelColony {
             ants,
+            graph,
             routes,
             pheromone,
             config: Config {
@@ -186,8 +212,11 @@ impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> StepwiseParallelColony<'
     }
 }
 
-impl<'a, U: PheromoneUpdater, D: AntDispatcher, R: Rng> Display
-    for StepwiseParallelColony<'a, U, D, R>
+impl<U, D, R> Display for StepwiseParallelColony<U, D, R>
+where
+    U: PheromoneUpdater,
+    D: AntDispatcher,
+    R: Rng,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(

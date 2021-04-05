@@ -1,6 +1,7 @@
 mod _tests;
 mod capacity;
 mod compare_float;
+mod euclidean_distance;
 mod exact_sized_chain;
 mod extend_basename;
 mod identity;
@@ -15,6 +16,7 @@ mod weighted_sample;
 
 pub use capacity::Capacity;
 pub use compare_float::compare_float;
+pub use euclidean_distance::Euclidean;
 pub use exact_sized_chain::ExactChainExt;
 pub use extend_basename::extend_basename;
 pub use identity::identity;

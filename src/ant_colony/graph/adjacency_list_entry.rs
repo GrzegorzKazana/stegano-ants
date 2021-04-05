@@ -10,6 +10,7 @@ pub struct AdjacencyListEntry {
     pub from: NodeId,
     pub to: NodeId,
     pub distance: f32,
+    pub visibility: f32,
 }
 
 impl AdjacencyListEntry {
@@ -19,6 +20,7 @@ impl AdjacencyListEntry {
             from,
             to,
             distance,
+            visibility: 1.0 / (distance + stability_factor!()),
         }
     }
 }

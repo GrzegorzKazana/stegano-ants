@@ -10,6 +10,8 @@ pub enum AppError {
     DataLoadingError(std::io::Error),
 
     IoError(String),
+
+    ColonyExecutionFailed,
 }
 
 impl Display for AppError {
@@ -19,6 +21,7 @@ impl Display for AppError {
             AppError::ImageSavingError(err) => write!(f, "ImageSavingError: {}", err),
             AppError::DataLoadingError(err) => write!(f, "DataLoadingError: {}", err),
             AppError::IoError(err) => write!(f, "IoError: {}", err),
+            AppError::ColonyExecutionFailed => write!(f, "Failed to execute the colony"),
         }
     }
 }

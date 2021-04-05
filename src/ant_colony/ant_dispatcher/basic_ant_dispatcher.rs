@@ -1,6 +1,8 @@
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::graph::AdjacencyListEntry;
+use crate::ant_colony::guiding_config::WithGuidingConfig;
 use crate::ant_colony::pheromone::Pheromone;
 
 use super::LikelihoodAntDispatcher;
@@ -20,14 +22,23 @@ impl LikelihoodAntDispatcher for BasicAntDispatcher {
         possible_next_edges
             .iter()
             .map(|edge| {
-                let visibility = 1.0 / edge.distance;
                 let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-                visibility * pheromone_level + stability_factor!()
+                edge.visibility * pheromone_level
             })
             .collect::<Vec<_>>()
     }
 }
+
+impl FromStr for BasicAntDispatcher {
+    type Err = &'static str;
+
+    fn from_str(_: &str) -> Result<Self, Self::Err> {
+        Ok(BasicAntDispatcher)
+    }
+}
+
+impl WithGuidingConfig for BasicAntDispatcher {}
 
 impl Display for BasicAntDispatcher {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

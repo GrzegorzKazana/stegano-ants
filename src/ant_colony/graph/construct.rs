@@ -1,6 +1,9 @@
 use rand::{distributions::Uniform, Rng};
 use std::collections::BTreeMap;
 
+use crate::common::utils::split_once;
+use crate::common::utils::Euclidean;
+
 use super::{AdjacencyListEntry, Graph, Node, NodeId};
 
 impl Graph {
@@ -49,6 +52,46 @@ impl Graph {
             .collect();
 
         Graph::from_neighbour_tuples(tuples)
+    }
+
+    pub fn from_coordinates(points: &[(u16, u16)]) -> Self {
+        let data = (0u32..).zip(points.iter()).collect::<Vec<_>>();
+
+        let nodes = data
+            .iter()
+            .cloned()
+            .map(|(idx, coords)| {
+                let adjacency_list = data
+                    .iter()
+                    .cloned()
+                    .filter(|(other_idx, _)| *other_idx != idx)
+                    .map(|(other_idx, other_coords)| {
+                        AdjacencyListEntry::new(
+                            idx,
+                            other_idx,
+                            Euclidean::dist(*coords, *other_coords),
+                        )
+                    })
+                    .collect::<Vec<_>>();
+
+                Node {
+                    id: idx,
+                    adjacency_list,
+                }
+            })
+            .collect::<Vec<_>>();
+
+        Self::from_node_vector(nodes)
+    }
+
+    pub fn from_coordinate_csv(data: &str) -> Self {
+        let coords: Vec<(u16, u16)> = data
+            .split("\n")
+            .filter_map(|line| split_once(line, ","))
+            .filter_map(|(a_str, b_str)| a_str.parse().ok().zip(b_str.parse().ok()))
+            .collect::<Vec<_>>();
+
+        Self::from_coordinates(&coords)
     }
 
     fn parse_adjacency_list_from_tuple(

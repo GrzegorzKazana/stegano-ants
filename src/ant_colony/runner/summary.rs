@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::ant_colony::graph::Route;
 
+#[derive(Clone)]
 pub struct CycleSummary {
     pub cycle_idx: usize,
     pub exec_time_ms: u128,
@@ -11,6 +12,7 @@ pub struct CycleSummary {
     pub n_non_empty_edges: usize,
     pub ratio_of_incomplete_routes: f32,
     pub pheromone_variance: f32,
+    pub shortest_route: Option<Route>,
 }
 
 impl Display for CycleSummary {
@@ -30,17 +32,25 @@ impl Display for CycleSummary {
     }
 }
 
+#[derive(Clone)]
+
 pub struct EpochSummary {
     pub epoch_idx: usize,
     pub exec_time_ms: u128,
     pub shortest_route: Option<Route>,
+    pub shortest_route_cycle_idx: Option<usize>,
 }
 
 impl Display for EpochSummary {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let path_appendix = match &self.shortest_route {
-            Option::Some(route) => format!(
-                "\n\tshortest path ({}): {:?}",
+        let path_appendix = match self
+            .shortest_route
+            .as_ref()
+            .zip(self.shortest_route_cycle_idx)
+        {
+            Option::Some((route, cycle_idx)) => format!(
+                "\n\tshortest path #{} ({}): {:?}",
+                cycle_idx,
                 route.get_distance(),
                 route.get_nodes()
             ),

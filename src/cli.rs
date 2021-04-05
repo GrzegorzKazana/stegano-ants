@@ -2,23 +2,30 @@ use clap::Clap;
 
 use crate::common::utils::Capacity;
 
+use crate::ant_colony::ant_dispatcher::DispatcherStringConfig;
+use crate::ant_colony::pheromone_updater::UpdaterStringConfig;
+
 #[derive(Clap, Debug)]
 #[clap(version = "1.0.0", author = "Grzegorz K. <kazana.grzegorz@gmail.com>")]
 pub struct Opts {
     #[clap(long, default_value = "42", about = "rng seed")]
     pub seed: u64,
 
-    #[clap(short, long, about = "amount of ants")]
-    pub ants: usize,
+    #[clap(short, long, about = "amount of ants, by default number of nodes")]
+    pub ants: Option<usize>,
 
-    #[clap(short, long, about = "number of ant steps in single cycle")]
-    pub steps: usize,
+    #[clap(
+        short,
+        long,
+        about = "number of ant steps in single cycle, by default number of nodes"
+    )]
+    pub steps: Option<usize>,
 
     #[clap(short, long, about = "dispatcher definition in format <type>:<args>")]
-    pub dispatcher: String,
+    pub dispatcher: DispatcherStringConfig,
 
     #[clap(short, long, about = "updater type in format <type>:<args>")]
-    pub updater: String,
+    pub updater: UpdaterStringConfig,
 
     #[clap(short, long, about = "number of traning cycles")]
     pub cycles: Option<usize>,
@@ -51,6 +58,8 @@ pub enum SubCommand {
     Embed(EmbedCommand),
     #[clap()]
     Extract(ExtractCommand),
+    #[clap()]
+    Tsp(TspCommand),
 }
 
 #[derive(Clap, Debug)]
@@ -69,4 +78,13 @@ pub struct ExtractCommand {
 
     #[clap(short, long, about = "path to steganogram")]
     pub steg: String,
+}
+
+#[derive(Clap, Debug)]
+pub struct TspCommand {
+    #[clap(short, long, about = "number of graph nodes")]
+    pub n_cities: Option<usize>,
+
+    #[clap(short, long, about = "path to tsp graph csv")]
+    pub graph: Option<String>,
 }

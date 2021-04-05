@@ -2,23 +2,25 @@ mod _tests;
 mod _union;
 mod basic_ant_dispatcher;
 mod biased_ant_dispatcher;
+mod colony_ant_dispatcher;
 mod likelihood_dispatcher;
-mod system_ant_dispatcher;
 
 use rand::{seq::IteratorRandom, Rng};
 use std::fmt::Display;
+use std::str::FromStr;
 
 use crate::ant_colony::ant::Ant;
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph};
+use crate::ant_colony::guiding_config::WithGuidingConfig;
 use crate::ant_colony::pheromone::Pheromone;
 
 pub use _union::Dispatchers;
 pub use basic_ant_dispatcher::BasicAntDispatcher;
 pub use biased_ant_dispatcher::BiasedAntDispatcher;
+pub use colony_ant_dispatcher::ColonyAntDispatcher;
 pub use likelihood_dispatcher::LikelihoodAntDispatcher;
-pub use system_ant_dispatcher::SystemAntDispatcher;
 
-pub trait AntDispatcher: Display + Send + Sync {
+pub trait AntDispatcher: WithGuidingConfig + Display + Send + Sync + Sized + FromStr {
     fn place_ants_on_graph<R: Rng>(
         &self,
         num_of_ants: usize,
@@ -65,5 +67,30 @@ pub trait AntDispatcher: Display + Send + Sync {
             .find(|edge| edge.to == ant.inital_node);
 
         edge_leading_to_inital_node.map_or(possible_next_edges, |edge| vec![edge])
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum DispatcherStringConfig {
+    Basic(String),
+    Biased(String),
+    Colony(String),
+}
+
+impl FromStr for DispatcherStringConfig {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut config_iter = s.split(":");
+        let name = config_iter.next().unwrap_or_default();
+        let opts = config_iter.next().map(String::from).unwrap_or_default();
+
+        match name {
+            "basic" => Some(Self::Basic(opts)),
+            "biased" => Some(Self::Biased(opts)),
+            "colony" => Some(Self::Colony(opts)),
+            _ => None,
+        }
+        .ok_or("Failed to parse ant dispatcher type")
     }
 }

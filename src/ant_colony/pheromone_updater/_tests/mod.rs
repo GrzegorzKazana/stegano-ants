@@ -5,8 +5,8 @@ mod pheromone_updater_tests {
     use crate::ant_colony::graph::{AdjacencyListEntry, EdgeKey, RouteCollection};
     use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
     use crate::ant_colony::pheromone_updater::{
-        AveragePheromoneUpdater, ConstantPheromoneUpdater, CyclicalPheromoneUpdater,
-        PheromoneUpdater, SystemPheromoneUpdater,
+        AveragePheromoneUpdater, ColonyPheromoneUpdater, ConstantPheromoneUpdater,
+        CyclicalPheromoneUpdater, PheromoneUpdater,
     };
 
     fn get_edges() -> Vec<AdjacencyListEntry> {
@@ -16,18 +16,21 @@ mod pheromone_updater_tests {
                 from: 0,
                 to: 0,
                 distance: 1.0,
+                visibility: 1.0,
             },
             AdjacencyListEntry {
                 key: 1,
                 from: 0,
                 to: 0,
                 distance: 2.0,
+                visibility: 0.5,
             },
             AdjacencyListEntry {
                 key: 2,
                 from: 0,
                 to: 0,
                 distance: 3.0,
+                visibility: 0.333,
             },
         ]
     }
@@ -168,7 +171,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn cyclical_updater_correctly_inits_the_pheromone() {
-        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2);
+        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_initialization(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -182,7 +185,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn cyclical_updater_correctly_updates_the_pheromone_after_step() {
-        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2);
+        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_step_update(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -196,7 +199,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn cyclical_updater_correctly_updates_the_pheromone_after_cycle() {
-        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2);
+        let updater = CyclicalPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_cycle_update(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -213,7 +216,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn system_updater_correctly_inits_the_pheromone() {
-        let updater = SystemPheromoneUpdater::new(1.0, 0.2);
+        let updater = ColonyPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_initialization(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -227,7 +230,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn system_updater_correctly_updates_the_pheromone_after_step() {
-        let updater = SystemPheromoneUpdater::new(1.0, 0.2);
+        let updater = ColonyPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_step_update(updater);
 
         let expected: HashMap<EdgeKey, PheromoneLevel> = map!(
@@ -244,7 +247,7 @@ mod pheromone_updater_tests {
 
     #[test]
     fn system_updater_correctly_updates_the_pheromone_after_cycle() {
-        let updater = SystemPheromoneUpdater::new(1.0, 0.2);
+        let updater = ColonyPheromoneUpdater::new(1.0, 0.2, 0.2, 2);
         let pheromone = test_cycle_update(updater);
 
         // shortest route was (0, 1) and its length is (1 + 2)

@@ -19,22 +19,25 @@ use clap::Clap;
 #[macro_use]
 mod macros;
 
+mod _app;
 mod ant_colony;
-mod app;
 mod cli;
 mod common;
 mod images;
 mod steganography;
 
-use app::App;
+use std::rc::Rc;
+
+use _app::App;
 use cli::Opts;
 use common::cli_output::{CliOutput, CliOutputs};
 
 fn main() {
     let opts: Opts = Opts::parse();
     let cli = CliOutputs::from_bool(opts.quiet);
+    let cli = Rc::new(cli);
 
-    match App::new(opts, &cli).run() {
+    match App::new(opts, Rc::clone(&cli)).run() {
         Result::Err(msg) => cli.print(&format!("{}", msg)),
         Result::Ok(summary) => cli.print(&format!("{}", summary.to_string())),
     }

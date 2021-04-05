@@ -1,6 +1,8 @@
-use std::fmt::Display;
+use itertools::Itertools;
+use std::{fmt::Display, str::FromStr};
 
-use crate::ant_colony::graph::{RouteBatchWithHoles, RouteCollection};
+use crate::ant_colony::graph::RouteBatchWithHoles;
+use crate::ant_colony::guiding_config::{GuidingConfig, WithGuidingConfig};
 use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::PheromoneUpdater;
@@ -44,9 +46,32 @@ impl PheromoneUpdater for ConstantPheromoneUpdater {
             },
         )
     }
+}
 
-    fn on_after_cycle(&self, pheromone: Pheromone, _taken_routes: &RouteCollection) -> Pheromone {
-        pheromone
+impl FromStr for ConstantPheromoneUpdater {
+    type Err = &'static str;
+
+    fn from_str(opts: &str) -> Result<Self, Self::Err> {
+        let error = "Failed to parse opts of ConstantPheromoneUpdater";
+
+        let (initial_value, evaporation_rate, increment): (f32, f32, f32) = opts
+            .splitn(3, ',')
+            .map(str::parse)
+            .filter_map(Result::ok)
+            .collect_tuple()
+            .ok_or(error)?;
+
+        Ok(ConstantPheromoneUpdater::new(
+            initial_value,
+            evaporation_rate,
+            increment,
+        ))
+    }
+}
+
+impl WithGuidingConfig for ConstantPheromoneUpdater {
+    fn guided(_guide: &GuidingConfig) -> Option<Self> {
+        Some(ConstantPheromoneUpdater::new(1.0, 0.001, 1.0))
     }
 }
 
