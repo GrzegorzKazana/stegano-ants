@@ -19,8 +19,8 @@ use clap::Clap;
 #[macro_use]
 mod macros;
 
+mod _app;
 mod ant_colony;
-mod app;
 mod cli;
 mod common;
 mod images;
@@ -28,7 +28,7 @@ mod steganography;
 
 use std::rc::Rc;
 
-use app::App;
+use _app::App;
 use cli::Opts;
 use common::cli_output::{CliOutput, CliOutputs};
 

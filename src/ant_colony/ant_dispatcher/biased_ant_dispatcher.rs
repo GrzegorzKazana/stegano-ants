@@ -38,7 +38,6 @@ impl LikelihoodAntDispatcher for BiasedAntDispatcher {
 
                 edge.visibility.powf(self.visibility_bias)
                     * pheromone_level.powf(self.pheromone_bias)
-                    + stability_factor!()
             })
             .collect::<Vec<_>>()
     }

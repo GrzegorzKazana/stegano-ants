@@ -32,7 +32,7 @@ impl SystemAntDispatcher {
     fn evalutate_edge(&self, pheromone: &Pheromone, edge: &AdjacencyListEntry) -> f32 {
         let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-        edge.visibility.powf(self.visibility_bias) * pheromone_level + stability_factor!()
+        edge.visibility.powf(self.visibility_bias) * pheromone_level
     }
 
     fn try_expoit_best_edge(

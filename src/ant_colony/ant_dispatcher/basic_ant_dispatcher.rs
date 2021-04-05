@@ -23,7 +23,7 @@ impl LikelihoodAntDispatcher for BasicAntDispatcher {
             .map(|edge| {
                 let pheromone_level = pheromone.get_pheromone_for_edge(edge.key);
 
-                edge.visibility * pheromone_level + stability_factor!()
+                edge.visibility * pheromone_level
             })
             .collect::<Vec<_>>()
     }

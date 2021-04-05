@@ -3,11 +3,10 @@ mod summary;
 use std::rc::Rc;
 
 use crate::ant_colony::colony::Colony;
-use crate::ant_colony::graph::Graph;
-use crate::ant_colony::pheromone::Pheromone;
+use crate::ant_colony::graph::{Graph, Route};
 use crate::ant_colony::pheromone_reader::PheromoneReader;
 use crate::common::cli_output::CliOutput;
-use crate::common::utils::{measure, produce_until};
+use crate::common::utils::{compare_float, measure, produce_until};
 
 pub use summary::{CycleSummary, EpochSummary};
 
@@ -38,12 +37,24 @@ where
         }
     }
 
-    pub fn get_pheromone(&self) -> &Pheromone {
-        self.colony.get_pheromone()
-    }
-
     pub fn train(self, n_epochs: usize, n_cycles: usize) -> Self {
         (0..n_epochs).fold(self, |runner, _| runner.train_epoch(n_cycles))
+    }
+
+    pub fn get_colony(self) -> C {
+        self.colony
+    }
+
+    pub fn last_cycle_summary(&self) -> Option<CycleSummary> {
+        self.cycle_history.last().cloned()
+    }
+
+    pub fn last_epoch_summary(&self) -> Option<EpochSummary> {
+        self.epoch_history.last().cloned()
+    }
+
+    pub fn last_summaries(&self) -> Option<(CycleSummary, EpochSummary)> {
+        self.last_cycle_summary().zip(self.last_epoch_summary())
     }
 
     pub fn train_n_until_no_improvement(self, n_until: usize) -> Self {
@@ -57,16 +68,16 @@ where
 
         let (colony, next_cycle_history) = produce_until(
             (init_colony, Vec::new()),
-            |(colony, history), idx| ColonyRunner::train_cycle(colony, io.as_ref(), history, idx),
-            |(_, history), _| {
-                ColonyRunner::<C, IO>::had_no_improvement_in_n_last_steps(history, n_until)
-            },
+            |(colony, history), idx| Self::train_cycle(colony, io.as_ref(), history, idx),
+            |(_, history), _| Self::had_no_improvement_in_n_last_steps(history, n_until),
         );
 
-        let shortest_route = colony.get_routes().get_shortest_route();
+        let (shortest_route, shortest_route_cycle_idx) =
+            Self::shortest_route_from_cycle_history(&next_cycle_history);
 
         let epoch_summary = EpochSummary {
             shortest_route,
+            shortest_route_cycle_idx,
             epoch_idx: epoch_history.len() + 1,
             exec_time_ms: next_cycle_history
                 .iter()
@@ -102,10 +113,12 @@ where
             },
         );
 
-        let shortest_route = colony.get_routes().get_shortest_route();
+        let (shortest_route, shortest_route_cycle_idx) =
+            Self::shortest_route_from_cycle_history(&next_cycle_history);
 
         let epoch_summary = EpochSummary {
             shortest_route,
+            shortest_route_cycle_idx,
             epoch_idx: epoch_history.len() + 1,
             exec_time_ms: next_cycle_history
                 .iter()
@@ -136,16 +149,19 @@ where
         let pheromone = new_colony.get_pheromone();
         let routes = new_colony.get_routes();
         let shortest_route = routes.get_shortest_route();
+        let shortest_dist = shortest_route.clone().map(|r| r.get_distance());
+        let shortest_path_length = shortest_route.clone().map(|r| r.get_length());
 
         let summary = CycleSummary {
             cycle_idx,
             exec_time_ms,
-            shortest_dist: shortest_route.clone().map(|r| r.get_distance()),
-            shortest_path_length: shortest_route.map(|r| r.get_length()),
+            shortest_dist,
+            shortest_path_length,
             avg_dist: routes.get_average_route_distance(),
             ratio_of_incomplete_routes: routes.get_ratio_of_incomplete_routes(),
             n_non_empty_edges: PheromoneReader::count_edges_with_pheromone_above(pheromone, 0.1),
             pheromone_variance: pheromone.calc_variance(),
+            shortest_route,
         };
 
         io.print(&summary);
@@ -184,5 +200,29 @@ where
                 });
 
         should_stop
+    }
+
+    fn shortest_route_from_cycle_history(
+        cycle_history: &[CycleSummary],
+    ) -> (Option<Route>, Option<usize>) {
+        let shortest_entry = cycle_history
+            .iter()
+            .filter_map(|cycle| {
+                cycle
+                    .shortest_route
+                    .as_ref()
+                    .map(|route| (route.clone(), cycle.cycle_idx))
+            })
+            .min_by(|(route_a, _), (route_b, _)| {
+                let dist_a = route_a.get_distance();
+                let dist_b = route_b.get_distance();
+
+                compare_float(&dist_a, &dist_b)
+            });
+
+        (
+            shortest_entry.clone().map(|(route, _)| route),
+            shortest_entry.map(|(_, cycle_idx)| cycle_idx),
+        )
     }
 }
