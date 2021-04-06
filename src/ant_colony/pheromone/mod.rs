@@ -106,6 +106,14 @@ impl Pheromone {
             .sum::<f32>()
             / count
     }
+
+    pub fn clamp(mut self, min: f32, max: f32) -> Pheromone {
+        for val in self.values.values_mut() {
+            *val = val.min(max).max(min);
+        }
+
+        self
+    }
 }
 
 impl Display for Pheromone {

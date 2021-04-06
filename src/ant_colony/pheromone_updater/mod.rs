@@ -4,6 +4,7 @@ mod average_pheromone_updater;
 mod colony_pheromone_updater;
 mod constant_pheromone_updater;
 mod cyclical_pheromone_updater;
+mod maxmin_pheromone_updater;
 
 use std::fmt::Display;
 use std::str::FromStr;
@@ -17,6 +18,7 @@ pub use average_pheromone_updater::AveragePheromoneUpdater;
 pub use colony_pheromone_updater::ColonyPheromoneUpdater;
 pub use constant_pheromone_updater::ConstantPheromoneUpdater;
 pub use cyclical_pheromone_updater::CyclicalPheromoneUpdater;
+pub use maxmin_pheromone_updater::MaxMinPheromoneUpdater;
 
 pub trait PheromoneUpdater: WithGuidingConfig + Display + Sized + FromStr {
     fn get_initial_value(&self) -> PheromoneLevel;
@@ -44,6 +46,7 @@ pub enum UpdaterStringConfig {
     Average(String),
     Cyclical(String),
     Colony(String),
+    MaxMin(String),
 }
 
 impl FromStr for UpdaterStringConfig {
@@ -59,6 +62,7 @@ impl FromStr for UpdaterStringConfig {
             "avg" => Some(Self::Average(opts)),
             "cycle" => Some(Self::Cyclical(opts)),
             "colony" => Some(Self::Colony(opts)),
+            "maxmin" => Some(Self::MaxMin(opts)),
             _ => None,
         }
         .ok_or("Failed to parse pheromone updater type")
