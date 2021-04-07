@@ -105,9 +105,12 @@ impl FromStr for MaxMinPheromoneUpdater {
 
 impl WithGuidingConfig for MaxMinPheromoneUpdater {
     fn guided(guide: &GuidingConfig) -> Option<Self> {
-        guide
-            .graph_cycle_estimate
-            .map(|dist| MaxMinPheromoneUpdater::new(dist, 0.2, 0.1, guide.num_of_steps_per_cycle))
+        Some(MaxMinPheromoneUpdater::new(
+            guide.graph_avg_distance * guide.num_of_steps_per_cycle as f32,
+            0.2,
+            0.1,
+            guide.num_of_steps_per_cycle,
+        ))
     }
 }
 
