@@ -70,6 +70,7 @@ impl WithGuidingConfig for BiasedAntDispatcher {
             UpdaterStringConfig::Const(_) => (2.0, 2.0),
             UpdaterStringConfig::Average(_) => (1.0, 1.0),
             UpdaterStringConfig::Cyclical(_) => (1.0, 2.5),
+            UpdaterStringConfig::MaxMin(_) => (1.0, 2.0),
             _ => (1.0, 1.0),
         };
 

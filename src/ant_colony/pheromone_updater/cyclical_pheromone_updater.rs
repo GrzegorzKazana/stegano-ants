@@ -48,19 +48,12 @@ impl PheromoneUpdater for CyclicalPheromoneUpdater {
         taken_routes.get_routes().iter().fold(
             decayed_pheromone,
             |route_updated_pheromone, taken_route| {
-                let route_dist = taken_route.get_distance();
-                let route_len = taken_route.get_length();
+                let route_dist = taken_route.get_adjusted_distance(self.target_num_of_steps);
 
                 taken_route.get_edges().iter().fold(
                     route_updated_pheromone,
                     |edge_updated_route, taken_edge| {
-                        // Below we take into account the fact that
-                        // some routes may be shorter (in terms of number of steps).
-                        // Therefore, we have to adjust route distance to reflect that,
-                        // otherwise routes with less steps would have unfair advantage.
-                        let adjusted_route_dist =
-                            route_dist / route_len as f32 * self.target_num_of_steps as f32;
-                        let increment = self.increment / adjusted_route_dist;
+                        let increment = self.increment / route_dist;
 
                         edge_updated_route.increase_pheromone_value(taken_edge.key, increment)
                     },

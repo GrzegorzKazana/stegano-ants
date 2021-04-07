@@ -17,6 +17,7 @@ pub struct GuidingConfig {
     pub graph_min_distance: f32,
     pub graph_max_distance: f32,
     pub graph_avg_distance: f32,
+    pub graph_cycle_estimate: Option<f32>,
 }
 
 impl GuidingConfig {
@@ -35,6 +36,7 @@ impl GuidingConfig {
             graph_min_distance: graph.min_edge_length(),
             graph_max_distance: graph.max_edge_length(),
             graph_avg_distance: graph.avg_edge_length(),
+            graph_cycle_estimate: graph.estimate_hamiltonian_cycle(),
         }
     }
 }

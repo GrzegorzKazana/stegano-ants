@@ -43,4 +43,13 @@ mod graph_tests {
             Graph::from_coordinate_csv(mock_coordinates())
         )
     }
+
+    #[test]
+    fn it_estimates_cycle_length() {
+        let graph = Graph::from_coordinate_csv(mock_coordinates());
+        let result = graph.estimate_hamiltonian_cycle();
+        let expected = Some(14.0f32);
+
+        assert_eq!(result, expected);
+    }
 }
