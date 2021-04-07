@@ -6,7 +6,7 @@ use crate::ant_colony::pheromone::{Pheromone, PheromoneLevel};
 
 use super::{
     AveragePheromoneUpdater, ColonyPheromoneUpdater, ConstantPheromoneUpdater,
-    CyclicalPheromoneUpdater, PheromoneUpdater, UpdaterStringConfig,
+    CyclicalPheromoneUpdater, MaxMinPheromoneUpdater, PheromoneUpdater, UpdaterStringConfig,
 };
 use crate::ant_colony::guiding_config::GuidingConfig;
 
@@ -17,6 +17,7 @@ pub enum Updaters {
     Const(ConstantPheromoneUpdater),
     Cyclical(CyclicalPheromoneUpdater),
     Colony(ColonyPheromoneUpdater),
+    MaxMin(MaxMinPheromoneUpdater),
 }
 
 impl PheromoneUpdater for Updaters {
@@ -26,6 +27,7 @@ impl PheromoneUpdater for Updaters {
             Updaters::Const(updater) => updater.get_initial_value(),
             Updaters::Cyclical(updater) => updater.get_initial_value(),
             Updaters::Colony(updater) => updater.get_initial_value(),
+            Updaters::MaxMin(updater) => updater.get_initial_value(),
         }
     }
 
@@ -35,6 +37,7 @@ impl PheromoneUpdater for Updaters {
             Updaters::Const(updater) => updater.on_after_step(pheromone, taken_edges),
             Updaters::Cyclical(updater) => updater.on_after_step(pheromone, taken_edges),
             Updaters::Colony(updater) => updater.on_after_step(pheromone, taken_edges),
+            Updaters::MaxMin(updater) => updater.on_after_step(pheromone, taken_edges),
         }
     }
 
@@ -44,6 +47,7 @@ impl PheromoneUpdater for Updaters {
             Updaters::Const(updater) => updater.on_after_cycle(pheromone, taken_routes),
             Updaters::Cyclical(updater) => updater.on_after_cycle(pheromone, taken_routes),
             Updaters::Colony(updater) => updater.on_after_cycle(pheromone, taken_routes),
+            Updaters::MaxMin(updater) => updater.on_after_cycle(pheromone, taken_routes),
         }
     }
 }
@@ -67,6 +71,7 @@ impl Display for Updaters {
             Updaters::Const(updater) => updater.fmt(f),
             Updaters::Cyclical(updater) => updater.fmt(f),
             Updaters::Colony(updater) => updater.fmt(f),
+            Updaters::MaxMin(updater) => updater.fmt(f),
         }
     }
 }
@@ -96,6 +101,11 @@ impl Updaters {
                 .ok()
                 .or_else(|| maybe_guide.and_then(ColonyPheromoneUpdater::guided))
                 .map(Self::Colony),
+
+            UpdaterStringConfig::MaxMin(opts) => MaxMinPheromoneUpdater::from_str(opts)
+                .ok()
+                .or_else(|| maybe_guide.and_then(MaxMinPheromoneUpdater::guided))
+                .map(Self::MaxMin),
         }
     }
 }

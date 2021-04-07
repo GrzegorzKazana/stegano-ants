@@ -8,8 +8,7 @@
 # --stop-after=1000
 # --steps=100
 --dispatcher=biased
---updater=cycle
-# --seed=43
+--updater=maxmin
 # --mask-width=100
 # --target-capacity=10000B
 tsp

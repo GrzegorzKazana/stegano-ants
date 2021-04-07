@@ -63,19 +63,12 @@ impl PheromoneUpdater for ColonyPheromoneUpdater {
         match taken_routes.get_shortest_route() {
             Option::None => decayed_pheromone,
             Option::Some(route) => {
-                let route_dist = route.get_distance();
-                let route_len = route.get_length();
+                let route_dist = route.get_adjusted_distance(self.target_num_of_steps);
 
                 route.get_edges().iter().fold(
                     decayed_pheromone,
                     |edge_updated_route, taken_edge| {
-                        // Below we take into account the fact that
-                        // some routes may be shorter (in terms of number of steps).
-                        // Therefore, we have to adjust route distance to reflect that,
-                        // otherwise routes with less steps would have unfair advantage.
-                        let adjusted_route_dist =
-                            route_dist / route_len as f32 * self.target_num_of_steps as f32;
-                        let increment = self.cycle_evaporation_rate / adjusted_route_dist;
+                        let increment = self.cycle_evaporation_rate / route_dist;
 
                         edge_updated_route.increase_pheromone_value(taken_edge.key, increment)
                     },

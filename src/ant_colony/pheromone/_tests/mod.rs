@@ -85,4 +85,20 @@ mod pheromone_tests {
 
         assert_delta!(result_sum, 1.0);
     }
+
+    #[test]
+    fn it_allows_for_clamping_values() {
+        let pheromone = Pheromone::new()
+            .initialize_pheromone_for_edge(0, 0.5)
+            .initialize_pheromone_for_edge(1, 0.2)
+            .initialize_pheromone_for_edge(2, 1.5);
+
+        let result = pheromone.clamp(0.3, 1.4);
+        let expected = Pheromone::new()
+            .initialize_pheromone_for_edge(0, 0.5)
+            .initialize_pheromone_for_edge(1, 0.3)
+            .initialize_pheromone_for_edge(2, 1.4);
+
+        assert_eq!(result, expected);
+    }
 }

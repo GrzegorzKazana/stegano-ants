@@ -87,6 +87,47 @@ impl Graph {
         iif!(edges_count > 0.0, edges_total_length / edges_count, 0.0)
     }
 
+    pub fn estimate_hamiltonian_cycle(&self) -> Option<f32> {
+        let cycle_length = self.nodes.len();
+        let starting_node = self.nodes.values().next()?;
+        let starting_edge = starting_node.adjacency_list.first()?;
+
+        let route = (0..cycle_length - 1).fold(vec![starting_edge], |mut taken_edges, _| {
+            let maybe_next_edge = taken_edges
+                .last()
+                .and_then(|edge| self.nodes.get(&edge.to))
+                .and_then(|node| {
+                    node.adjacency_list
+                        .iter()
+                        .filter(|edge| {
+                            taken_edges.iter().all(|taken_edge| {
+                                let was_not_taken = taken_edge.from != edge.to;
+                                let is_closing_cycle = edge.to == starting_node.id
+                                    && taken_edges.len() == cycle_length - 1;
+
+                                was_not_taken || is_closing_cycle
+                            })
+                        })
+                        .min_by(|edge_a, edge_b| compare_float(&edge_a.distance, &edge_b.distance))
+                });
+
+            match maybe_next_edge {
+                None => taken_edges,
+                Some(next_edge) => {
+                    taken_edges.push(next_edge);
+                    taken_edges
+                }
+            }
+        });
+
+        if route.len() == cycle_length {
+            let distance = route.iter().map(|edge| edge.distance).sum();
+            Some(distance)
+        } else {
+            None
+        }
+    }
+
     fn edges_iter(&self) -> impl Iterator<Item = AdjacencyListEntry> + '_ {
         self.nodes
             .values()
