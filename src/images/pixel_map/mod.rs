@@ -3,7 +3,7 @@ mod _tests;
 use itertools::Itertools;
 use std::convert::TryFrom;
 
-use crate::common::utils::identity;
+use crate::common::utils::{ceil_div, identity, measure_chunks};
 use crate::images::image::Image;
 use crate::images::image::Pixel;
 
@@ -90,6 +90,68 @@ impl PixelMap {
             .and_then(|(px_x, px_y)| self.index(px_x, px_y))
             .and_then(|idx| self.pixels.get(idx))
             .cloned()
+    }
+
+    pub fn window_iter<'a>(
+        &'a self,
+        num_x_slices: usize,
+        num_y_slices: usize,
+    ) -> impl Iterator<Item = PixelMap> + 'a {
+        let n_rows_per_chunk = ceil_div(self.height, num_y_slices);
+        let n_cols_per_chunk = ceil_div(self.width, num_x_slices);
+
+        let actual_n_rows = measure_chunks(0..self.height, n_rows_per_chunk);
+        let actual_n_cols = measure_chunks(0..self.width, n_cols_per_chunk);
+
+        assert_eq!(
+            num_x_slices,
+            actual_n_cols.len(),
+            "window_iter failed to chunk in x axis"
+        );
+        assert_eq!(
+            num_y_slices,
+            actual_n_rows.len(),
+            "window_iter failed to chunk in y axis"
+        );
+
+        actual_n_rows
+            .into_iter()
+            .cartesian_product(actual_n_cols.into_iter())
+            .map(
+                move |((row_from, row_chunk_len, _), (col_from, col_chunk_len, _))| {
+                    let pixels = self
+                        .pixels
+                        .chunks_exact(self.width)
+                        .skip(row_from)
+                        .take(row_chunk_len)
+                        .flat_map(|row| row.iter().skip(col_from).take(col_chunk_len))
+                        .map(|pixel| pixel.translate(-(col_from as isize), -(row_from as isize)))
+                        .collect();
+
+                    PixelMap::new(row_chunk_len, col_chunk_len, pixels)
+                },
+            )
+    }
+
+    pub fn avg(&self) -> f32 {
+        let sum: usize = self
+            .pixels
+            .iter()
+            .map(|pixel| pixel.intensity() as usize)
+            .sum();
+
+        sum as f32 / self.pixels.len() as f32
+    }
+
+    pub fn variance(&self) -> f32 {
+        let avg_intensity = self.avg();
+        let diffs: f32 = self
+            .pixels
+            .iter()
+            .map(|pixel| (pixel.intensity() as f32 - avg_intensity).powi(2))
+            .sum();
+
+        diffs / self.pixels.len() as f32
     }
 
     fn index(&self, x: usize, y: usize) -> Option<usize> {

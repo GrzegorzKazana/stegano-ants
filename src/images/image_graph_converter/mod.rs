@@ -1,4 +1,5 @@
 mod _tests;
+mod chunk_to_edge_converter;
 mod edge_change_converter;
 mod spatial_image_graph_converter;
 
