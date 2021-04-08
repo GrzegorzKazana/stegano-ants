@@ -24,7 +24,7 @@ pub use extend_basename::extend_basename;
 pub use identity::identity;
 pub use map_accum::MapAccumExt;
 pub use measure::measure;
-pub use measure_chunks::measure_chunks;
+pub use measure_chunks::{measure_chunks, MeasuredChunk};
 pub use produce_until::produce_until;
 pub use random_pair_iter::random_pair_iter;
 pub use select_top_n_items::select_top_n_items;

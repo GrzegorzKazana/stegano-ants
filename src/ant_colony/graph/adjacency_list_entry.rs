@@ -16,11 +16,15 @@ pub struct AdjacencyListEntry {
 impl AdjacencyListEntry {
     pub fn new(from: NodeId, to: NodeId, distance: f32) -> Self {
         AdjacencyListEntry {
-            key: UniquePair::generate_key(from, to),
+            key: Self::get_key(from, to),
             from,
             to,
             distance,
             visibility: 1.0 / (distance + stability_factor!()),
         }
+    }
+
+    pub fn get_key(from: NodeId, to: NodeId) -> EdgeKey {
+        UniquePair::generate_key(from, to)
     }
 }

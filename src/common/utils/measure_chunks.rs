@@ -2,7 +2,9 @@ use itertools::Itertools;
 
 use std::ops::Range;
 
-pub fn measure_chunks(range: Range<usize>, chunk_size: usize) -> Vec<(usize, usize, usize)> {
+pub type MeasuredChunk = (usize, usize, usize);
+
+pub fn measure_chunks(range: Range<usize>, chunk_size: usize) -> Vec<MeasuredChunk> {
     range
         .chunks(chunk_size)
         .into_iter()

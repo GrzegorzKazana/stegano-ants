@@ -124,10 +124,11 @@ mod images_pixel_map_tests {
     #[test]
     fn it_allows_for_iterating_windows_of_eql_size() {
         let map = mock_image();
-        let mut windows = map.window_iter(2, 2);
+        let map_windows = map.windows(2, 2);
+        let mut windows = map_windows.iter();
 
         assert_eq!(
-            windows.next().unwrap(),
+            windows.next().unwrap().1,
             PixelMap::new(
                 2,
                 2,
@@ -140,7 +141,7 @@ mod images_pixel_map_tests {
             )
         );
         assert_eq!(
-            windows.next().unwrap(),
+            windows.next().unwrap().1,
             PixelMap::new(
                 2,
                 2,
@@ -153,7 +154,7 @@ mod images_pixel_map_tests {
             )
         );
         assert_eq!(
-            windows.next().unwrap(),
+            windows.next().unwrap().1,
             PixelMap::new(
                 2,
                 2,
@@ -166,7 +167,7 @@ mod images_pixel_map_tests {
             )
         );
         assert_eq!(
-            windows.next().unwrap(),
+            windows.next().unwrap().1,
             PixelMap::new(
                 2,
                 2,
