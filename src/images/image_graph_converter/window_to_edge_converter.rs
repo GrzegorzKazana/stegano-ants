@@ -7,7 +7,9 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::{PixelMap, PixelMapWindows, WindowId};
 
-use super::ImageGraphConverter;
+use crate::common::utils::compare_float;
+
+use super::{FromStrAndPixelMap, ImageGraphConverter};
 
 /// Segments image into n_x_windows * n_y_windows non-overlapping windows.
 ///
@@ -29,12 +31,15 @@ impl WindowToEdgeConverter {
         n_y_windows: usize,
         n_nodes: usize,
     ) -> Self {
+        // let n_edges = n_x_windows * n_y_windows;
         // TODO: instead of panicking on invalid input,calculate this numbers
         // hint: for 100 nodes, it could be 75x66
+        // 2,5,5
+        // 3,5,6
         assert_eq!(n_nodes * (n_nodes - 1), n_x_windows * n_y_windows * 2);
 
         WindowToEdgeConverter {
-            pixel_map_windows: pixel_map.windows(n_x_windows, n_y_windows),
+            pixel_map_windows: pixel_map.resize(240, 240).windows(n_x_windows, n_y_windows),
             n_nodes,
             n_x_windows,
             n_y_windows,
@@ -61,14 +66,41 @@ impl WindowToEdgeConverter {
 
         nodes.unwrap_or_default()
     }
+
+    fn window_to_distance((idx, window): (WindowId, PixelMap)) -> (WindowId, f32) {
+        (idx, 1.0 / (window.variance() + stability_factor!()))
+    }
+
+    fn visualize_segmentation(&self) -> PixelMap {
+        let distances_by_window_idx: HashMap<WindowId, f32> = self
+            .pixel_map_windows
+            .iter()
+            .map(Self::window_to_distance)
+            .collect();
+
+        let distance_max: f32 = distances_by_window_idx
+            .values()
+            .max_by(compare_float)
+            .cloned()
+            .unwrap_or(1.0);
+
+        let distances_norm: HashMap<WindowId, f32> = distances_by_window_idx
+            .into_iter()
+            .map(|(idx, distance)| (idx, distance / distance_max))
+            .collect();
+
+        self.pixel_map_windows.map_pixels(|px, window_idx| {
+            let intensity =
+                (255.0 * distances_norm.get(&window_idx).cloned().unwrap_or_default()) as u8;
+
+            Pixel::grey(px.x, px.y, intensity)
+        })
+    }
 }
 
 impl ImageGraphConverter for WindowToEdgeConverter {
     fn img_to_graph(&self) -> Graph {
-        let distances = self
-            .pixel_map_windows
-            .iter()
-            .map(|(idx, window)| (idx, 1.0 / (window.variance() + stability_factor!())));
+        let distances = self.pixel_map_windows.iter().map(Self::window_to_distance);
 
         let edges = distances
             .flat_map(|(idx, distance)| {
@@ -98,5 +130,26 @@ impl ImageGraphConverter for WindowToEdgeConverter {
 
             Pixel::grey(px.x, px.y, intensity as u8)
         })
+    }
+
+    fn visualize_conversion(&self) -> Option<PixelMap> {
+        Some(self.visualize_segmentation())
+    }
+}
+
+impl FromStrAndPixelMap for WindowToEdgeConverter {
+    fn from_str_and_pixel_map(pixel_map: &PixelMap, opts: &str) -> Option<Self> {
+        let (n_x_windows, n_y_windows, n_nodes): (usize, usize, usize) = opts
+            .splitn(3, ',')
+            .map(str::parse)
+            .filter_map(Result::ok)
+            .collect_tuple()?;
+
+        Some(WindowToEdgeConverter::new(
+            pixel_map,
+            n_x_windows,
+            n_y_windows,
+            n_nodes,
+        ))
     }
 }

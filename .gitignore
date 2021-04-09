@@ -6,6 +6,7 @@
 
 assets/images/**/*_steg*
 assets/images/**/*_pher*
+assets/images/**/*_conv*
 
 /docs/thesis/*.*
 !/docs/thesis/*.tex

@@ -6,7 +6,7 @@ mod edge_change_converter_tests {
     use crate::images::image::Pixel;
     use crate::images::pixel_map::PixelMap;
 
-    use super::super::super::{EdgeChangeConverter, ImageGraphConverter};
+    use super::super::super::{ImageGraphConverter, SpatialEdgeChangeConverter};
 
     const MAX_PIXEL_DISTANCE: f32 = 255.0 * 255.0 * 3.0;
 
@@ -42,7 +42,7 @@ mod edge_change_converter_tests {
     fn it_creates_correct_graph_from_mock() {
         let img = mock_image();
 
-        let result = EdgeChangeConverter::new(&img).img_to_graph();
+        let result = SpatialEdgeChangeConverter::new(&img).img_to_graph();
 
         let nodes = vec![
             Node {
@@ -157,7 +157,7 @@ mod edge_change_converter_tests {
         let img = mock_image();
         let pheromone = mock_pheromone();
 
-        let result = EdgeChangeConverter::new(&img).visualize_pheromone(&pheromone);
+        let result = SpatialEdgeChangeConverter::new(&img).visualize_pheromone(&pheromone);
 
         let expected = PixelMap::new(
             2,

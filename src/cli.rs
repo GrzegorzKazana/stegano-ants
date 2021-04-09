@@ -4,6 +4,7 @@ use crate::common::utils::Capacity;
 
 use crate::ant_colony::ant_dispatcher::DispatcherStringConfig;
 use crate::ant_colony::pheromone_updater::UpdaterStringConfig;
+use crate::images::image_graph_converter::ConverterStringConfig;
 
 #[derive(Clap, Debug)]
 #[clap(version = "1.0.0", author = "Grzegorz K. <kazana.grzegorz@gmail.com>")]
@@ -26,6 +27,9 @@ pub struct Opts {
 
     #[clap(short, long, about = "updater type in format <type>:<args>")]
     pub updater: UpdaterStringConfig,
+
+    #[clap(long, about = "converter type in format <type>:<args>")]
+    pub converter: Option<ConverterStringConfig>,
 
     #[clap(short, long, about = "number of traning cycles")]
     pub cycles: Option<usize>,

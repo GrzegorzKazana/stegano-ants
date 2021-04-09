@@ -15,7 +15,7 @@ use crate::ant_colony::guiding_config::GuidingConfig;
 use crate::ant_colony::pheromone_updater::Updaters;
 use crate::ant_colony::runner::ColonyRunner;
 
-use crate::images::image_graph_converter::{EdgeChangeConverter, ImageGraphConverter};
+use crate::images::image_graph_converter::{Converters, ImageGraphConverter};
 use crate::images::pixel_map::PixelMap;
 
 use crate::steganography::image_embedder::{EmbedInImage, MaskImageEmbedder};
@@ -53,7 +53,8 @@ impl App {
 
         let transport_image = DiskIo::load_image(img_name)?;
         let data = DiskIo::load_data(&embed_opts.data)?;
-        let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
+        let (pheromone_image, conversion_image) =
+            self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
         let (embedder, scaled_pheromone) =
             Self::prepare_embedder_and_mask(&self.opts, &pheromone_image);
@@ -63,6 +64,9 @@ impl App {
 
         let _ = DiskIo::save_pheromone_image(img_name, &pheromone_image)?;
         let _ = DiskIo::save_scaled_pheromone_image(img_name, &scaled_pheromone)?;
+        if let Some(img) = conversion_image {
+            let _ = DiskIo::save_conversion_image(img_name, &img)?;
+        }
         let output_path = DiskIo::save_steg_image(img_name, &steganogram)?;
 
         let summary = EmbeddingSummary::new(
@@ -83,7 +87,7 @@ impl App {
         let transport_image = DiskIo::load_image(&extract_opts.image)?;
         let steg_image = DiskIo::load_image(&extract_opts.steg)?;
 
-        let pheromone_image = self.generate_pheromone_mask(&self.opts, &transport_image)?;
+        let (pheromone_image, _) = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
         let (embedder, _) = Self::prepare_embedder_and_mask(&self.opts, &pheromone_image);
         let extracted = embedder.extract(&steg_image);
@@ -111,13 +115,21 @@ impl App {
         &self,
         opts: &Opts,
         transport_image: &PixelMap,
-    ) -> AppResult<PixelMap> {
+    ) -> AppResult<(PixelMap, Option<PixelMap>)> {
         let rng = StdRng::seed_from_u64(opts.seed);
         let downscaled_transport_image = Self::downscale_transport_image(opts, transport_image);
 
-        let img_graph_converter = EdgeChangeConverter::new(&downscaled_transport_image);
-        let graph = img_graph_converter.img_to_graph();
+        let img_graph_converter = opts
+            .converter
+            .as_ref()
+            .and_then(|config| {
+                Converters::from_string_config_and_pixel_map(&downscaled_transport_image, config)
+            })
+            .unwrap_or_else(|| Converters::default(&downscaled_transport_image));
 
+        let conversion_visualization = img_graph_converter.visualize_conversion();
+
+        let graph = img_graph_converter.img_to_graph();
         let colony_runner = self.run_colony(opts, rng, graph)?;
         let colony = colony_runner.get_colony();
         let pheromone = colony.get_pheromone();
@@ -126,7 +138,7 @@ impl App {
             .resize(transport_image.width, transport_image.height)
             .invert();
 
-        Result::Ok(visualized_pheromone)
+        Result::Ok((visualized_pheromone, conversion_visualization))
     }
 
     fn run_colony(
