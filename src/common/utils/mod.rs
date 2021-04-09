@@ -1,4 +1,5 @@
 mod _tests;
+mod balanced_divisors;
 mod capacity;
 mod compare_float;
 mod euclidean_distance;
@@ -16,6 +17,7 @@ mod unique_pair;
 mod usize_ceil_div;
 mod weighted_sample;
 
+pub use balanced_divisors::balanced_divisors;
 pub use capacity::Capacity;
 pub use compare_float::compare_float;
 pub use euclidean_distance::Euclidean;

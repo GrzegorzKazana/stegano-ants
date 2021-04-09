@@ -7,6 +7,8 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::{PixelMap, PixelMapWindows, WindowId};
 
+use crate::common::utils::balanced_divisors;
+
 use super::super::FromStrAndPixelMap;
 use super::{SegmentDistances, SegmentId, SegmentToEdgeConverter};
 
@@ -24,21 +26,13 @@ pub struct WindowToEdgeConverter {
 }
 
 impl WindowToEdgeConverter {
-    pub fn new(
-        pixel_map: &PixelMap,
-        n_x_windows: usize,
-        n_y_windows: usize,
-        n_nodes: usize,
-    ) -> Self {
-        // let n_edges = n_x_windows * n_y_windows;
-        // TODO: instead of panicking on invalid input,calculate this numbers
-        // hint: for 100 nodes, it could be 75x66
-        // 2,5,5
-        // 3,5,6
-        assert_eq!(n_nodes * (n_nodes - 1), n_x_windows * n_y_windows * 2);
+    pub fn new(pixel_map: &PixelMap, n_nodes: usize) -> Self {
+        let n_edges = n_nodes * (n_nodes - 1) / 2;
+        let (n_y_windows, n_x_windows) = balanced_divisors(n_edges);
+        println!("{}: {}x{}", n_edges, n_y_windows, n_x_windows);
 
         WindowToEdgeConverter {
-            pixel_map_windows: pixel_map.resize(240, 240).windows(n_x_windows, n_y_windows),
+            pixel_map_windows: pixel_map.windows(n_x_windows, n_y_windows),
             n_nodes,
             n_x_windows,
             n_y_windows,
@@ -107,17 +101,12 @@ impl SegmentToEdgeConverter for WindowToEdgeConverter {
 
 impl FromStrAndPixelMap for WindowToEdgeConverter {
     fn from_str_and_pixel_map(pixel_map: &PixelMap, opts: &str) -> Option<Self> {
-        let (n_x_windows, n_y_windows, n_nodes): (usize, usize, usize) = opts
-            .splitn(3, ',')
+        let (n_nodes,): (usize,) = opts
+            .splitn(1, ',')
             .map(str::parse)
             .filter_map(Result::ok)
             .collect_tuple()?;
 
-        Some(WindowToEdgeConverter::new(
-            pixel_map,
-            n_x_windows,
-            n_y_windows,
-            n_nodes,
-        ))
+        Some(WindowToEdgeConverter::new(pixel_map, n_nodes))
     }
 }

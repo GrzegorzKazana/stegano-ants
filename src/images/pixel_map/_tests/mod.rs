@@ -2,6 +2,7 @@
 mod images_pixel_map_tests {
     use super::super::Pixel;
     use super::super::PixelMap;
+    use super::super::{PixelMapWindows, WindowOffsets};
 
     fn mock_image() -> PixelMap {
         PixelMap::new(
@@ -180,5 +181,31 @@ mod images_pixel_map_tests {
             )
         );
         assert_eq!(windows.next(), None);
+    }
+
+    #[test]
+    fn it_should_generate_even_offsets_if_possible() {
+        let offsets = PixelMapWindows::generate_offsets(10, 1, 5, 1).collect::<Vec<_>>();
+        let expected: Vec<WindowOffsets> = vec![
+            (0, (0, 1, 0), (0, 2, 1)),
+            (1, (0, 1, 0), (2, 2, 3)),
+            (2, (0, 1, 0), (4, 2, 5)),
+            (3, (0, 1, 0), (6, 2, 7)),
+            (4, (0, 1, 0), (8, 2, 9)),
+        ];
+
+        assert_eq!(offsets, expected);
+    }
+
+    #[test]
+    fn it_should_handle_uneven_chunks() {
+        let offsets = PixelMapWindows::generate_offsets(10, 1, 3, 1).collect::<Vec<_>>();
+        let expected: Vec<WindowOffsets> = vec![
+            (0, (0, 1, 0), (0, 3, 2)),
+            (1, (0, 1, 0), (3, 3, 5)),
+            (2, (0, 1, 0), (6, 4, 9)),
+        ];
+
+        assert_eq!(offsets, expected);
     }
 }

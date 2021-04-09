@@ -10,7 +10,7 @@ use crate::images::image::Image;
 use crate::images::image::Pixel;
 
 pub use pixel_map_clusters::{ClusterId, ClusterMean, Clusters, PixelMapClusters};
-pub use pixelmap_windows::{PixelMapWindows, WindowId};
+pub use pixelmap_windows::{PixelMapWindows, WindowId, WindowOffsets};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PixelMap {

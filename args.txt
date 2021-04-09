@@ -4,15 +4,16 @@
 # `cargo run -q --release -- `cat args.txt | grep -v ^#``
 
 # --ants=1000
---cycles=1
+--cycles=10
 # --stop-after=1000
 # --steps=100
 # --dispatcher=basic
 # --updater=const
 --dispatcher=biased
 --updater=const
-# --converter=superpixels:11
---converter=kmeans:5
+# --converter=superpixels:20
+# --converter=kmeans:5
+--converter=window:14
 # --converter=window:15,20,25
 # --converter=window:2,5,5
 # --mask-width=100
