@@ -5,36 +5,46 @@ use crate::ant_colony::graph::{AdjacencyListEntry, Graph, Node, NodeId};
 use crate::ant_colony::pheromone::Pheromone;
 
 use crate::images::image::Pixel;
-use crate::images::pixel_map::{PixelMap, PixelMapWindows};
+use crate::images::pixel_map::{PixelMap, PixelMapWindows, WindowId};
 
 use super::ImageGraphConverter;
 
-pub struct ChunkToEdgeConverter {
+/// Segments image into n_x_windows * n_y_windows non-overlapping windows.
+///
+/// Each window is mapped to an edge on the graph, the edge length
+/// is 1/window.variance() which hopefully will make edges/windows
+/// with complex structure more desirable.
+pub struct WindowToEdgeConverter {
     pixel_map_windows: PixelMapWindows,
-    // graph: Graph,
     n_nodes: usize,
-    n_chunks_x: usize,
-    n_chunks_y: usize,
-    window_idx_to_node_pair: HashMap<usize, (NodeId, NodeId)>,
+    n_x_windows: usize,
+    n_y_windows: usize,
+    window_idx_to_node_pair: HashMap<WindowId, (NodeId, NodeId)>,
 }
 
-impl ChunkToEdgeConverter {
-    pub fn new(pixel_map: &PixelMap, n_chunks_x: usize, n_chunks_y: usize, n_nodes: usize) -> Self {
-        assert_eq!(n_nodes * (n_nodes - 1), n_chunks_x * n_chunks_y * 2);
-        // let n_chunks_x = 75;
-        // let n_chunks_y = 66; // multiplies to 4950, which is 100*99/2
-        // let n_nodes = 100;
+impl WindowToEdgeConverter {
+    pub fn new(
+        pixel_map: &PixelMap,
+        n_x_windows: usize,
+        n_y_windows: usize,
+        n_nodes: usize,
+    ) -> Self {
+        // TODO: instead of panicking on invalid input,calculate this numbers
+        // hint: for 100 nodes, it could be 75x66
+        assert_eq!(n_nodes * (n_nodes - 1), n_x_windows * n_y_windows * 2);
 
-        ChunkToEdgeConverter {
-            pixel_map_windows: pixel_map.windows(n_chunks_x, n_chunks_y),
+        WindowToEdgeConverter {
+            pixel_map_windows: pixel_map.windows(n_x_windows, n_y_windows),
             n_nodes,
-            n_chunks_x,
-            n_chunks_y,
+            n_x_windows,
+            n_y_windows,
             window_idx_to_node_pair: Self::build_window_idx_lookup(n_nodes),
         }
     }
 
-    fn build_window_idx_lookup(n_nodes: usize) -> HashMap<usize, (NodeId, NodeId)> {
+    /// maps (0..n_edges) to unique pairs of indicies of graph adjacency matrix
+    /// see tests for example
+    pub fn build_window_idx_lookup(n_nodes: usize) -> HashMap<usize, (NodeId, NodeId)> {
         let n_nodes_u32 = n_nodes as u32;
 
         (0..n_nodes_u32)
@@ -44,7 +54,7 @@ impl ChunkToEdgeConverter {
             .collect()
     }
 
-    fn lookup_nodes_by_window_idx(&self, window_idx: usize) -> (NodeId, NodeId) {
+    fn lookup_nodes_by_window_idx(&self, window_idx: WindowId) -> (NodeId, NodeId) {
         let nodes = self.window_idx_to_node_pair.get(&window_idx).cloned();
 
         debug_assert_ne!(nodes, None, "Failed to lookup nodes by window index");
@@ -53,12 +63,12 @@ impl ChunkToEdgeConverter {
     }
 }
 
-impl ImageGraphConverter for ChunkToEdgeConverter {
+impl ImageGraphConverter for WindowToEdgeConverter {
     fn img_to_graph(&self) -> Graph {
         let distances = self
             .pixel_map_windows
             .iter()
-            .map(|(idx, chunk)| (idx, 1.0 / (chunk.variance() + stability_factor!())));
+            .map(|(idx, window)| (idx, 1.0 / (window.variance() + stability_factor!())));
 
         let edges = distances
             .flat_map(|(idx, distance)| {

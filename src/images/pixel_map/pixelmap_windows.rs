@@ -5,6 +5,11 @@ use crate::images::image::Pixel;
 
 use super::PixelMap;
 
+pub type WindowId = usize;
+pub type WindowOffsets = (WindowId, MeasuredChunk, MeasuredChunk);
+
+/// Structure representing image segmented into n_x_windows * n_y_windows
+/// non-overlapping windows.
 pub struct PixelMapWindows {
     image: PixelMap,
     n_x_windows: usize,
@@ -20,7 +25,7 @@ impl PixelMapWindows {
         }
     }
 
-    pub fn iter<'a>(&'a self) -> impl Iterator<Item = (usize, PixelMap)> + 'a {
+    pub fn iter<'a>(&'a self) -> impl Iterator<Item = (WindowId, PixelMap)> + 'a {
         self.generate_offsets().map(
             move |(window_idx, (row_from, row_chunk_len, _), (col_from, col_chunk_len, _))| {
                 let pixels = self
@@ -41,7 +46,7 @@ impl PixelMapWindows {
         )
     }
 
-    pub fn map_pixels<F: Fn(&Pixel, usize) -> Pixel>(&self, mapper: F) -> PixelMap {
+    pub fn map_pixels<F: Fn(&Pixel, WindowId) -> Pixel>(&self, mapper: F) -> PixelMap {
         let offsets = self.generate_offsets().collect::<Vec<_>>();
 
         self.image.map(|pixel| {
@@ -55,13 +60,15 @@ impl PixelMapWindows {
         })
     }
 
-    fn generate_offsets(&self) -> impl Iterator<Item = (usize, MeasuredChunk, MeasuredChunk)> {
+    fn generate_offsets(&self) -> impl Iterator<Item = WindowOffsets> {
         let n_rows_per_chunk = ceil_div(self.image.height, self.n_y_windows);
         let n_cols_per_chunk = ceil_div(self.image.width, self.n_x_windows);
 
         let actual_n_rows = measure_chunks(0..self.image.height, n_rows_per_chunk);
         let actual_n_cols = measure_chunks(0..self.image.width, n_cols_per_chunk);
 
+        // TODO: this function probably should return Option<_>
+        // if dividing the image is not possible
         assert_eq!(
             self.n_x_windows,
             actual_n_cols.len(),
@@ -80,9 +87,9 @@ impl PixelMapWindows {
             .map(|((row_offsets, col_offsets), idx)| (idx, row_offsets, col_offsets))
     }
 
-    fn is_pixel_in_offset(px: &Pixel, offsets: &(usize, MeasuredChunk, MeasuredChunk)) -> bool {
-        let (_, (row_from, _, row_to), (col_from, _, col_to)) = offsets;
+    fn is_pixel_in_offset(px: &Pixel, offsets: &WindowOffsets) -> bool {
+        let (_, (row_from, _, row_to), (col_from, _, col_to)) = offsets.clone();
 
-        px.x >= *col_from && px.x <= *col_to && px.y >= *row_from && px.y <= *row_to
+        px.x >= col_from && px.x <= col_to && px.y >= row_from && px.y <= row_to
     }
 }

@@ -4,11 +4,11 @@ mod pixelmap_windows;
 use itertools::Itertools;
 use std::convert::TryFrom;
 
-use crate::common::utils::{ceil_div, identity, measure_chunks};
+use crate::common::utils::identity;
 use crate::images::image::Image;
 use crate::images::image::Pixel;
 
-pub use pixelmap_windows::PixelMapWindows;
+pub use pixelmap_windows::{PixelMapWindows, WindowId};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PixelMap {
@@ -95,8 +95,8 @@ impl PixelMap {
             .cloned()
     }
 
-    pub fn windows(&self, num_x_slices: usize, num_y_slices: usize) -> PixelMapWindows {
-        PixelMapWindows::new(self, num_x_slices, num_y_slices)
+    pub fn windows(&self, n_x_windows: usize, n_y_windows: usize) -> PixelMapWindows {
+        PixelMapWindows::new(self, n_x_windows, n_y_windows)
     }
 
     pub fn avg(&self) -> f32 {

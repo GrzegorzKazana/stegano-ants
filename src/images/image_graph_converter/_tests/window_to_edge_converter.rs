@@ -1,12 +1,12 @@
 #[cfg(test)]
-mod chunk_to_edge_converter_tests {
+mod window_to_edge_converter_tests {
     use crate::ant_colony::graph::{AdjacencyListEntry, Graph, Node};
     use crate::ant_colony::pheromone::Pheromone;
     use crate::common::utils::UniquePair;
     use crate::images::image::Pixel;
     use crate::images::pixel_map::PixelMap;
 
-    use super::super::super::{ChunkToEdgeConverter, ImageGraphConverter};
+    use super::super::super::{ImageGraphConverter, WindowToEdgeConverter};
 
     fn mock_image() -> PixelMap {
         PixelMap::new(
@@ -81,7 +81,7 @@ mod chunk_to_edge_converter_tests {
     #[test]
     fn it_should_create_correct_graph() {
         let image = mock_image();
-        let result = ChunkToEdgeConverter::new(&image, 5, 3, 6).img_to_graph();
+        let result = WindowToEdgeConverter::new(&image, 5, 3, 6).img_to_graph();
 
         let dist = 1.0 / (156.25 + stability_factor!());
         let expected = Graph::from_node_vector(vec![
@@ -154,7 +154,7 @@ mod chunk_to_edge_converter_tests {
     fn it_should_correctly_visualize_pheromone() {
         let image = mock_image();
         let pheromone = mock_pheromone();
-        let result = ChunkToEdgeConverter::new(&image, 5, 3, 6).visualize_pheromone(&pheromone);
+        let result = WindowToEdgeConverter::new(&image, 5, 3, 6).visualize_pheromone(&pheromone);
         let expected = PixelMap::new(
             6,
             5,
@@ -198,5 +198,34 @@ mod chunk_to_edge_converter_tests {
         );
 
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_build_correct_window_idx_lookup() {
+        let n_nodes = 6;
+        let result = WindowToEdgeConverter::build_window_idx_lookup(n_nodes);
+        let exepected = map!(
+            0 => (0,1),
+            1 => (0,2),
+            2 => (0,3),
+            3 => (0,4),
+            4 => (0,5),
+            //
+            5 => (1,2),
+            6 => (1,3),
+            7 => (1,4),
+            8 => (1,5),
+            //
+            9 => (2,3),
+            10 => (2,4),
+            11 => (2,5),
+            //
+            12 => (3,4),
+            13 => (3,5),
+            //
+            14 => (4,5)
+        );
+
+        assert_eq!(result, exepected)
     }
 }
