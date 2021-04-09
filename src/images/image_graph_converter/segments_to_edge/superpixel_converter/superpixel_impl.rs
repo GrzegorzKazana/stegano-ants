@@ -1,5 +1,5 @@
 use crate::images::pixel_map::PixelMap;
-pub fn segment(pixel_map: &PixelMap, num_patches: usize, compactness: f32) -> (usize, Vec<i32>) {
+pub fn segment(pixel_map: &PixelMap, num_patches: usize, compactness: f32) -> (usize, Vec<usize>) {
     let image: image::RgbImage = pixel_map.pixels().iter().fold(
         image::ImageBuffer::new(pixel_map.width as u32, pixel_map.height as u32),
         |mut buffer, px| {
@@ -37,7 +37,10 @@ pub fn segment(pixel_map: &PixelMap, num_patches: usize, compactness: f32) -> (u
         iterations,
     );
 
-    (num_superpixels as usize, klabels)
+    (
+        num_superpixels as usize,
+        klabels.into_iter().map(|l| l as usize).collect(),
+    )
 }
 
 /// HUGE WARNING
@@ -45,9 +48,10 @@ pub fn segment(pixel_map: &PixelMap, num_patches: usize, compactness: f32) -> (u
 /// https://crates.io/crates/superpixel/0.1.1
 /// DO NOT MODIFY
 ///
-/// the reason is conflicting `image` crate versions
-/// (`superpixel` uses outdated one),
-/// and i ain't go time for forking or pinging the maintainers
+/// The reason why it is copied, (instead of installed like a normal person would)
+/// is conflicting common dependency. `image` crate version used by `superpixel`
+/// is outdated, and therefore I cannot downgrade version used here.
+/// And i ain't go time for forking or pinging the maintainers.
 use image;
 
 use std::cmp::{max, min};

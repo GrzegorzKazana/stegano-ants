@@ -1,5 +1,6 @@
 mod _tests;
 mod kmeans_converter;
+mod superpixel_converter;
 mod window_to_edge_converter;
 
 use itertools::Itertools;
@@ -16,6 +17,7 @@ use crate::common::utils::compare_float;
 use super::{FromStrAndPixelMap, ImageGraphConverter};
 
 pub use kmeans_converter::KMeansConverter;
+pub use superpixel_converter::SuperPixelConverter;
 pub use window_to_edge_converter::WindowToEdgeConverter;
 
 pub type SegmentId = usize;

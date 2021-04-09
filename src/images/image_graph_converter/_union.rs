@@ -7,7 +7,7 @@ use crate::images::pixel_map::PixelMap;
 
 use super::{
     ConverterStringConfig, FromStrAndPixelMap, ImageGraphConverter, KMeansConverter,
-    SpatialEdgeChangeConverter, WindowToEdgeConverter,
+    SpatialEdgeChangeConverter, SuperPixelConverter, WindowToEdgeConverter,
 };
 
 /// using an enum instead of run-time
@@ -16,6 +16,7 @@ pub enum Converters {
     SpatialEdgeChange(SpatialEdgeChangeConverter),
     WindowToEdge(WindowToEdgeConverter),
     Kmeans(KMeansConverter),
+    SuperPixels(SuperPixelConverter),
 }
 
 impl ImageGraphConverter for Converters {
@@ -24,6 +25,7 @@ impl ImageGraphConverter for Converters {
             Self::SpatialEdgeChange(converter) => converter.img_to_graph(),
             Self::WindowToEdge(converter) => converter.img_to_graph(),
             Self::Kmeans(converter) => converter.img_to_graph(),
+            Self::SuperPixels(converter) => converter.img_to_graph(),
         }
     }
 
@@ -32,6 +34,7 @@ impl ImageGraphConverter for Converters {
             Self::SpatialEdgeChange(converter) => converter.visualize_pheromone(pheromone),
             Self::WindowToEdge(converter) => converter.visualize_pheromone(pheromone),
             Self::Kmeans(converter) => converter.visualize_pheromone(pheromone),
+            Self::SuperPixels(converter) => converter.visualize_pheromone(pheromone),
         }
     }
 
@@ -40,6 +43,7 @@ impl ImageGraphConverter for Converters {
             Self::SpatialEdgeChange(converter) => converter.visualize_conversion(),
             Self::WindowToEdge(converter) => converter.visualize_conversion(),
             Self::Kmeans(converter) => converter.visualize_conversion(),
+            Self::SuperPixels(converter) => converter.visualize_conversion(),
         }
     }
 }
@@ -60,6 +64,9 @@ impl Converters {
             }
             ConverterStringConfig::KMeans(opts) => {
                 KMeansConverter::from_str_and_pixel_map(pixel_map, opts).map(Self::Kmeans)
+            }
+            ConverterStringConfig::SuperPixels(opts) => {
+                SuperPixelConverter::from_str_and_pixel_map(pixel_map, opts).map(Self::SuperPixels)
             }
         }
     }

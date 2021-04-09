@@ -17,12 +17,14 @@ pub struct KMeansConverter {
 }
 
 impl KMeansConverter {
-    pub fn new(pixel_map: &PixelMap, k_clusters: usize) -> Self {
+    pub fn new(pixel_map: &PixelMap, target_n_nodes: usize) -> Self {
+        let k_clusters = target_n_nodes * (target_n_nodes - 1) / 2;
+
         KMeansConverter {
             pixel_map_clusters: pixel_map
                 .clusters(k_clusters, |px| Self::pixel_cost_fn(px, pixel_map)),
             k_clusters,
-            cluster_id_to_node_pair: Self::build_segment_idx_node_lookup(k_clusters),
+            cluster_id_to_node_pair: Self::build_segment_idx_node_lookup(target_n_nodes),
         }
     }
 
@@ -80,12 +82,12 @@ impl SegmentToEdgeConverter for KMeansConverter {
 
 impl FromStrAndPixelMap for KMeansConverter {
     fn from_str_and_pixel_map(pixel_map: &PixelMap, opts: &str) -> Option<Self> {
-        let (k_clusters,): (usize,) = opts
+        let (target_n_nodes,): (usize,) = opts
             .splitn(1, ',')
             .map(str::parse)
             .filter_map(Result::ok)
             .collect_tuple()?;
 
-        Some(KMeansConverter::new(pixel_map, k_clusters))
+        Some(KMeansConverter::new(pixel_map, target_n_nodes))
     }
 }

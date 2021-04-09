@@ -1,7 +1,6 @@
 mod _union;
 mod segments_to_edge;
 mod spatial;
-mod superpixels;
 
 use std::str::FromStr;
 
@@ -11,6 +10,7 @@ use crate::images::pixel_map::PixelMap;
 
 pub use _union::Converters;
 pub use segments_to_edge::KMeansConverter;
+pub use segments_to_edge::SuperPixelConverter;
 pub use segments_to_edge::WindowToEdgeConverter;
 pub use spatial::SpatialEdgeChangeConverter;
 pub use spatial::SpatialImageGraphConverter;
@@ -35,6 +35,7 @@ pub enum ConverterStringConfig {
     SpatialEdgeChange(String),
     WindowToEdge(String),
     KMeans(String),
+    SuperPixels(String),
 }
 
 impl FromStr for ConverterStringConfig {
@@ -49,6 +50,7 @@ impl FromStr for ConverterStringConfig {
             "spatial" => Some(Self::SpatialEdgeChange(opts)),
             "window" => Some(Self::WindowToEdge(opts)),
             "kmeans" => Some(Self::KMeans(opts)),
+            "superpixels" => Some(Self::SuperPixels(opts)),
             _ => None,
         }
         .ok_or("Failed to parse image converter type")
