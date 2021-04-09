@@ -1,6 +1,7 @@
 mod _union;
 mod segments_to_edge;
 mod spatial;
+mod superpixels;
 
 use std::str::FromStr;
 
