@@ -3,8 +3,8 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
 
-use super::spatial_image_graph_converter::SpatialImageGraphConverter;
-use super::{FromStrAndPixelMap, ImageGraphConverter};
+use super::super::{FromStrAndPixelMap, ImageGraphConverter};
+use super::SpatialImageGraphConverter;
 
 /// Image-graph converted build around 4-kind neighbourhood
 /// Attributes distance proportional to pixel distance

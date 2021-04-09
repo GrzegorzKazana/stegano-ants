@@ -1,8 +1,6 @@
-mod _tests;
 mod _union;
-mod spatial_edge_change_converter;
-mod spatial_image_graph_converter;
-mod window_to_edge_converter;
+mod segments_to_edge;
+mod spatial;
 
 use std::str::FromStr;
 
@@ -11,9 +9,10 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::pixel_map::PixelMap;
 
 pub use _union::Converters;
-pub use spatial_edge_change_converter::SpatialEdgeChangeConverter;
-pub use spatial_image_graph_converter::SpatialImageGraphConverter;
-pub use window_to_edge_converter::WindowToEdgeConverter;
+pub use segments_to_edge::KMeansConverter;
+pub use segments_to_edge::WindowToEdgeConverter;
+pub use spatial::SpatialEdgeChangeConverter;
+pub use spatial::SpatialImageGraphConverter;
 
 pub trait ImageGraphConverter: FromStrAndPixelMap {
     /// image in any form is expected to be passed via constructor
@@ -34,6 +33,7 @@ pub trait FromStrAndPixelMap: Sized {
 pub enum ConverterStringConfig {
     SpatialEdgeChange(String),
     WindowToEdge(String),
+    KMeans(String),
 }
 
 impl FromStr for ConverterStringConfig {
@@ -47,6 +47,7 @@ impl FromStr for ConverterStringConfig {
         match name {
             "spatial" => Some(Self::SpatialEdgeChange(opts)),
             "window" => Some(Self::WindowToEdge(opts)),
+            "kmeans" => Some(Self::KMeans(opts)),
             _ => None,
         }
         .ok_or("Failed to parse image converter type")

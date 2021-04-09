@@ -7,6 +7,7 @@ mod window_to_edge_converter_tests {
     use crate::images::pixel_map::PixelMap;
 
     use super::super::super::{ImageGraphConverter, WindowToEdgeConverter};
+    use super::super::SegmentToEdgeConverter;
 
     fn mock_image() -> PixelMap {
         PixelMap::new(
@@ -81,7 +82,7 @@ mod window_to_edge_converter_tests {
     #[test]
     fn it_should_create_correct_graph() {
         let image = mock_image();
-        let result = WindowToEdgeConverter::new(&image, 5, 3, 6).img_to_graph();
+        let result = WindowToEdgeConverter::new_without_resize(&image, 5, 3, 6).img_to_graph();
 
         let dist = 1.0 / (156.25 + stability_factor!());
         let expected = Graph::from_node_vector(vec![
@@ -154,7 +155,8 @@ mod window_to_edge_converter_tests {
     fn it_should_correctly_visualize_pheromone() {
         let image = mock_image();
         let pheromone = mock_pheromone();
-        let result = WindowToEdgeConverter::new(&image, 5, 3, 6).visualize_pheromone(&pheromone);
+        let result = WindowToEdgeConverter::new_without_resize(&image, 5, 3, 6)
+            .visualize_pheromone(&pheromone);
         let expected = PixelMap::new(
             6,
             5,
@@ -203,7 +205,7 @@ mod window_to_edge_converter_tests {
     #[test]
     fn it_build_correct_window_idx_lookup() {
         let n_nodes = 6;
-        let result = WindowToEdgeConverter::build_window_idx_lookup(n_nodes);
+        let result = WindowToEdgeConverter::build_segment_idx_node_lookup(n_nodes);
         let exepected = map!(
             0 => (0,1),
             1 => (0,2),

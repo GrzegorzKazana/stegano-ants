@@ -1,7 +1,12 @@
+mod _tests;
+mod spatial_edge_change_converter;
+
 use crate::ant_colony::graph::{AdjacencyListEntry, Graph, Node, NodeId};
 use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
+
+pub use spatial_edge_change_converter::SpatialEdgeChangeConverter;
 
 /// Trait shared by all ImageGraphConverters that create graphs
 /// that have 1:1 mapping between pixel and node.

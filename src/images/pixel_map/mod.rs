@@ -1,4 +1,5 @@
 mod _tests;
+mod pixel_map_clusters;
 mod pixelmap_windows;
 
 use itertools::Itertools;
@@ -8,6 +9,7 @@ use crate::common::utils::identity;
 use crate::images::image::Image;
 use crate::images::image::Pixel;
 
+pub use pixel_map_clusters::{ClusterId, ClusterMean, Clusters, PixelMapClusters};
 pub use pixelmap_windows::{PixelMapWindows, WindowId};
 
 #[derive(Debug, Clone, PartialEq)]
@@ -99,25 +101,36 @@ impl PixelMap {
         PixelMapWindows::new(self, n_x_windows, n_y_windows)
     }
 
-    pub fn avg(&self) -> f32 {
-        let sum: usize = self
-            .pixels
-            .iter()
-            .map(|pixel| pixel.intensity() as usize)
-            .sum();
+    pub fn clusters<F: Fn(&Pixel) -> f32>(
+        &self,
+        k_clusters: usize,
+        cost_fn: F,
+    ) -> PixelMapClusters {
+        PixelMapClusters::new(self, k_clusters, cost_fn)
+    }
 
-        sum as f32 / self.pixels.len() as f32
+    pub fn avg(&self) -> f32 {
+        Self::avg_of_pixels(self.pixels())
     }
 
     pub fn variance(&self) -> f32 {
-        let avg_intensity = self.avg();
-        let diffs: f32 = self
-            .pixels
+        Self::variance_of_pixels(self.pixels())
+    }
+
+    pub fn avg_of_pixels(pixels: &[Pixel]) -> f32 {
+        let sum: usize = pixels.iter().map(|pixel| pixel.intensity() as usize).sum();
+
+        sum as f32 / pixels.len() as f32
+    }
+
+    pub fn variance_of_pixels(pixels: &[Pixel]) -> f32 {
+        let avg_intensity = Self::avg_of_pixels(pixels);
+        let diffs: f32 = pixels
             .iter()
             .map(|pixel| (pixel.intensity() as f32 - avg_intensity).powi(2))
             .sum();
 
-        diffs / self.pixels.len() as f32
+        diffs / pixels.len() as f32
     }
 
     fn index(&self, x: usize, y: usize) -> Option<usize> {

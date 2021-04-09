@@ -6,8 +6,8 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::pixel_map::PixelMap;
 
 use super::{
-    ConverterStringConfig, FromStrAndPixelMap, ImageGraphConverter, SpatialEdgeChangeConverter,
-    WindowToEdgeConverter,
+    ConverterStringConfig, FromStrAndPixelMap, ImageGraphConverter, KMeansConverter,
+    SpatialEdgeChangeConverter, WindowToEdgeConverter,
 };
 
 /// using an enum instead of run-time
@@ -15,6 +15,7 @@ use super::{
 pub enum Converters {
     SpatialEdgeChange(SpatialEdgeChangeConverter),
     WindowToEdge(WindowToEdgeConverter),
+    Kmeans(KMeansConverter),
 }
 
 impl ImageGraphConverter for Converters {
@@ -22,6 +23,7 @@ impl ImageGraphConverter for Converters {
         match self {
             Self::SpatialEdgeChange(converter) => converter.img_to_graph(),
             Self::WindowToEdge(converter) => converter.img_to_graph(),
+            Self::Kmeans(converter) => converter.img_to_graph(),
         }
     }
 
@@ -29,6 +31,7 @@ impl ImageGraphConverter for Converters {
         match self {
             Self::SpatialEdgeChange(converter) => converter.visualize_pheromone(pheromone),
             Self::WindowToEdge(converter) => converter.visualize_pheromone(pheromone),
+            Self::Kmeans(converter) => converter.visualize_pheromone(pheromone),
         }
     }
 
@@ -36,6 +39,7 @@ impl ImageGraphConverter for Converters {
         match self {
             Self::SpatialEdgeChange(converter) => converter.visualize_conversion(),
             Self::WindowToEdge(converter) => converter.visualize_conversion(),
+            Self::Kmeans(converter) => converter.visualize_conversion(),
         }
     }
 }
@@ -53,6 +57,9 @@ impl Converters {
             ConverterStringConfig::WindowToEdge(opts) => {
                 WindowToEdgeConverter::from_str_and_pixel_map(pixel_map, opts)
                     .map(Self::WindowToEdge)
+            }
+            ConverterStringConfig::KMeans(opts) => {
+                KMeansConverter::from_str_and_pixel_map(pixel_map, opts).map(Self::Kmeans)
             }
         }
     }
