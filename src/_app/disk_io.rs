@@ -49,6 +49,13 @@ impl DiskIo {
             .and_then(|name_ext| Self::save_image(&name_ext, pixel_map))
     }
 
+    pub fn save_conversion_image(name: &str, pixel_map: &PixelMap) -> AppResult<String> {
+        extend_basename(name, "_conv")
+            .ok_or(format!("Failed to generate file with extension."))
+            .map_err(AppError::IoError)
+            .and_then(|name_ext| Self::save_image(&name_ext, pixel_map))
+    }
+
     pub fn load_data(path: &str) -> AppResult<Data> {
         Data::from_file(path)
             .map_err(|_| format!("Failed to load data {}", path))

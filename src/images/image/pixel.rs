@@ -67,6 +67,16 @@ impl Pixel {
         }
     }
 
+    pub fn translate(&self, x: isize, y: isize) -> Pixel {
+        Pixel {
+            x: (self.x as isize + x) as usize,
+            y: (self.y as isize + y) as usize,
+            r: self.r,
+            g: self.g,
+            b: self.b,
+        }
+    }
+
     pub fn cmp_by_coords(&self, other: &Self) -> Ordering {
         let x_ord = self.x.cmp(&other.x);
         let y_ord = self.y.cmp(&other.y);
