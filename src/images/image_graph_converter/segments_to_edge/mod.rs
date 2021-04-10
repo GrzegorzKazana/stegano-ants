@@ -102,7 +102,9 @@ impl<C: SegmentToEdgeConverter> ImageGraphConverter for C {
 
         let intensities_by_segment_id: HashMap<SegmentId, u8> = distances
             .into_iter()
-            .map(|(idx, distance)| (idx, (255.0 * distance / distance_max) as u8))
+            // when visualizing, we want to highlight segments with less distance,
+            // therefore the `1.0 -` in `(1.0 - distance / distance_max)`
+            .map(|(idx, distance)| (idx, (255.0 * (1.0 - distance / distance_max)) as u8))
             .collect();
 
         let image = self.map_image_with_intensity_map(intensities_by_segment_id);

@@ -84,7 +84,7 @@ mod window_to_edge_converter_tests {
         let image = mock_image();
         let result = WindowToEdgeConverter::new(&image, 6).img_to_graph();
 
-        let dist = 156.25;
+        let dist = 1.0 / (156.25 + stability_factor!());
         let expected = Graph::from_node_vector(vec![
             Node {
                 id: 0,

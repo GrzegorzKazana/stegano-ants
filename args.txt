@@ -9,20 +9,18 @@
 # --steps=100
 # --dispatcher=basic
 # --updater=const
---dispatcher=biased
+--dispatcher=basic
 --updater=const
 # --converter=superpixels:10
-# --converter=kmeans:5
---converter=window:40
-# --converter=window:15,20,25
-# --converter=window:2,5,5
+--converter=kmeans:10
+# --converter=window:40
 # --mask-width=100
 --target-capacity=50000B
 # tsp
 # --graph=./assets/tsp/oliver30.csv
 embed
 --data assets/data/lorem_ipsum_large.txt
---image assets/images/house/house-l.bmp
+--image assets/images/baboon/baboon-l.bmp
 # extract
 # --steg assets/images/baboon/baboon-l_steg.bmp
 # --image assets/images/baboon/baboon-l.bmp

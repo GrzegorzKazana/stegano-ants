@@ -40,7 +40,7 @@ impl WindowToEdgeConverter {
     }
 
     fn window_to_distance((idx, window): (WindowId, PixelMap)) -> (WindowId, f32) {
-        (idx, window.variance())
+        (idx, 1.0 / (window.variance() + stability_factor!()))
     }
 }
 

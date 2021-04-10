@@ -1,13 +1,14 @@
-mod _tests;
 mod superpixel_impl;
 
 use itertools::Itertools;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use crate::ant_colony::graph::NodeId;
 use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
+
+use crate::common::utils::produce_until;
 
 use super::super::FromStrAndPixelMap;
 use super::{SegmentDistances, SegmentId, SegmentToEdgeConverter};
@@ -16,7 +17,7 @@ use superpixel_impl::segment;
 
 pub struct SuperPixelConverter {
     image: PixelMap,
-    n_super_pixels: usize,
+    n_superpixels: usize,
     labels: Vec<usize>,
     pixels_by_group_id: HashMap<usize, Vec<Pixel>>,
     segment_to_node_pair: HashMap<SegmentId, (NodeId, NodeId)>,
@@ -24,9 +25,8 @@ pub struct SuperPixelConverter {
 
 impl SuperPixelConverter {
     pub fn new(pixel_map: &PixelMap, target_n_nodes: usize) -> Self {
-        let target_superpixels = target_n_nodes * (target_n_nodes - 1) / 2;
-        let (n_super_pixels, labels) = segment(pixel_map, target_superpixels, 20.0);
-        let labels = Self::fix_unexact_superpixel_count(target_superpixels, n_super_pixels, labels);
+        let n_superpixels = target_n_nodes * (target_n_nodes - 1) / 2;
+        let labels = Self::generate_exact_super_pixels(pixel_map, n_superpixels);
 
         let pixels_by_group_id = labels
             .iter()
@@ -36,7 +36,7 @@ impl SuperPixelConverter {
 
         SuperPixelConverter {
             image: pixel_map.clone(),
-            n_super_pixels,
+            n_superpixels,
             labels,
             pixels_by_group_id,
             segment_to_node_pair: Self::build_segment_idx_node_lookup(target_n_nodes),
@@ -44,38 +44,37 @@ impl SuperPixelConverter {
     }
 
     /// unfortunately SLIC superpixel algorithm does not guarantee that we will get
-    /// exact amount of superpixels we requested. Here we make some sketchy operations
-    /// to adjust number of pixels (either by creating single pixel clusters or switching clusters)
-    fn fix_unexact_superpixel_count(
-        expected: usize,
-        actual: usize,
-        labels: Vec<usize>,
+    /// exact amount of superpixels we requested.
+    /// Here we generate the grouping and make some sketchy operations to adjust the numer of superpixels.
+    /// TODO: rewrite the algo implementation
+    fn generate_exact_super_pixels(
+        pixel_map: &PixelMap,
+        target_n_superpixels: usize,
     ) -> Vec<usize> {
-        if expected == actual {
+        // produce until we get not less superpixels than we want
+        // it is easier to remove surplus than generate new groups
+        let (n_superpixels, labels) = produce_until(
+            (0, vec![]),
+            |_, idx| segment(pixel_map, target_n_superpixels + idx, 20.0),
+            |(super_pixel_count, _), _| *super_pixel_count >= target_n_superpixels,
+        );
+
+        if n_superpixels == target_n_superpixels {
             return labels;
-        } else if actual < expected {
-            let n_missing = expected - actual;
-            let labels_to_replace: HashSet<usize> = (0..n_missing).collect();
-
-            labels
-                .into_iter()
-                .scan(labels_to_replace, |labels_to_replace, label| {
-                    let new_label = match labels_to_replace.take(&label) {
-                        Some(_) => label + actual,
-                        _ => label,
-                    };
-
-                    Some(new_label)
-                })
-                .collect()
         } else {
-            let n_surplus = actual - expected;
+            let n_surplus = n_superpixels - target_n_superpixels;
 
             labels
                 .into_iter()
-                .map(|label| iif!(label >= expected, label - n_surplus, label))
+                .map(|label| iif!(label >= target_n_superpixels, label - n_surplus, label))
                 .collect()
         }
+    }
+
+    fn super_pixel_to_cost((segment_id, pixels): (&SegmentId, &Vec<Pixel>)) -> (SegmentId, f32) {
+        let variance = PixelMap::variance_of_pixels(pixels);
+
+        (*segment_id, 1.0 / (variance + stability_factor!()))
     }
 }
 
@@ -83,8 +82,8 @@ impl SegmentToEdgeConverter for SuperPixelConverter {
     fn distances(&self) -> Vec<SegmentDistances> {
         self.pixels_by_group_id
             .iter()
-            .map(|(segment_id, pixels)| (*segment_id, PixelMap::variance_of_pixels(pixels)))
-            .sorted_by_key(|(id, _)| *id)
+            .map(Self::super_pixel_to_cost)
+            .sorted_by_key(|(id, _)| id.clone())
             .collect()
     }
 

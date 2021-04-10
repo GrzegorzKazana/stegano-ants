@@ -29,10 +29,15 @@ impl KMeansConverter {
     }
 
     fn pixel_cost_fn(px: &Pixel, pixel_map: &PixelMap) -> f32 {
-        let neighbours = pixel_map.get_neighbours_8(px.x, px.y);
-        let variance = PixelMap::variance_of_pixels(&neighbours);
+        // smallest possible variance using grayscale 8-neighbourhood
+        // one pixel out of 8 pixels being different from avg by 1 level
+        // prevents from blowing everything up in homogenous image areas
+        let minimum_non_zero_variance = 1.0 / 8.0;
 
-        variance
+        let neighbours = pixel_map.get_neighbours_8(px.x, px.y);
+        let variance = PixelMap::variance_of_pixels(&neighbours).max(minimum_non_zero_variance);
+
+        1.0 / variance
     }
 
     fn cluster_to_distance(

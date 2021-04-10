@@ -135,8 +135,7 @@ impl App {
         let pheromone = colony.get_pheromone();
         let visualized_pheromone = img_graph_converter
             .visualize_pheromone(pheromone)
-            .resize(transport_image.width, transport_image.height)
-            .invert();
+            .resize(transport_image.width, transport_image.height);
 
         Result::Ok((visualized_pheromone, conversion_visualization))
     }

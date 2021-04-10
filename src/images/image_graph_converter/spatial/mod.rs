@@ -29,6 +29,10 @@ pub trait SpatialImageGraphConverter {
             .iter()
             .map(|neighbour_pixel| {
                 let neighbour_id = Self::pixel_to_id(pixel_map, neighbour_pixel);
+                // we make edge distance proportional to pixel distance,
+                // thus ants will try to follow paths of least pixel difference
+                // therefore we need to invert the visualized pheromone, so that
+                // elements of high pixel difference are highlighted
                 let distance = Self::calc_distance_between_pixels(pixel, neighbour_pixel);
 
                 AdjacencyListEntry::new(node_id, neighbour_id, distance)
@@ -76,15 +80,17 @@ pub trait SpatialImageGraphConverter {
     ) -> PixelMap {
         let pheromone_norm = pheromone.normalize();
 
-        pixel_map.map(|pixel| {
-            let node_id = Self::pixel_to_id(pixel_map, pixel);
-            let edges_adjacent_to_pixel = graph.get_adjacent_edges(&node_id);
-            let intensity_level = Self::calculate_pixel_intensity_from_pheromone(
-                &pheromone_norm,
-                &edges_adjacent_to_pixel,
-            );
+        pixel_map
+            .map(|pixel| {
+                let node_id = Self::pixel_to_id(pixel_map, pixel);
+                let edges_adjacent_to_pixel = graph.get_adjacent_edges(&node_id);
+                let intensity_level = Self::calculate_pixel_intensity_from_pheromone(
+                    &pheromone_norm,
+                    &edges_adjacent_to_pixel,
+                );
 
-            Pixel::grey(pixel.x, pixel.y, intensity_level)
-        })
+                Pixel::grey(pixel.x, pixel.y, intensity_level)
+            })
+            .invert()
     }
 }
