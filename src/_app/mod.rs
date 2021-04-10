@@ -119,17 +119,10 @@ impl App {
         let rng = StdRng::seed_from_u64(opts.seed);
         let downscaled_transport_image = Self::downscale_transport_image(opts, transport_image);
 
-        let img_graph_converter = opts
-            .converter
-            .as_ref()
-            .and_then(|config| {
-                Converters::from_string_config_and_pixel_map(&downscaled_transport_image, config)
-            })
-            .unwrap_or_else(|| Converters::default(&downscaled_transport_image));
-
+        let img_graph_converter = Self::parse_image_converter(opts, &downscaled_transport_image)?;
         let conversion_visualization = img_graph_converter.visualize_conversion();
-
         let graph = img_graph_converter.img_to_graph();
+
         let colony_runner = self.run_colony(opts, rng, graph)?;
         let colony = colony_runner.get_colony();
         let pheromone = colony.get_pheromone();
@@ -200,6 +193,12 @@ impl App {
     fn parse_pheromone_updater(opts: &Opts, guide: &GuidingConfig) -> AppResult<Updaters> {
         Updaters::from_string_config(&opts.updater, Option::Some(guide))
             .ok_or(format!("invalid updater arg"))
+            .map_err(AppError::IoError)
+    }
+
+    fn parse_image_converter(opts: &Opts, pixel_map: &PixelMap) -> AppResult<Converters> {
+        Converters::from_string_config_and_pixel_map(pixel_map, &opts.converter)
+            .ok_or(format!("invalid converter arg"))
             .map_err(AppError::IoError)
     }
 

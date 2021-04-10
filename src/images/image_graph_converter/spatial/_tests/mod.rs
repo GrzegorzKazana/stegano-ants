@@ -170,7 +170,8 @@ mod edge_change_converter_tests {
                 Pixel::grey(1, 1, (255.0 * 2.3 / 3.0) as u8), // (0.5 + 0.8 + 1.0) / 3
                 Pixel::grey(2, 1, (255.0 * 0.8) as u8),  // (0.6 + 1.0) / 2
             ],
-        );
+        )
+        .invert();
 
         assert_eq!(result, expected);
     }

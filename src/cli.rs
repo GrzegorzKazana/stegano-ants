@@ -28,8 +28,12 @@ pub struct Opts {
     #[clap(short, long, about = "updater type in format <type>:<args>")]
     pub updater: UpdaterStringConfig,
 
-    #[clap(long, about = "converter type in format <type>:<args>")]
-    pub converter: Option<ConverterStringConfig>,
+    #[clap(
+        long,
+        default_value = "spatial",
+        about = "converter type in format <type>:<args>"
+    )]
+    pub converter: ConverterStringConfig,
 
     #[clap(short, long, about = "number of traning cycles")]
     pub cycles: Option<usize>,
