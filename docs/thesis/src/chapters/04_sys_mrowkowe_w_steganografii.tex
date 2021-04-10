@@ -1,4 +1,4 @@
-\chapter{Zastosowanie systemów mrówkowych w steganografii}\label{chap:antsys}
+\chapter{Zastosowanie systemów mrówkowych w steganografii}\label{chap:stegoants}
 {
     % - wstęp
     %   - skoro mrówki mają tak szerokie zastosowania, to czemu nie użyć ich w steganografii?
@@ -8,6 +8,7 @@
     %   - zalety: stochastyczność procesu (bezpieczeństwo++)
     % - przytoczenie (krótkie) istniejących prac, ich założeń/wad/zalet
     %%  moja metoda:
+    % - coś powiedzieć o zasadzie Kerckhoffsa i dodatkowym bezpieczeństwie z nią związaną
     % - kwestia reprezentacji obrazu jako grafu
     %   - czym są węzły
     %   - czym są krawędzie
@@ -16,12 +17,102 @@
     %   - brak pełnych cykli (ograniczenie ilości kroków)
     % - interpretacja śladu feromonowego
     %   - metody przekształceń (tzn ograniczenie zakresu wartości, skalowanie itp)
+
+    Jak przedstawiono w poprzednich rozdziałach, zagadnienia steganografii oraz systemów mrówkowych są złożone, nawet
+    gdy są analizowane w izolacji. Obie dziedziny mogą zostać powiązane, jeśli spojrzymy na nie jako na parę problemu
+    optymalizacji oraz metaheurystykę mogącą posłużyć do jego rozwiązania.
+
+    % GŁÓWNY PROBLEM: ILOŚĆ vs JAKOŚĆ
+    Wykorzystanie systemów steganograficznych jest bezpośrednio związane z jednoczesną realizacją celów stojących sobie
+    w opozycji. Idealny system steganograficzny, niezależnie od stosowanego medium nośnego, cechuje się jednocześnie
+    dużą pojemnością, odpornością na zakłócenia i zniekształcenia nośnika i niską wykrywalnością istnienia przekazu.
+    Intuicyjnie, lecz również na podstawie wszelkich obserwacji, można zauważyć że jednoczesna maksymalizacja ukrywanego
+    przekazu powoduje wzrost cech niepożądanych, takich jak wzrost podatności na ataki steganograficzne. Oznacza to, że
+    kluczowym aspektem wszystkich metod steganograficznych jest zachowanie balansu pomiędzy realizacją tych celów. W
+    zastosowaniach o krytycznej poufności istotniejsze będzie zapewnienie niższej wykrywalności, nawet jeśli się
+    odbędzie kosztem stosunku wiadomości do sygnału. W zależności od wybranej metody, kontrolowanie tego balansu może
+    się to sprowadzać do regulacji parametrów algorytmu lub wyboru nośnika o odpowiednio dużym rozmiarze.
+
+    % METODY HEURYSTYCZNE - ZALETY W STEGANOGRAFII
+    Nie oznacza to jednak, że należy zaniechać poszukiwań metod pozwalających na zachowanie zadowalającego poziomu
+    każdego z parametrów procesu. W rzeczywistości, zagadnienie wykorzystania metaheurystyk oraz metod uczenia
+    maszynowego do celów steganografii jest aktywną dziedziną odnoszącą ciągłe sukcesy\cite{ElEmam2013NewSA,
+    Zhao2021AntCO, Khan2018AntCO, Saleema2016ANS, Li2007ASM}.
+    % STOSOWANIE KLUCZY
+    Kolejnym aspektem przemawiającym na korzyść stosowania metod heurystycznych do celów steganograficznych jest ich
+    stochastyczny charakter. Podstawowym problemem najprostszych technik steganograficznych, takich jak \textit{LSB},
+    jest sekwencyjność wyboru fragmentów nośnika informacji. W przypadku ukrywania informacji w obrazach,
+    najoczywistszym działaniem jest kodowanie danych w kolejnych pikselach obrazu. Takie podejście jest wyjątkowo
+    wrażliwe na najprostsze formy ataków, za równo steganograficznych jak i statystycznych. W celu uniknięcia powyższej
+    podatności, możliwe jest stosowanie dodatkowych kluczy instruujących, które i w jakiej kolejności segmenty nośnika
+    należy analizować\cite{AlHusainy2019ASI}. Wykorzystanie stochastycznych procesów które zachodzą w znacznej części
+    metaheurystyk, automatycznie rozwiązuje problem przewidywalności umiejscowienia informacji. Gwarantuje również
+    możliwość powtarzalnego odtworzenia jego działania poprzez ustalanie ziarna generatora liczb losowych. W takim
+    przypadku, jego wartość stanowi swoisty klucz zwiększający bezpieczeństwo ukrytych danych.
+    % ZASADA KERCKHOFFSA
+    Dodatkowym argumentem przemawiającym za słusznością wykorzystania klucza w metodach steganograficznych, jest słynna
+    zasada Kerckhoffsa\cite{Guillot2013AugusteKE}, będąca fundamentem współczesnej kryptografii. Jej treść głosi, że
+    bezpieczeństwo systemu powinno zostać zachowane, nawet jeśli osoba próbująca odkryć poufne informacje zna wszystkie
+    szczegóły jego działania. Gwarantem bezpieczeństwa musi być prywatny klucz. Zasada ta stoi w opozycji do systemów
+    opierających się na niejawności \textit{(ang. Security by obscurity)}.
+
+    % SYSTEMY MRÓWKOWE W STEGANOGRAFII
+    W związku z zaletami metod heurystycznych, oraz nadziejami na znalezienie sposobu optymalizacji przeciwstawnych cech
+    steganogramów, próby wykorzystania systemów mrówkowych i mrowiskowych do ukrywania danych w obrazach były
+    niejednokrotnie podejmowane\cite{Priya2018HIGHCA, ZghaerACOStegEN, Khan2018AntCO}.
+    % REPREZENTACJA PROBLEMU + INTERPRETACJA WYNIKÓW
+    Najważniejszym aspektem charakteryzującym każdą z opisanych metod jest sposób reprezentacji problemu. W celu
+    zastosowania metaheurystyki systemu mrówkowego, konieczne jest przedstawienie danych wejściowych w postaci grafu.
+    Wybór dotyczący zasady jego budowy ma fundamentalny wpływ na uzyskiwane rezultaty oraz efektywność algorytmu.
+    Kolejnym kluczowym zagadnieniem jest interpretacja rezultatów pracy wirtualnych mrówek. W tej kwestii, istnieją
+    conajmniej dwie obierane ścieżki przez eksperymentatorów. Za wynik działania algorytmu można uznać najkrótszą bądź
+    najpopularniejszą ścieżkę obieraną przez mrówki - takie podejście oznacza pozyskanie dyskretnej listy wykorzystanych
+    krawędzi. Alternatywnie, jako rezultat można uznać utworzony ślad feromonowy. Korzystając z tego podejścia,
+    utrzymujemy rozmyty zbiór krawędzi reprezentujących najlepszą ścieżkę - krawędzie częściej należące do krótszych
+    rozwiązań problemu komiwojażera będą bardziej do niego należeć niż ścieżki rzadko obierane. Analiza rozmytego zbioru
+    rozwiązań pozostawia szerszą możliwość interpretacji wyników. Dodatkowo, charakterystyka uzyskiwanego śladu
+    feromonowego jest bardziej podatna na zmiany rodzaju systemu mrówkowego oraz jego parametry.
+
+    % PRZYKŁD - CZĘSTOTLIWOŚCIOWO
+    Systemy mrowiskowe mogą zostać wykorzystane za równo w steganografii przy pomocy obrazów cyfrowych w dziedzinie
+    przestrzennej\cite{ZghaerACOStegEN, Khan2018AntCO}, jak i częstotliwościowej\cite{Priya2018HIGHCA}. W artykule
+    \textit{High capacity and optimized image steganography technique based on ant colony optimization algorithm},
+    zaproponowano metodę opartą o przytoczoną metodę całkowitoliczbowej transformaty falkowej (\textit{IWT}). Twórcy
+    opisali algorytm wykorzystujący system mrowiskowy do ukrycia sekretnej informacji w współczynnikach dziedziny
+    transformaty. Przeprowadzone eksperymenty wykazały wysoką skuteczność metody\cite{Priya2018HIGHCA}.
+    % PRZYKŁD - PRZESTRZENNIE
+    Pomimo że pozostałe przestudiowane prace oparte są o analizę obrazu w technice przestrzennej, sposób reprezentacji
+    problemu i interpretacji wyników jest zdecydowanie odmienny. W pracy \textit{Ant Colony Optimization To Enhance
+    Image Steganography}\cite{ZghaerACOStegEN}, obrazy zostały podzielone na bloki o rozmiarach $2\times2$ lub
+    $5\times5$. Każdy blok jest interpretowany jako graf, w którym wierzchołkami są piksele, a długościami krawędzi są
+    odwrotności błędu średniokwadratowego spowodowanego przez ukrycie w danym pikselu jednego bitu informacji. Uzyskana
+    przez system mrówkowy ścieżka wskazuje, w których pikselach należy umieścić informację aby uzyskać najmniejszy wpływ
+    na różnicę między obrazem nośnym a stganogramem\cite{ZghaerACOStegEN}.
+    % PRZYKŁD - PRZESTRZENNIE 2
+    Przykładem pracy wykorzystującej wartości śladu feromonowego naniesionego przez mrówki jest \textit{Ant Colony
+    Optimization (ACO) based Data Hiding in Image Complex Region}\cite{Khan2018AntCO}. W powyższej pracy, mrówki
+    poruszają się po grafie zbudowany, na podstawie bitmapy nośnej. Jego wierzchołkami są piksele, a długościami
+    krawędzi różnice intensywności pikseli przez nie łączone. Dążeniem stosowania takiej reprezentacji jest wykrycie
+    krawędzi oraz złożonych obszarów obrazu, pozwalających na ukrycie większej ilości informacji przy jednoczesnej
+    niższej wykrywalności ingerencji w obraz. Po ukończeniu pracy systemu mrowiskowego, ustalana jest wartość graniczna
+    feromonu, dla której piksele uznawane są za należące do złożonego segmentu. W ten sposób, obraz zostaje podzielony
+    na dwa zbiory pikseli, w tych związanych z wartością feromonu przekraczającą wartość graniczną zostaje stosowana
+    technika \textit{LSB}. Pozostałe piksele pozostają niezmienione. Za pomocą wyników eksperymentów udaje się dowieźć,
+    jest to skuteczna metoda. Jej dodatkową zaletą jest możliwość parametryzacji i zmiany sposobu wyznaczania granicznej
+    wartości feromonu, co pozwala na kontrolę pojemności steganogramu kosztem jakości\cite{Khan2018AntCO}.
+
+    % Priya2018HIGHCA - ACO + IWT, ants used to select coefficients in which to embed data
+    % ZghaerACOStegEN - aco/mmas + przestrzenne, podział na bloki 2x2 lub 5x5 + ukrywanie bitów w blokach tak aby
+    % minimalizować MSE. 1 pixel = 1 node
+    % Khan2018AntCO - aco + przestrzenne, 1 pixel = 1 wierzchołek, ślad feromonowy pozwala na decyzję czy piksel należy
+    % do `complex` region czy nie (binarnie). W `complex` region ukrywamy dane LSB. Podział obrazu na 2 grupy
+
 }
 
 % ALG MRÓWKOWE W STEGANOGRAFII
-% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20colony%20optimization%20with%20horizontal%20and%20vertical%20crossover%20search%20Fundamental%20visions%20for%20multi-thres.image%20segmentation.pdf
-% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20Novel%20Technique%20for%20Steganography%20Method%20Based%20on.pdf
-% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20ACO%20based%20Data%20Hiding%20in%20Image%20Complex%20Region.pdf
-% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20To%20Enhance%20Image%20Steganography.pdf
-% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/HIGH%20CAPACITY%20AND%20OPTIMIZED%20IMAGE%20STEGANOGRAPHY%20TECHNIQUE%20BASED%20ON%20ANT%20COLONY%20OPTIMIZATION%20ALGORITHM.pdf
-% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/New%20steganography%20algorithm%20to%20conceal%20a%20large%20amount%20of%20secret%20message%20using%20hybrid%20adaptive%20neural.pdf
+% Zhao2021AntCO file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20colony%20optimization%20with%20horizontal%20and%20vertical%20crossover%20search%20Fundamental%20visions%20for%20multi-thres.image%20segmentation.pdf
+% Mohadeseh2013ANT file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20Novel%20Technique%20for%20Steganography%20Method%20Based%20on.pdf
+% Khan2018AntCO file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20ACO%20based%20Data%20Hiding%20in%20Image%20Complex%20Region.pdf
+% ZghaerACOStegEN file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20To%20Enhance%20Image%20Steganography.pdf
+% Priya2018HIGHCA file:///Users/grzegorzkazana/Desktop/Stegano_Ant/HIGH%20CAPACITY%20AND%20OPTIMIZED%20IMAGE%20STEGANOGRAPHY%20TECHNIQUE%20BASED%20ON%20ANT%20COLONY%20OPTIMIZATION%20ALGORITHM.pdf
+% ElEmam2013NewSA file:///Users/grzegorzkazana/Desktop/Stegano_Ant/New%20steganography%20algorithm%20to%20conceal%20a%20large%20amount%20of%20secret%20message%20using%20hybrid%20adaptive%20neural.pdf

@@ -86,4 +86,4 @@
 -   https://en.wikipedia.org/wiki/List_of_color_spaces_and_their_uses
 -   https://en.wikipedia.org/wiki/Color_difference
 
--   zaimplementować min max system https://www.cs.ubc.ca/~hoos/Publ/fgcs00.pdf
+https://www.semanticscholar.org/paper/Secret-Key-Steganography-with-Message-Obfuscation-Guti%C3%A9rrez-C%C3%A1rdenas/cbbabeae9fdd6779007bda2ab5bde33fce77c0a4
