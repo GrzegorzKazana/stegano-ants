@@ -29,24 +29,6 @@ impl WindowToEdgeConverter {
     pub fn new(pixel_map: &PixelMap, n_nodes: usize) -> Self {
         let n_edges = n_nodes * (n_nodes - 1) / 2;
         let (n_y_windows, n_x_windows) = balanced_divisors(n_edges);
-        println!("{}: {}x{}", n_edges, n_y_windows, n_x_windows);
-
-        WindowToEdgeConverter {
-            pixel_map_windows: pixel_map.windows(n_x_windows, n_y_windows),
-            n_nodes,
-            n_x_windows,
-            n_y_windows,
-            window_idx_to_node_pair: Self::build_segment_idx_node_lookup(n_nodes),
-        }
-    }
-
-    pub fn new_without_resize(
-        pixel_map: &PixelMap,
-        n_x_windows: usize,
-        n_y_windows: usize,
-        n_nodes: usize,
-    ) -> Self {
-        assert_eq!(n_nodes * (n_nodes - 1), n_x_windows * n_y_windows * 2);
 
         WindowToEdgeConverter {
             pixel_map_windows: pixel_map.windows(n_x_windows, n_y_windows),
@@ -58,7 +40,7 @@ impl WindowToEdgeConverter {
     }
 
     fn window_to_distance((idx, window): (WindowId, PixelMap)) -> (WindowId, f32) {
-        (idx, 1.0 / (window.variance() + stability_factor!()))
+        (idx, window.variance())
     }
 }
 

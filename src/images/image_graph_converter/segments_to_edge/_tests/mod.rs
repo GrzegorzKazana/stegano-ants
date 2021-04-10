@@ -82,9 +82,9 @@ mod window_to_edge_converter_tests {
     #[test]
     fn it_should_create_correct_graph() {
         let image = mock_image();
-        let result = WindowToEdgeConverter::new_without_resize(&image, 5, 3, 6).img_to_graph();
+        let result = WindowToEdgeConverter::new(&image, 6).img_to_graph();
 
-        let dist = 1.0 / (156.25 + stability_factor!());
+        let dist = 156.25;
         let expected = Graph::from_node_vector(vec![
             Node {
                 id: 0,
@@ -155,8 +155,7 @@ mod window_to_edge_converter_tests {
     fn it_should_correctly_visualize_pheromone() {
         let image = mock_image();
         let pheromone = mock_pheromone();
-        let result = WindowToEdgeConverter::new_without_resize(&image, 5, 3, 6)
-            .visualize_pheromone(&pheromone);
+        let result = WindowToEdgeConverter::new(&image, 6).visualize_pheromone(&pheromone);
         let expected = PixelMap::new(
             6,
             5,

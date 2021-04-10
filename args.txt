@@ -11,9 +11,9 @@
 # --updater=const
 --dispatcher=biased
 --updater=const
-# --converter=superpixels:20
+# --converter=superpixels:10
 # --converter=kmeans:5
---converter=window:14
+--converter=window:40
 # --converter=window:15,20,25
 # --converter=window:2,5,5
 # --mask-width=100
@@ -22,7 +22,7 @@
 # --graph=./assets/tsp/oliver30.csv
 embed
 --data assets/data/lorem_ipsum_large.txt
---image assets/images/baboon/baboon-l.bmp
+--image assets/images/house/house-l.bmp
 # extract
 # --steg assets/images/baboon/baboon-l_steg.bmp
 # --image assets/images/baboon/baboon-l.bmp

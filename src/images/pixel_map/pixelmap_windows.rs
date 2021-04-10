@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::common::utils::{ceil_div, measure_chunks, MeasuredChunk};
+use crate::common::utils::{measure_chunks, MeasuredChunk};
 use crate::images::image::Pixel;
 
 use super::PixelMap;
@@ -82,25 +82,38 @@ impl PixelMapWindows {
         let n_cols_per_chunk = width / n_x_windows;
 
         let actual_n_rows = measure_chunks(height, n_rows_per_chunk);
-        let actual_n_cols = measure_chunks(width, n_cols_per_chunk);
+        let actual_n_rows = Self::adjust_chunk_amount(actual_n_rows, n_y_windows);
 
-        // Just a sanity check
-        assert_eq!(
-            n_x_windows,
-            actual_n_cols.len(),
-            "window_iter failed to chunk in x axis"
-        );
-        assert_eq!(
-            n_y_windows,
-            actual_n_rows.len(),
-            "window_iter failed to chunk in y axis"
-        );
+        let actual_n_cols = measure_chunks(width, n_cols_per_chunk);
+        let actual_n_cols = Self::adjust_chunk_amount(actual_n_cols, n_x_windows);
 
         actual_n_rows
             .into_iter()
             .cartesian_product(actual_n_cols.into_iter())
             .zip(0..)
             .map(|((row_offsets, col_offsets), idx)| (idx, row_offsets, col_offsets))
+    }
+
+    fn adjust_chunk_amount(chunks: Vec<MeasuredChunk>, target_count: usize) -> Vec<MeasuredChunk> {
+        let head = chunks.iter().cloned().take(target_count - 1).into_iter();
+
+        let tail = chunks
+            .iter()
+            .cloned()
+            .skip(target_count - 1)
+            .fold1(|prev, next| (prev.0, prev.1 + next.1, next.2))
+            .into_iter();
+
+        let result = head.chain(tail).collect::<Vec<_>>();
+
+        // sanity check
+        assert_eq!(
+            target_count,
+            result.len(),
+            "window_iter failed to chunk evenly"
+        );
+
+        result
     }
 
     fn is_pixel_in_offset(px: &Pixel, offsets: &WindowOffsets) -> bool {

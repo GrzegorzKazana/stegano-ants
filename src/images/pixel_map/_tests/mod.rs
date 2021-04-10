@@ -208,4 +208,12 @@ mod images_pixel_map_tests {
 
         assert_eq!(offsets, expected);
     }
+
+    #[test]
+    fn it_should_handle_uneven_chunks_by_returning_correct_len() {
+        let offsets = PixelMapWindows::generate_offsets(200, 1, 30, 1).collect::<Vec<_>>();
+        let expected = 30;
+
+        assert_eq!(offsets.len(), expected);
+    }
 }
