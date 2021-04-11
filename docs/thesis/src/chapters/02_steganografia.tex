@@ -28,7 +28,7 @@
     % CZYM SIĘ RÓŻNIĄ
     W odróżnieniu od kryptografii, celem technik steganograficznych jest umożliwienie uczestnikom komunikacji
     przesyłania informacji bez ujawniania faktu istnienia samego przekazu.
-    
+
     \section{Zastosowania steganografii}
     {
         % PRZYKŁADY HISTORYCZNE
@@ -74,14 +74,14 @@
         odbiorze tylko i wyłącznie po odtworzeniu utworu od tyłu. Jednym z pierwszych zespołów przyczyniających się do
         wzrostu popularności powyższych eksperymentów jest \textit{The Beatles}.
     }
-    
+
     \section{Steganografia z wykorzystaniem obrazów cyfrowych}
     {
         % TECHNIKI UKRYWANIA INFORMACJI W OBRAZACH
         Mimo tego, że jako medium steganograficzne można wykorzystać każdy plik binarny, szczególnie dużo uwagi zostało
         poświęcone cyfrowym obrazom i zdjęciom. Pomimo pozornej prostoty powyższego zadania powstało wiele
         wyrafinowanych metod i technik, różniących się za równo pod kątem założeń jak i rezultatów. Pierwszym parametrem
-        mogącym służyć do podziału zaproponowanych metod jest dziedzina w której  obraz zostaje poddany analizie. 
+        mogącym służyć do podziału zaproponowanych metod jest dziedzina w której  obraz zostaje poddany analizie.
 
         \subsection{Techniki przestrzenne}
         {
@@ -141,7 +141,7 @@
             wartości. Ilość ukrytych  bitów jest proporcjonalna do zmiany wartości pikseli. W ten sposób możliwe jest
             osiągnięcie obrazów mniej  podatnych na steganoanalizę przy jednoczesnym zachowaniu znacznej
             pojemności\cite{Wu2003ASM}.
-            
+
         }
 
         \subsection{Techniki częstotliwościowe}
@@ -176,16 +176,16 @@
             \begin{equation}\label{eqt:dctcoef}
                 T_{i, j}=\left\{\begin{array}{ll}\frac{1}{\sqrt{N}} & \text { if } i=0 \\ \sqrt{\frac{2}{N}} \cos \left[\frac{(2 j+1) i \pi}{2 N}\right] & \text { if } i>0\end{array}\right\}
             \end{equation}
-            
+
             W kontekście złożoności obliczeniowej istotny jest fakt, że macierz transformacji $T$ można wyznaczyć
             jednokrotnie i ponownie wykorzystać dla każdego z bloków obrazu. W tym przypadku stosowane jest równanie
             \ref{eqt:dctmat}, w którym wyznacza się macierz współczynników $D$ korzystając z macierzy transformacji $T$
             oraz bloku wartości pikseli $M$ przeskalowanych do zakresu $[-128, 127]$.
-            
+
             \begin{equation}\label{eqt:dctmat}
                 D=T M T^{\prime}
             \end{equation}
-            
+
             Jednym z zastosowań dyskretnej transformacji kosinusowej jest stratna kompresja danych, przykładowo w
             formacie JPEG. Po wyznaczeniu współczynników odpowiadających kolejnym częstotliwościom następuje proces
             kwantyzacji - macierz współczynników zostaje skalarnie przemnożona przez macierz kwantyzacji a następnie
@@ -196,12 +196,12 @@
             mniejszym rozmiarem. W celu rekonstrukcji wykonuje się transformację odwrotną (\textit{IDCT}).
 
             % DCT - PRZYKŁADY
-            Przykładem algorytmu steganograficznego korzystającego z \textit{DCT} jest praca ,,Reversible Data Hiding in
-            JPEG Images''\cite{Huang2016ReversibleDH, Li2007ASM}. Wyznaczone współczynniki częstotliwości służą za
-            nośnik tekstu jawnego - współczynnikom z eksperymentalnie dobranych pasm częstotliwości zostają podmienione
-            najmniej znaczące bity, podobnie jak w przestrzennych metodach \textit{LSB}. W celu osiągnięcia dużo
-            większej odporności steganogramu na kompresję, Zhiqiang Zhu, N. Zheng, Tong Qiao oraz Ming Xu zaproponowali
-            metodę opartą o manipulację znaków współczynników, w odróżnieniu do manipulacji ich
+            Przykładem algorytmu steganograficznego korzystającego z \textit{DCT} jest praca \textit{,,Reversible Data
+            Hiding in JPEG Images''}\cite{Huang2016ReversibleDH, Li2007ASM}. Wyznaczone współczynniki częstotliwości
+            służą za nośnik tekstu jawnego - współczynnikom z eksperymentalnie dobranych pasm częstotliwości zostają
+            podmienione najmniej znaczące bity, podobnie jak w przestrzennych metodach \textit{LSB}. W celu osiągnięcia
+            dużo większej odporności steganogramu na kompresję, Zhiqiang Zhu, N. Zheng, Tong Qiao oraz Ming Xu
+            zaproponowali metodę opartą o manipulację znaków współczynników, w odróżnieniu do manipulacji ich
             wartościami\cite{Zhu2019RobustSB}.
 
             % DWT + IWT
@@ -209,11 +209,11 @@
             \textit{Discrete wavelet transform (DWT)}) oraz jej odpowiednik pozwalający na bezstratną transformację
             odwrotną - \textit{Całkowitoliczbowa transformata falkowa} (ang. \textit{Integer wavelet transform
             (IWT)})\cite{Xuan2005LosslessDH}.
-            
+
             Jedną z możliwości transformaty falkowej jest wyodrębnienie części obrazu w której skład wchodzą osobno
             wysokie i niskie pasma częstotliwości. Obraz zostaje kolejno przekształcany wierszami i kolumnami przez
             filtr dolnoprzepustowy (wykonujący operację uśredniania) i górnoprzepustowy (obliczający różnicę).
-            
+
             Po pierwszej iteracji oryginalny obraz zostaje podzielony na sekcje:
             \begin{itemize}
                 \item LL - filter dolnoprzepustowy zaaplikowany do wierszy i kolumn,
@@ -232,14 +232,13 @@
                     http://bigwww.epfl.ch/demo/ip/demos/wavelets/}
                 \label{fig:iwtdemo}
             \end{figure}
-            
 
-            W artykule ,,Lossless Data Hiding Using Integer Wavelet Transform and Threshold Embedding Technique''
-            opisano metodę ukrywania bitów wiadomości w najmniej znaczących bitach współczynników odpowiadających pasmom
-            wysokiej częstotliwości. Wyniki eksperymentalne, względem innych metod, wykazały znaczący wzrost pojemności
-            obrazu przy zachowaniu tego samego współczynnika szczytowego stosunku sygnału do
-            szumu\cite{Xuan2005LosslessDH}.
-        }
+
+            W artykule \textit{,,Lossless Data Hiding Using Integer Wavelet Transform and Threshold Embedding
+            Technique''} opisano metodę ukrywania bitów wiadomości w najmniej znaczących bitach współczynników
+            odpowiadających pasmom wysokiej częstotliwości. Wyniki eksperymentalne, względem innych metod, wykazały
+            znaczący wzrost pojemności obrazu przy zachowaniu tego samego współczynnika szczytowego stosunku sygnału do
+            szumu\cite{Xuan2005LosslessDH}.}
 
         \subsection{Podsumowanie}
         {
@@ -248,8 +247,8 @@
             istotność doboru regionów obrazu w których są ukrywane dane. W opisanych pracach korzystających z
             transformat częstotliwościowych, dokonywano wyboru pomiędzy ukrywaniem danych w
             niskich-średnich\cite{Huang2000EmbeddingIW, DataHidinginJPEG, Li2007ASM} lub wysokich pasmach
-            częstotliwości\cite{Xuan2005LosslessDH, Muhuri2020ANI}. 
-            
+            częstotliwości\cite{Xuan2005LosslessDH, Muhuri2020ANI}.
+
             Główną motywacją autorów decydujących się na dobór niskich bądź średnich pasm w celach ukrywania informacji
             jest uzyskanie obrazu o większej odporności na manipulacje i zniekształcenia. W pracach opisujących metody
             wykorzystujące wysokie pasma częstotliwości, wybór jest argumentowany niższą percepcyjną wykrywalnością
@@ -265,8 +264,9 @@
             częstotliwości\cite{ImageCompressionDCT}. Oznacza to, że istnieje większy potencjał w manipulacjach obrazem
             w zakresie pasm wysokich, przy jednoczesnej zachowaniu jak najwyższej subiektywnej jakości obrazu. Istnieją
             prace związane z steganografią popierające powyższą tezę. Należą do nich już przytoczona w kontekście metody
-            \textit{PVD} ,,A steganographic method for images by pixel-value differencing"\cite{Wu2003ASM}, oraz
-            praca,,Edge-based image steganography''  oparta na wykrywaniu krawędzi obrazu\cite{Islam2014EdgebasedIS}.
+            \textit{PVD} \textit{,,A steganographic method for images by pixel-value differencing''}\cite{Wu2003ASM},
+            oraz praca \textit{,,Edge-based image steganography''} oparta na wykrywaniu krawędzi
+            obrazu\cite{Islam2014EdgebasedIS}.
         }
     }
 }

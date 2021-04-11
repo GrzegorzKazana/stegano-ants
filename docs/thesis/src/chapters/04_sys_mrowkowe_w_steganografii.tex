@@ -6,9 +6,9 @@
     %     ukrytych informacji)
     %   - pomysł: odpowiedni dobór miejsc w których zostaną ukryte informacje (wykorzystanie `complex` regions)
     %   - zalety: stochastyczność procesu (bezpieczeństwo++)
-    % - przytoczenie (krótkie) istniejących prac, ich założeń/wad/zalet
-    %%  moja metoda:
     % - coś powiedzieć o zasadzie Kerckhoffsa i dodatkowym bezpieczeństwie z nią związaną
+    % - przytoczenie (krótkie) istniejących prac, ich założeń/wad/zalet
+    %  moja metoda:
     % - kwestia reprezentacji obrazu jako grafu
     %   - czym są węzły
     %   - czym są krawędzie
@@ -34,79 +34,332 @@
     się to sprowadzać do regulacji parametrów algorytmu lub wyboru nośnika o odpowiednio dużym rozmiarze.
 
     % METODY HEURYSTYCZNE - ZALETY W STEGANOGRAFII
-    Nie oznacza to jednak, że należy zaniechać poszukiwań metod pozwalających na zachowanie zadowalającego poziomu
-    każdego z parametrów procesu. W rzeczywistości, zagadnienie wykorzystania metaheurystyk oraz metod uczenia
-    maszynowego do celów steganografii jest aktywną dziedziną odnoszącą ciągłe sukcesy\cite{ElEmam2013NewSA,
-    Zhao2021AntCO, Khan2018AntCO, Saleema2016ANS, Li2007ASM}.
-    % STOSOWANIE KLUCZY
-    Kolejnym aspektem przemawiającym na korzyść stosowania metod heurystycznych do celów steganograficznych jest ich
-    stochastyczny charakter. Podstawowym problemem najprostszych technik steganograficznych, takich jak \textit{LSB},
-    jest sekwencyjność wyboru fragmentów nośnika informacji. W przypadku ukrywania informacji w obrazach,
-    najoczywistszym działaniem jest kodowanie danych w kolejnych pikselach obrazu. Takie podejście jest wyjątkowo
-    wrażliwe na najprostsze formy ataków, za równo steganograficznych jak i statystycznych. W celu uniknięcia powyższej
-    podatności, możliwe jest stosowanie dodatkowych kluczy instruujących, które i w jakiej kolejności segmenty nośnika
-    należy analizować\cite{AlHusainy2019ASI}. Wykorzystanie stochastycznych procesów które zachodzą w znacznej części
-    metaheurystyk, automatycznie rozwiązuje problem przewidywalności umiejscowienia informacji. Gwarantuje również
-    możliwość powtarzalnego odtworzenia jego działania poprzez ustalanie ziarna generatora liczb losowych. W takim
-    przypadku, jego wartość stanowi swoisty klucz zwiększający bezpieczeństwo ukrytych danych.
-    % ZASADA KERCKHOFFSA
-    Dodatkowym argumentem przemawiającym za słusznością wykorzystania klucza w metodach steganograficznych, jest słynna
-    zasada Kerckhoffsa\cite{Guillot2013AugusteKE}, będąca fundamentem współczesnej kryptografii. Jej treść głosi, że
-    bezpieczeństwo systemu powinno zostać zachowane, nawet jeśli osoba próbująca odkryć poufne informacje zna wszystkie
-    szczegóły jego działania. Gwarantem bezpieczeństwa musi być prywatny klucz. Zasada ta stoi w opozycji do systemów
-    opierających się na niejawności \textit{(ang. Security by obscurity)}.
+    \section{Zastosowanie metod heurystycznych w steganografii}
+    {
+        Trudności związane z optymalizacją procesu nie oznaczają, że należy zaniechać poszukiwań metod pozwalających na
+        zachowanie zadowalającego poziomu każdego z parametrów procesu. W rzeczywistości, zagadnienie wykorzystania
+        metaheurystyk oraz metod uczenia maszynowego do celów steganografii jest aktywną dziedziną odnoszącą ciągłe
+        sukcesy\cite{ElEmam2013NewSA, Zhao2021AntCO, Khan2018AntCO, Saleema2016ANS, Li2007ASM}.
+        % STOSOWANIE KLUCZY
+        Jednym z aspektów przemawiających na korzyść stosowania metod heurystycznych do celów steganograficznych jest
+        ich stochastyczny charakter. Podstawowym problemem najprostszych technik steganograficznych, takich jak
+        \textit{LSB}, jest sekwencyjność wyboru fragmentów nośnika informacji. W przypadku ukrywania informacji w
+        obrazach, najoczywistszym działaniem jest kodowanie danych w kolejnych pikselach obrazu. Takie podejście jest
+        wyjątkowo wrażliwe na najprostsze formy ataków, za równo steganograficznych jak i statystycznych. W celu
+        uniknięcia powyższej podatności, możliwe jest stosowanie dodatkowych kluczy instruujących, które i w jakiej
+        kolejności segmenty nośnika należy analizować\cite{AlHusainy2019ASI}. Wykorzystanie stochastycznych procesów
+        które zachodzą w znacznej części metaheurystyk, automatycznie rozwiązuje problem przewidywalności umiejscowienia
+        informacji. Gwarantuje również możliwość powtarzalnego odtworzenia jego działania poprzez ustalanie ziarna
+        generatora liczb losowych. W takim przypadku, jego wartość stanowi swoisty klucz zwiększający bezpieczeństwo
+        ukrytych danych.
+        % ZASADA KERCKHOFFSA
+        Dodatkowym argumentem przemawiającym za słusznością wykorzystania klucza w metodach steganograficznych, jest
+        słynna zasada Kerckhoffsa\cite{Guillot2013AugusteKE}, będąca fundamentem współczesnej kryptografii. Jej treść
+        głosi, że bezpieczeństwo systemu powinno zostać zachowane, nawet jeśli osoba próbująca odkryć poufne informacje
+        zna wszystkie szczegóły jego działania. Gwarantem bezpieczeństwa musi być prywatny klucz. Zasada ta stoi w
+        opozycji do systemów opierających się na niejawności \textit{(ang. Security by obscurity)}.
 
-    % SYSTEMY MRÓWKOWE W STEGANOGRAFII
-    W związku z zaletami metod heurystycznych, oraz nadziejami na znalezienie sposobu optymalizacji przeciwstawnych cech
-    steganogramów, próby wykorzystania systemów mrówkowych i mrowiskowych do ukrywania danych w obrazach były
-    niejednokrotnie podejmowane\cite{Priya2018HIGHCA, ZghaerACOStegEN, Khan2018AntCO}.
-    % REPREZENTACJA PROBLEMU + INTERPRETACJA WYNIKÓW
-    Najważniejszym aspektem charakteryzującym każdą z opisanych metod jest sposób reprezentacji problemu. W celu
-    zastosowania metaheurystyki systemu mrówkowego, konieczne jest przedstawienie danych wejściowych w postaci grafu.
-    Wybór dotyczący zasady jego budowy ma fundamentalny wpływ na uzyskiwane rezultaty oraz efektywność algorytmu.
-    Kolejnym kluczowym zagadnieniem jest interpretacja rezultatów pracy wirtualnych mrówek. W tej kwestii, istnieją
-    conajmniej dwie obierane ścieżki przez eksperymentatorów. Za wynik działania algorytmu można uznać najkrótszą bądź
-    najpopularniejszą ścieżkę obieraną przez mrówki - takie podejście oznacza pozyskanie dyskretnej listy wykorzystanych
-    krawędzi. Alternatywnie, jako rezultat można uznać utworzony ślad feromonowy. Korzystając z tego podejścia,
-    utrzymujemy rozmyty zbiór krawędzi reprezentujących najlepszą ścieżkę - krawędzie częściej należące do krótszych
-    rozwiązań problemu komiwojażera będą bardziej do niego należeć niż ścieżki rzadko obierane. Analiza rozmytego zbioru
-    rozwiązań pozostawia szerszą możliwość interpretacji wyników. Dodatkowo, charakterystyka uzyskiwanego śladu
-    feromonowego jest bardziej podatna na zmiany rodzaju systemu mrówkowego oraz jego parametry.
+        % SYSTEMY MRÓWKOWE W STEGANOGRAFII
+        \subsection{Systemy mrówkowe w steganografii}
+        {
+            W związku z zaletami metod heurystycznych, oraz nadziejami na znalezienie sposobu optymalizacji
+            przeciwstawnych cech steganogramów, próby wykorzystania systemów mrówkowych i mrowiskowych do ukrywania
+            danych w obrazach były niejednokrotnie podejmowane\cite{Priya2018HIGHCA, ZghaerACOStegEN, Khan2018AntCO}.
+            % REPREZENTACJA PROBLEMU + INTERPRETACJA WYNIKÓW
+            Najważniejszym aspektem charakteryzującym każdą z opisanych metod jest sposób reprezentacji problemu. W celu
+            zastosowania metaheurystyki systemu mrówkowego, konieczne jest przedstawienie danych wejściowych w postaci
+            grafu. Wybór dotyczący zasady jego budowy ma fundamentalny wpływ na uzyskiwane rezultaty oraz efektywność
+            algorytmu. Kolejnym kluczowym zagadnieniem jest interpretacja rezultatów pracy wirtualnych mrówek. W tej
+            kwestii istnieją conajmniej dwie obierane ścieżki przez eksperymentatorów. Za wynik działania algorytmu
+            można uznać najkrótszą bądź najpopularniejszą ścieżkę obieraną przez mrówki - takie podejście oznacza
+            pozyskanie dyskretnej listy wykorzystanych krawędzi. Alternatywnie, jako rezultat można uznać utworzony ślad
+            feromonowy. Korzystając z tego podejścia, utrzymujemy rozmyty zbiór krawędzi reprezentujących najlepszą
+            ścieżkę - krawędzie częściej należące do krótszych rozwiązań problemu komiwojażera będą bardziej do niego
+            należeć niż ścieżki rzadko obierane. Analiza rozmytego zbioru rozwiązań pozostawia szerszą możliwość
+            interpretacji wyników. Dodatkowo, charakterystyka uzyskiwanego śladu feromonowego jest bardziej podatna na
+            zmiany rodzaju systemu mrówkowego oraz jego parametry.
 
-    % PRZYKŁD - CZĘSTOTLIWOŚCIOWO
-    Systemy mrowiskowe mogą zostać wykorzystane za równo w steganografii przy pomocy obrazów cyfrowych w dziedzinie
-    przestrzennej\cite{ZghaerACOStegEN, Khan2018AntCO}, jak i częstotliwościowej\cite{Priya2018HIGHCA}. W artykule
-    \textit{High capacity and optimized image steganography technique based on ant colony optimization algorithm},
-    zaproponowano metodę opartą o przytoczoną metodę całkowitoliczbowej transformaty falkowej (\textit{IWT}). Twórcy
-    opisali algorytm wykorzystujący system mrowiskowy do ukrycia sekretnej informacji w współczynnikach dziedziny
-    transformaty. Przeprowadzone eksperymenty wykazały wysoką skuteczność metody\cite{Priya2018HIGHCA}.
-    % PRZYKŁD - PRZESTRZENNIE
-    Pomimo że pozostałe przestudiowane prace oparte są o analizę obrazu w technice przestrzennej, sposób reprezentacji
-    problemu i interpretacji wyników jest zdecydowanie odmienny. W pracy \textit{Ant Colony Optimization To Enhance
-    Image Steganography}\cite{ZghaerACOStegEN}, obrazy zostały podzielone na bloki o rozmiarach $2\times2$ lub
-    $5\times5$. Każdy blok jest interpretowany jako graf, w którym wierzchołkami są piksele, a długościami krawędzi są
-    odwrotności błędu średniokwadratowego spowodowanego przez ukrycie w danym pikselu jednego bitu informacji. Uzyskana
-    przez system mrówkowy ścieżka wskazuje, w których pikselach należy umieścić informację aby uzyskać najmniejszy wpływ
-    na różnicę między obrazem nośnym a stganogramem\cite{ZghaerACOStegEN}.
-    % PRZYKŁD - PRZESTRZENNIE 2
-    Przykładem pracy wykorzystującej wartości śladu feromonowego naniesionego przez mrówki jest \textit{Ant Colony
-    Optimization (ACO) based Data Hiding in Image Complex Region}\cite{Khan2018AntCO}. W powyższej pracy, mrówki
-    poruszają się po grafie zbudowany, na podstawie bitmapy nośnej. Jego wierzchołkami są piksele, a długościami
-    krawędzi różnice intensywności pikseli przez nie łączone. Dążeniem stosowania takiej reprezentacji jest wykrycie
-    krawędzi oraz złożonych obszarów obrazu, pozwalających na ukrycie większej ilości informacji przy jednoczesnej
-    niższej wykrywalności ingerencji w obraz. Po ukończeniu pracy systemu mrowiskowego, ustalana jest wartość graniczna
-    feromonu, dla której piksele uznawane są za należące do złożonego segmentu. W ten sposób, obraz zostaje podzielony
-    na dwa zbiory pikseli, w tych związanych z wartością feromonu przekraczającą wartość graniczną zostaje stosowana
-    technika \textit{LSB}. Pozostałe piksele pozostają niezmienione. Za pomocą wyników eksperymentów udaje się dowieźć,
-    jest to skuteczna metoda. Jej dodatkową zaletą jest możliwość parametryzacji i zmiany sposobu wyznaczania granicznej
-    wartości feromonu, co pozwala na kontrolę pojemności steganogramu kosztem jakości\cite{Khan2018AntCO}.
+            % PRZYKŁD - CZĘSTOTLIWOŚCIOWO
+            Systemy mrowiskowe mogą zostać wykorzystane za równo w steganografii przy pomocy obrazów cyfrowych w
+            dziedzinie przestrzennej\cite{ZghaerACOStegEN, Khan2018AntCO}, jak i
+            częstotliwościowej\cite{Priya2018HIGHCA}. W artykule \textit{,,High capacity and optimized image
+            steganography technique based on ant colony optimization algorithm''}, zaproponowano metodę opartą o
+            przytoczoną metodę całkowitoliczbowej transformaty falkowej (\textit{IWT}). Twórcy opisali algorytm
+            wykorzystujący system mrowiskowy do ukrycia sekretnej informacji w współczynnikach dziedziny transformaty.
+            Przeprowadzone eksperymenty wykazały wysoką skuteczność metody\cite{Priya2018HIGHCA}.
 
-    % Priya2018HIGHCA - ACO + IWT, ants used to select coefficients in which to embed data
-    % ZghaerACOStegEN - aco/mmas + przestrzenne, podział na bloki 2x2 lub 5x5 + ukrywanie bitów w blokach tak aby
-    % minimalizować MSE. 1 pixel = 1 node
-    % Khan2018AntCO - aco + przestrzenne, 1 pixel = 1 wierzchołek, ślad feromonowy pozwala na decyzję czy piksel należy
-    % do `complex` region czy nie (binarnie). W `complex` region ukrywamy dane LSB. Podział obrazu na 2 grupy
+            % PRZYKŁD - PRZESTRZENNIE
+            Pomimo że pozostałe przestudiowane prace oparte są o analizę obrazu w technice przestrzennej, sposób
+            reprezentacji problemu i interpretacji wyników jest zdecydowanie odmienny. W pracy \textit{,,Ant Colony
+            Optimization To Enhance Image Steganography''}\cite{ZghaerACOStegEN}, obrazy zostały podzielone na bloki o
+            rozmiarach $2 \times 2$ lub $5 \times 5$. Każdy blok jest interpretowany jako graf, w którym wierzchołkami
+            są piksele, a długościami krawędzi są odwrotności błędu średniokwadratowego spowodowanego przez ukrycie w
+            danym pikselu jednego bitu informacji. Uzyskana przez system mrówkowy ścieżka wskazuje, w których pikselach
+            należy umieścić informację aby uzyskać najmniejszy wpływ na różnicę między obrazem nośnym a
+            stganogramem\cite{ZghaerACOStegEN}.
 
+            % PRZYKŁD - PRZESTRZENNIE 2
+            Przykładem pracy wykorzystującej wartości śladu feromonowego naniesionego przez mrówki jest \textit{,,Ant
+            Colony Optimization (ACO) based Data Hiding in Image Complex Region''}\cite{Khan2018AntCO}. W powyższej
+            pracy, mrówki poruszają się po grafie zbudowanym na podstawie bitmapy nośnej. Jego wierzchołkami są piksele,
+            a długościami krawędzi różnice intensywności pikseli przez nie łączone. Dążeniem stosowania takiej
+            reprezentacji jest wykrycie krawędzi oraz złożonych obszarów obrazu, pozwalających na ukrycie większej
+            ilości informacji przy jednoczesnej niższej wykrywalności ingerencji w obraz. Po ukończeniu pracy systemu
+            mrowiskowego, ustalana jest wartość graniczna feromonu, dla której piksele uznawane są za należące do
+            złożonego segmentu. W ten sposób, obraz zostaje podzielony na dwa zbiory pikseli, w tych związanych z
+            wartością feromonu przekraczającą wartość graniczną zostaje stosowana technika \textit{LSB}. Pozostałe
+            piksele pozostają niezmienione. Za pomocą wyników eksperymentów udaje się dowieźć, jest to skuteczna metoda.
+            Jej dodatkową zaletą jest możliwość parametryzacji i zmiany sposobu wyznaczania granicznej wartości
+            feromonu, co pozwala na kontrolę pojemności steganogramu kosztem jakości\cite{Khan2018AntCO}.
+        }
+    }
+    % wady/zalety powyższych podejść, czego nie zbadały lub co można było ulepszyć 
+    %
+    % przytoczenie zasad sugerujących korzystanie z complex region
+    % przytoczenie metod vLSB i podobnych
+    % zaproponować 2 inne podejścia reprezentacji grafu + sposoby interpretacji śladu feromonowego z nimi związane
+
+    \section{Zaproponowana metoda}
+    {
+        Przytoczone i opisane metody udowadniają użyteczność i skuteczność wykorzystania systemów mrówkowych w celach
+        steganograficznych. Jednocześnie, przegląd dostępnej literatury sugeruje że nie jest to temat wyczerpany, a jego
+        dalsza eksploracja jest możliwa i niesie nadzieję na odkrycie metod jeszcze lepszych pod kątem pojemności
+        steganogramu i niższej postrzegalności przekazu. Poniżej przytoczono główne założenia i idee dwóch badanych
+        metod wykorzystujących systemy mrówkowe i mrowiskowe do ukrywania informacji w obrazach w celu zapewnienia
+        możliwie najwyższej jakości steganogramu i jego pojemności.
+
+        % IDEA DOBORU REGIONU OBRAZU: ZŁOŻONOŚĆ + STOCHASTYCZNOŚĆ
+        \subsection{Założenia}
+        {
+            Pierwszą decyzją podjętą podczas projektowania rozwiązania problemu było zdecydowanie się na wykorzystanie
+            sekcji obrazów cechujących się większą złożonością, takich jak krawędzie i zróżnicowane tekstury. Istniejąca
+            literatura z dziedziny steganografii sugeruje wyższą podatność na manipulację w takich właśnie obszarach
+            przy zachowaniu jednoczesnej niskiej postrzegalności istnienia przekazu. Przykładem powszechnie przyjętej
+            techniki opartej o powyższą tezę jest opisana w rozdziale \ref{chap:steganography} metoda \textit{Value
+            Pixel Differencing (VPD)}\cite{Wu2003ASM}, polecająca na uzależnieniu ilości wykorzystanych bitów od miary
+            różnicy sąsiadujących pikseli. Poparcia powyższej tezy można również szukać w przykładach metod opartych o
+            dziedzinę częstotliwościową obrazu\cite{Xuan2005LosslessDH}.
+
+            % METODA UKRYWANIA DANYCH W PIKSELACH
+            Na podstawie uzyskanych sekcji obrazu umiejscowionych na spektrum stopnia złożoności, można dokonać procesu
+            ukrywania danych w sposób faworyzujący złożone grupy pikseli. Trafną analogią do wykorzystanej metody jest
+            technika \textit{Variable Significant Bit (VLS)}, będąca rozwinięciem \textit{Least Significant Bit (LSB)} o
+            zmienność ukrywanej informacji w każdym z pikseli. W zaimplementowanym rozwiązaniu, stopień przynależności
+            do złożonego obszaru determinuje ilość bitów obrazu nośnego które zostaną zastąpione bitami ukrywanej
+            informacji. Motywacją reprezentacji obszarów złożonych obrazu jako zbiór rozmyty, odróżniającą ją od
+            dyskretnej metody opisanej w pracy \textit{,,Ant Colony Optimization (ACO) based Data Hiding in Image
+            Complex Region''}\cite{Khan2018AntCO}, jest jej większy potencjał na uzyskanie dużej pojemności
+            steganogramu. Decydując się na binarny podział obrazu, ograniczamy się do dwóch różnych ilości ukrywanych
+            bitów, w szczególnym przypadku opisanym w przytoczonej pracy ilość wykorzystanych bitów w obszarach nie
+            złożonych wynosił zero. Wadą takiego podejścia, jest niemożliwość wyróżnienia i przez to efektywnego
+            wykorzystania obszarów o średniej złożoności. Umiejscowienie złożoności na ciągłej skali, pozwala
+            skuteczniej podejść do problemu wyznaczania ilości bitów ukrytych w konkretnym pikselu obrazu. W takim
+            podejściu, nie tylko jesteśmy w stanie wykorzystać większą liczbę pikseli, lecz również uzyskany steganogram
+            może cechować się niższą wykrywalnością, gdyż obszary w których ukryto dane nie są oddzielone ostrą
+            krawędzią od pozostałych sekcji obrazu.
+        }
+
+        % WYKORZYSTANIE MRÓWEK
+        \subsection{Zastosowanie optymalizacji mrowiskowej}
+        {
+            Etapem procesu, w którym zdecydowano się wykorzystać system mrówkowy jest rozwiązanie problemu oceny
+            złożoności obszarów obrazu. W kontekście opisywanej metody, jest to kluczowe zagadnienie całego procesu,
+            gdyż od niego zależy czy informacje zostaną ukryte w sposób utrudniający ich wykrycie i maksymalizujący
+            pojemność steganogramu. Zaproponowane podejście polega na wykorzystaniu pewnej transformacji obrazu nośnego
+            do postaci grafowej, przeprowadzeniu zadanej ilości iteracji systemu mrówkowego, odczytaniu i odpowiedniej
+            interpretacji pozostawionego śladu feromonowego. Etap interpretacji śladu feromonowego jest ściśle związany
+            z wybraną metodą transformacji obrazu do postaci grafowej, lecz jego ostatecznym celem jest uzyskanie
+            macierzy maskującej o wymiarach odpowiadających wymiarom obrazu nośnego. Wartości współczynników uzyskanej
+            macierzy posłużą do wyznaczenia ilości bitów każdego z pikseli które zostaną zamienione na bity ukrywanej
+            wiadomości. Działanie zaproponowanego algorytmu można podsumować w następujących krokach:
+
+            \begin{enumerate}
+                \item Wyznacz grafową reprezentację obrazu nośnego.
+                \item Wykonaj $n$ iteracji systemy mrówkowego o zadanych parametrach.
+                \item Odczytaj ślad uzyskany feromonowy.
+                \item Na podstawie śladu utwórz macierz maskującą $K_{xy}$ o wymiarach obrazu nośnego.
+                \item W każdym z pikseli zastąp $k_{xy}$ najmniej znaczących bitów bitami informacji.
+            \end{enumerate}
+
+            Proces wydobywania wiadomości zakodowanej w obrazie jest analogiczny do procesu jej ukrywania. W celu
+            odczytania wiadomości należy ponownie wygenerować macierz maskującą i sekwencyjnie odczytać dyktowane przez
+            nią ilości bitów obrazu.
+
+            Zastosowanie systemu mrówkowego niesie z sobą dodatkową zaletę w dziedzinie bezpieczeństwa. Uzyskany ślad
+            feromonowy, a co za tym idzie macierz maskująca, jest zależny od i bardzo wrażliwy na zmiany wartości
+            parametrów systemu mrówkowego. Dzięki temu, w hipotetycznym przypadku przejęcia steganogramu przez osobę
+            postronną i stwierdzeniu samego faktu istnienia ukrytej wiadomości, odczytanie jej treści będzie znacząco
+            utrudnione. Oznacza to, że parametry systemu mrówkowego stanowią formę klucza.
+        }
+    }
+
+    \section{Sposób reprezentacji problemu w postaci grafowej oraz interpretacja śladu feromonowego}
+    {
+        % SPOSÓB GRAFOWEJ REPREZENTACJI + POWROTNA INTERPRETACJA ŚLADU FEROMONOWEGO
+        Jak podkreślono w rozdziale \ref{chap:antsys} oraz powyższym podsumowaniu zaproponowanej metody, zadanie
+        przekształcenia bitmapy do postaci grafu jest etapem niezbędnym do wykorzystania systemu mrówkowego w celu
+        optymalizacji procesu steganograficznego. Parametry uzyskanego grafu, takie jak ilość wierzchołków i krawędzi
+        będzie miał bezpośredni wpływ na wydajność oraz skuteczność działania całego algorytmu.
+
+        Omawiając zagadnienie grafowej reprezentacji obrazu, błędem byłoby pominięcie tematu interpretacji uzyskanego
+        śladu feromonowego. Pomimo pozornej odrębności tych dwóch etapów, są one ściśle z sobą związane. Przyczyną
+        takiego stanu rzeczy jest fakt, że uzyskany ślad feromonowy jest przypisaniem każdej krawędzi grafu pewnej
+        wartości liczbowej. Oznacza to, że interpretacja wartości liczbowej dla każdej krawędzi nie może być oderwana od
+        metody, na podstawie której krawędź została utworzona, a co za tym idzie, również przypisano jej pewne
+        znaczenie. W związku z powyższym, zaproponowane metody budowania grafów będą omówione równolegle z sposobami
+        przekształcenia uzyskanego śladu feromonowego na macierz maskującą.
+
+        % METODA OPARTA O WIERZCHOŁKI
+        \subsection{Metoda oparta o wierzchołki}
+        {
+            W pierwszej opisanej metodzie graf jest $(V, E)$ budowany począwszy od wierzchołów. Każdemu pikselowi obrazu
+            wejściowego przypisywany jest jeden wierzchołek tworzonego grafu, co oznacza że zbiór wierzchołków $V$ jest
+            równoliczny zbiorowi pikseli obrazu. Krawędzie grafu $E$ prowadzone są pomiędzy sąsiadującymi z sobą
+            pikselami. Sąsiedztwo może być rozumiane jako czterospójne bądź ośmiospójne.
+            %% TODO: obrazek sąsiedztwa 4 i 8 spójnego
+            Długość krawędzi $E_{ij}$ łączącej piksele reprezentowane przez wierzchołki $V_i$ oraz $V_j$ wyznaczana jest
+            na podstawie różnicy wartości łącznej intensywności wszystkich kanałów \textit{RGB}, opisanej wzorem
+            \ref{eqt:pixeldiff}. Taki sposób doboru długości krawędzi pozwoli ,,zachęcić'' mrówki do poruszania się, a
+            co za tym idzie odkładania śladu feromonowego, po ścieżkach łączących piksele podobne, jeśli ich długość
+            będzie odwrotnie proporcjonalna do różnicy intensywności, lub zróżnicowane jeśli długość będzie
+            proporcjonalna do różnicy.
+
+            \begin{equation}\label{eqt:pixeldiff}
+                \Delta p_{ij} = \frac{(p_i^r - p_j^r)^2 + (p_i^g - p_j^g)^2 + (p_i^b - p_j^b)^2}{255^2 * 3}
+            \end{equation}
+
+            Tak utworzony graf, nie jest grafem pełnym. Oznacza to, że reprezentowany przez niego problem nie jest
+            równoważny z klasycznym problemem komiwojażera. Kolejną trudnością występującą w przypadku chęci
+            sprowadzenia tego zadania do \textit{TSP} jest ilość wierzchołków grafu. Poszukiwanie cykli Hamiltona dla
+            grafu o $w \times h$ wierzchołkach jest conajmniej nieefektywne, gdyż wartość iloczynu szerokości $w$ oraz
+            wysokości $h$ nawet dla małych obrazów osiąga bardzo duże wartości.
+
+            W związku z tym, w celu zastosowania powyższej metody wprowadzono pewne zmiany w sposobie uruchamiania i
+            działania systemu mrówkowego. Najważniejsza z nich polega na zrezygnowaniu z kończenia przez mrówki pełnych
+            cykli. Zamiast tego, ilość wykonywanych kroków w każdej iteracji algorytmu jest również parametrem
+            algorytmu.
+
+            Wymusiło to również adaptację części reguł aktualizacji śladu feromonowego. Ponieważ uzyskany graf nie jest
+            pełny, istnieje ryzyko przedwczesnego utknięcia mrówki w pozycji z której nie może wykonać kolejnego kroku,
+            gdyż wszystkie sąsiadujące wierzchołki zostały już odwiedzone. Trasa mrówki która nie zdołała wykonać
+            zadanej ilości kroków będzie nieproporcjonalnie krótsza od tras pozostałych mrówek, co przełoży się na jej
+            niesłuszne faworyzowanie. Powyższym niebezpieczeństwem są dotknięte systemy, które w regule aktualizacji
+            śladu wykorzystują długość całej trasy. Należy do nich cykliczny model systemu mrówkowego
+            (\textit{Ant-cycle}), system mrowiskowy oraz system max-min. W związku z powyższym, zdecydowano się
+            uwzględnić możliwość wystąpienia niepełnych ścieżek i do równań wprowadzono czynnik skalujący dystans trasy
+            do zadanej ilości kroków. Przykładowo, wzór modelu cyklicznego opisanego wzorem \ref{eqt:pheromone-cycle} ma
+            postać \ref{eqt:pheromone-cycle-adjusted}. $|L^k|$ oznacza ilość kroków trasy $L^k$, a $N$ docelową ilość
+            kroków zadaną podczas uruchamiania algorytmu.
+
+            \begin{equation}\label{eqt:pheromone-cycle-adjusted}
+                \Delta\tau_{ij}(t, t + n) = \sum_{k=1}^m \left\{
+                        \begin{matrix}
+                            \frac{Q}{||L^k|| * \frac{|L^k|}{N}} & (i, j) \in L_k\\
+                            0 & w\ przeciwnym\ wypadku
+                        \end{matrix}
+                    \right.
+            \end{equation}
+
+            % ŚLAD FEROMONOWY -> MACIERZ MASKUJĄCA
+            Ponieważ macierz maskująca musi posiadać wymiary identyczne z obrazem wejściowym, współczynnik na pozycji
+            $x, y$ musi odpowiadać pikselowi $p_{xy}$. W celu wyznaczenia wartości elementów macierzy, które decydują o
+            ilości bitów które zostaną zastąpione bitami ukrywanej wiadomości, obliczając wartość współczynnika $K_{xy}$
+            rozpatrywano wszystkie krawędzie wychodzące z wierzchołka grafu któremu odpowiada piksel $p_{xy}$.
+
+            Dylematem, który powstał podczas opracowywania powyższej metody jest decyzja dotycząca zależności pomiędzy
+            różnicami sąsiadujących pikseli $\Delta p_{ij}$ a długością krawędzi grafu. Początkowe eksperymenty wykazały
+            wyższą skuteczność metody w której długości krawędzi są proporcjonalne do różnicy pomiędzy sąsiadującymi
+            pikselami. Ponieważ oznacza to intensywniejsze i częstsze odkładanie feromonu na krawędziach łączących
+            podobne piksele, musiało to zostać uwzględnione podczas tworzenia macierzy maskującej. Ilośc bitów
+            ukrywanych w danym pikselu jest zatem odwrotnie proporcjonalna do natężenia śladu feromonowego.
+
+            W związku z powyższym, wartość $K_{xy}$ określa wzór \ref{eqt:vertex-based-converter-matrix}. $A_i$ oznacza
+            zbiór pikseli sąsiadujących z pikselem $i$.
+
+            \begin{equation}\label{eqt:vertex-based-converter-matrix}
+                K_{xy} = 255 * (1 - \frac{\sum_{j \in A_i} \tau_{ij}}{|A_i|})
+            \end{equation}
+
+            Rysunek przedstawia obraz wejściowy na który nałożono wartości długości krawędzi związanych z konkretnymi
+            pikselami.
+            %% TODO: obrazek wizualizujący konwersję obrazek -> graf
+        }
+
+        % METODA OPARTA O KRAWĘDZIE
+        \subsection{Metoda oparta o krawędzie}
+        {
+            Drugim zaproponowanym podejściem jest budowanie grafu zaczynając od krawędzi. Pierwszym krokiem jego budowy
+            jest podział obrazu wejściowego na ustaloną liczbę segmentów, przeważnie znacznie mniejszą niż ilość pikseli
+            bitmapy. Każdy segment obrazu jest reprezentowany przez jedną krawędź grafu. Jej długość jest uzależniona od
+            wariancji wszystkich pikseli należących do segmentu przez nią opisaną. Podobnie jak w przypadku konstrukcji
+            grafu na podstawie wierzchołków, długość krawędzi może być wprost lub odwrotnie proporcjonalna wartości
+            wybranej miary, w tym przypadku wariancji. Uzasadnieniem wyboru wariancji jako miary opisującej każdy z
+            segmentów, jest jej zdolność wyrażenia stopnia odchyleń pikseli do niego należących. Segmenty znajdujące się
+            w złożonych obszarach obrazu będą posiadać wyższą wariancję.
+
+            Następnie, z uzyskanych krawędzi tworzony jest graf pełny. Aby było to możliwe, konieczne jest spełnienie
+            warunku \ref{eqt:edge-based-converter-cond}. Z tego względu, zaimplementowany algorytm jako parametr
+            wejściowy przyjmuje jedynie docelową ilość węzłów $|V|$, a ilość krawędzi $|E|$, a co za tym idzie segmentów
+            obrazu, jest wyznaczana automatycznie.
+
+            \begin{equation}\label{eqt:edge-based-converter-cond}
+                |E| = \frac{|V| * (|V| - 1)}{2}
+            \end{equation}
+
+            Kolejno, graf zostaje wykorzystany przez system mrówkowy. Zadanie, które jest postawione przed wirtualnymi
+            mrówkami można interpretować następująco: spośród $|E|$ wszystkich krawędzi, wskaż $|V| + 1$ które pozwolą
+            na ukrycie informacji w najbardziej złożonych obszarach obrazu. Jest to zadanie równoważne z problemem
+            komiwojażera, przez co nie muszą być wprowadzane żadne modyfikacje algorytmu tak jak to miało miejsce w
+            metodzie opartej o przekształcenie pikseli w wierzchołki grafu.
+
+            Uzyskany ślad feromonowy przypisuje wartość liczbową każdej z krawędzi. Aby na jego podstawie uzyskać
+            macierz maskującą, należy nanieść na piksele należące do segmentu $i$ wartość feromonu związaną z krawędzią
+            $E_i$. Ponieważ każdy piksel jest przypisany do dokładnie jednego segmentu, wyznaczenie wartości macierzy
+            maskującej nie jest problematyczne.
+            % WYBRANE METODY SEGMENTACJI
+            Implementacja powyższej metody jest nierozerwalnie związana z podziałem obrazu na zadaną ilość segmentów.
+            Wybór techniki nie jest wyborem oczywistym, gdyż istnieje bardzo wiele sposobów na który można takiego
+            podziału dokonać. W związku z powyższym, zdecydowano się wykorzystać trzy różne metody, a następnie porównać
+            ich wyniki. Do wykorzystanych metod należą poniższe.
+
+            \begin{enumerate}
+                \item Podział obrazu na pewną ilość nie nachodzących na siebie prostokątów w osi $x$ i $y$. Konieczny
+                jest wybór takiej liczby podziałów $S_x$ i $S_y$ w osiach $x$ oraz $y$, aby ich iloczyn był równy $|E|$.
+                W przeciwnym razie, zbudowanie grafu będzie niemożliwe.
+
+                Zaletą tej metody jest jej prostota i intuicyjność, lecz ma również kilka wad. W przypadku w którym
+                wymiary bitmapy $w$ i $h$ nie są całkowicie podzielne przez $S_x$ o $S_y$, konieczne jest zwiększenie
+                segmentów znajdujących się na końcach utworzonych wierszy i kolumn. Inną wadą są jednolite krawędzie
+                podziałów - co może przełożyć się na wyraźną różnicę jakości obrazu pomiędzy sąsiadującymi segmentami.
+
+                Rysunek przedstawia wizualizację podziału obrazu powyższą metodą.
+                %% TODO: obrazek wizualizujący konwersję obrazek -> graf, windows
+
+                \item Segmentację obrazu można również przeprowadzić wykorzystując algorytmy grupujące. Jednym z nich
+                jest \textit{k-means}. Jego zastosowanie pozwala na podzielenie danych wejściowych na zadaną ilość $k$
+                group elementów w sposób minimalizujący odległości pomiędzy elementami należącymi do tej samej
+                grupy\cite{MacQueen1967SomeMF}. Algorytm pozwala na grupowanie obserwacji wielowymiarowych, lecz w tym
+                przypadku zdecydowano się opisać każdy z pikseli tylko jednym atrybutem - wariancją jego ośmiu
+                najbliższych sąsiadów. Ponieważ grupowanie nie bierze pod uwagę przestrzennego położenia pikseli,
+                piksele należące do tej samej grupy niekoniecznie muszą do siebie przylegać.
+
+                Na rysunku przedstawiono przykład podziału obrazu na zadaną ilość grup.
+                %% TODO: obrazek wizualizujący konwersję obrazek -> graf, kmeans
+
+                \item Ostatnią wykorzystaną metodą segmentacji obrazu jest podział na superpiksele (ang.
+                \textit{superpixels}). Superpiksele są grupami pikseli które cechują zbliżone wartości składowych w
+                przestrzeni barw. Zastosowany algorytm \textit{SLIC} polega z przestrzeni
+                \textit{CIELAB}\cite{Achanta2012SLICSC}. Popularność superpikseli w dziedzinie przetwarzania obrazów
+                stale rośnie, gdyż pozwalają na uchwycenie najważniejszych cech obrazu przy znacznej redukcji jego
+                reprezentacji. To z kolej przekłada się na krótszy czas pracy algorytmów przetwarzania wizji. Ich
+                zastosowania można doszukiwać się w rozwiązywaniu problemów identyfikacji i wyodrębniania obiektów. W
+                przeciwieństwie do algorytmu \textit{k-means}, uzyskane grupy pikseli są spójne.
+
+                Rysunek przedstawia wizualizację podziału obrazu powyższą metodą.
+                %% TODO: obrazek wizualizujący konwersję obrazek -> graf, superpixels
+            \end{enumerate}
+        }
+    }
 }
 
 % ALG MRÓWKOWE W STEGANOGRAFII

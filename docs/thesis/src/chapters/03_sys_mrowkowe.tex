@@ -195,7 +195,7 @@
             \item \label{step:dispatch} Każda mrówka dokonuje wyboru kolejnego nieodwiedzonego miasta zgodnie z ustaloną
             funkcją prawdopodobieństwa $P_{ij}(t)$.
             \item \label{step:update} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+1)$.
-            \item Powtórz kroki \ref{step:dispatch}-\label{step:update} do momentu odwiedzenia wszyskich wierzchołków
+            \item Powtórz kroki \ref{step:dispatch}-\ref{step:update} do momentu odwiedzenia wszyskich wierzchołków
             przez każdą mrówkę
             \item \label{step:update_cycle} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+1)$.
             \item Powtórz kroki \ref{step:place}-\ref{step:update_cycle}.
@@ -299,7 +299,7 @@
             \begin{equation}\label{eqt:pheromone-cycle}
                 \Delta\tau_{ij}(t, t + n) = \sum_{k=1}^m \left\{
                         \begin{matrix}
-                            \frac{Q}{|L^k|} & (i, j) \in L_k\\
+                            \frac{Q}{||L^k||} & (i, j) \in L_k\\
                             0 & w\ przeciwnym\ wypadku
                         \end{matrix}
                     \right.
