@@ -11,7 +11,7 @@
 # --updater=const
 --dispatcher=basic
 --updater=const
---converter=superpixels:5
+--converter=superpixels:10
 # --converter=kmeans:10
 # --converter=window:40
 # --mask-width=100

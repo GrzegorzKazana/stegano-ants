@@ -314,20 +314,20 @@ pub fn slic<I: GenericImage>(
                             as f64;
                         dist += dist_xyz * invwt;
 
-                        println!("invwt: {}", invwt);
-                        println!("s: {:#?}", s);
-                        println!("step: {}, comp: {}", step, compactness);
-                        println!(
-                            "x: {}, y: {}, l: {}, a: {}, b: {}, dist: {}, dist_xyz: {}",
-                            x,
-                            y,
-                            l,
-                            a,
-                            b,
-                            ((l - c.l) * (l - c.l) + (a - c.a) * (a - c.a) + (b - c.b) * (b - c.b)),
-                            dist_xyz
-                        );
-                        panic!();
+                        // println!("invwt: {}", invwt);
+                        // println!("s: {:#?}", s);
+                        // println!("step: {}, comp: {}", step, compactness);
+                        // println!(
+                        //     "x: {}, y: {}, l: {}, a: {}, b: {}, dist: {}, dist_xyz: {}",
+                        //     x,
+                        //     y,
+                        //     l,
+                        //     a,
+                        //     b,
+                        //     ((l - c.l) * (l - c.l) + (a - c.a) * (a - c.a) + (b - c.b) * (b - c.b)),
+                        //     dist_xyz
+                        // );
+                        // panic!();
                         //println!("z {} y {} x {} i {} dist {} dist_vec[i] {}", z, y, x, i, dist, dist_vec[i]);
 
                         if dist < dist_vec[i] {

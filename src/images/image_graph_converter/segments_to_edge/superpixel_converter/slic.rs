@@ -1,5 +1,8 @@
 use itertools::Itertools;
-use std::iter::{once, repeat};
+use std::{
+    collections::BTreeMap,
+    iter::{once, repeat},
+};
 
 use crate::images::image::{LABColor, Pixel};
 use crate::images::pixel_map::PixelMap;
@@ -67,6 +70,8 @@ impl Slic {
     pub fn run_iterations(self, n_iter: usize) -> Vec<usize> {
         (0..n_iter)
             .fold(self, Self::perform_iteration)
+            .enforce_connectivity()
+            .enforce_connectivity()
             .enforce_connectivity()
             .labels
     }
@@ -294,21 +299,32 @@ impl Slic {
         )
     }
 
-    fn index_neighbours<A: Copy>(&self, data: &[A], x: usize, y: usize) -> impl Iterator<Item = A> {
-        let (x, y) = (x as isize, y as isize);
+    fn index_neighbours_range<'a, A: Copy>(
+        &'a self,
+        data: &'a [A],
+        x: usize,
+        y: usize,
+        range: usize,
+    ) -> impl Iterator<Item = A> + 'a {
+        let (x, y, range) = (x as isize, y as isize, range as isize);
 
-        self.index(data, x + 1, y)
-            .into_iter()
-            .chain(self.index(data, x - 1, y).into_iter())
-            .chain(self.index(data, x, y + 1).into_iter())
-            .chain(self.index(data, x, y - 1).into_iter())
-            .chain(self.index(data, x - 1, y - 1).into_iter())
-            .chain(self.index(data, x + 1, y - 1).into_iter())
-            .chain(self.index(data, x - 1, y + 1).into_iter())
-            .chain(self.index(data, x + 1, y + 1).into_iter())
+        let x_offsets_range = -range..=range;
+        let y_offsets_range = -range..=range;
+
+        let offsets = x_offsets_range
+            .cartesian_product(y_offsets_range)
+            .filter(|(x, y)| !(*x == 0 && *y == 0));
+
+        offsets.flat_map(move |(x_offset, y_offset)| {
+            self.index(data, x + x_offset, y + y_offset).into_iter()
+        })
     }
 
     fn enforce_connectivity(self) -> Self {
+        // 1 would mean 8 pixels around, (-1, 1) in both directions
+        const NEIGHBOUR_RANGE: usize = 2;
+        const NEIGHBOUR_COUNT: usize = (2 * NEIGHBOUR_RANGE + 1) * (2 * NEIGHBOUR_RANGE + 1) - 1;
+
         let pixel_dimensions_1d = (0..self.n_pixels).map(|idx| {
             let x = idx % self.width;
             let y = idx / self.width;
@@ -321,18 +337,26 @@ impl Slic {
             .iter()
             .zip(pixel_dimensions_1d)
             .map(|(label, (x, y))| {
-                let is_disconnected = self
-                    .index_neighbours(&self.labels, x, y)
-                    .all(|neighbour_label| neighbour_label != *label);
+                let connected_neighbours = self
+                    .index_neighbours_range(&self.labels, x, y, NEIGHBOUR_RANGE)
+                    .filter(|neighbour_label| *neighbour_label == *label)
+                    .count();
+
+                let is_disconnected = connected_neighbours < NEIGHBOUR_COUNT / 2;
 
                 if !is_disconnected {
                     return *label;
                 }
 
-                self.index_neighbours(&self.labels, x, y)
-                    .dedup_with_count()
-                    .max_by_key(|(count, _)| *count)
-                    .map(|(_, label)| label)
+                self.index_neighbours_range(&self.labels, x, y, NEIGHBOUR_RANGE)
+                    .fold(BTreeMap::new(), |mut label_count, label| {
+                        let current_count = label_count.get(&label).cloned().unwrap_or(0);
+                        label_count.insert(label, current_count + 1);
+                        label_count
+                    })
+                    .into_iter()
+                    .max_by_key(|(_, count)| *count)
+                    .map(|(label, _)| label)
                     .unwrap_or(*label)
             })
             .collect();
