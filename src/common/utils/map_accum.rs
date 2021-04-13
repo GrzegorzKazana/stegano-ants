@@ -1,3 +1,5 @@
+use std::iter::FromIterator;
+
 /// This a iterator extension that allows for mapping with accumulator
 /// using pure function.
 /// This differs from `.scan`, as it relies on mutable reference. MapAccum relies on
@@ -41,6 +43,18 @@ where
             accumulator: Option::Some(accumulator),
             mapper,
         }
+    }
+
+    pub fn collect_with_state<R>(mut self) -> (B, R)
+    where
+        R: FromIterator<C>,
+    {
+        let collected = self.by_ref().collect::<R>();
+
+        // again, see comment below
+        let state = self.accumulator.unwrap();
+
+        (state, collected)
     }
 
     fn calculate_value_and_update_accumulator(&mut self, item: A::Item) -> C {
@@ -104,4 +118,4 @@ pub trait MapAccumExt: Iterator {
     }
 }
 
-impl<A: Iterator> MapAccumExt for A {}
+impl<A> MapAccumExt for A where A: Iterator {}

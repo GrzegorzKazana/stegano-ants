@@ -19,7 +19,7 @@
                 "--data",
                 "assets/data/lorem_ipsum_large.txt",
                 "--image",
-                "assets/images/baboon/baboon-l.bmp"
+                "assets/images/baboon/baboon-s.bmp"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

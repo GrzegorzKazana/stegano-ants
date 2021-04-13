@@ -27,4 +27,24 @@ mod image_tests {
             Ordering::Less
         );
     }
+
+    #[test]
+    fn it_converts_rgb_to_xyz() {
+        let rgb = Pixel::new(0, 0, 255, 255, 22);
+        let xyz = rgb.to_xyz();
+
+        assert_delta!(xyz.x, 0.7714801);
+        assert_delta!(xyz.y, 0.9284041);
+        assert_delta!(xyz.z, 0.1461503);
+    }
+
+    #[test]
+    fn it_converts_rgb_to_lab() {
+        let rgb = Pixel::new(0, 0, 255, 255, 22);
+        let lab = rgb.to_lab();
+
+        assert_delta!(lab.l, 97.1627998);
+        assert_delta!(lab.a, -21.3609707);
+        assert_delta!(lab.b, 92.7035375);
+    }
 }

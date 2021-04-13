@@ -5,7 +5,6 @@ mod pixelmap_windows;
 use itertools::Itertools;
 use std::convert::TryFrom;
 
-use crate::common::utils::identity;
 use crate::images::image::Image;
 use crate::images::image::Pixel;
 
@@ -58,32 +57,27 @@ impl PixelMap {
         self.map(Pixel::invert)
     }
 
-    pub fn get_neighbours_4(&self, x: usize, y: usize) -> Vec<Pixel> {
-        vec![
-            self.get_pixel_by_delta(x, y, 0, -1),
-            self.get_pixel_by_delta(x, y, 1, 0),
-            self.get_pixel_by_delta(x, y, 0, 1),
-            self.get_pixel_by_delta(x, y, -1, 0),
-        ]
-        .into_iter()
-        .filter_map(identity)
-        .collect::<Vec<_>>()
+    pub fn get_neighbours_4(&self, x: usize, y: usize) -> impl Iterator<Item = Pixel> {
+        self.get_pixel_by_delta(x, y, 0, -1)
+            .into_iter()
+            .chain(self.get_pixel_by_delta(x, y, 1, 0))
+            .into_iter()
+            .chain(self.get_pixel_by_delta(x, y, 0, 1))
+            .into_iter()
+            .chain(self.get_pixel_by_delta(x, y, -1, 0))
+            .into_iter()
     }
 
-    pub fn get_neighbours_8(&self, x: usize, y: usize) -> Vec<Pixel> {
-        vec![
-            self.get_pixel_by_delta(x, y, 0, -1),
-            self.get_pixel_by_delta(x, y, 1, -1),
-            self.get_pixel_by_delta(x, y, 1, 0),
-            self.get_pixel_by_delta(x, y, 1, 1),
-            self.get_pixel_by_delta(x, y, 0, 1),
-            self.get_pixel_by_delta(x, y, -1, 1),
-            self.get_pixel_by_delta(x, y, -1, 0),
-            self.get_pixel_by_delta(x, y, -1, -1),
-        ]
-        .into_iter()
-        .filter_map(identity)
-        .collect::<Vec<_>>()
+    pub fn get_neighbours_8(&self, x: usize, y: usize) -> impl Iterator<Item = Pixel> {
+        self.get_pixel_by_delta(x, y, 0, -1)
+            .into_iter()
+            .chain(self.get_pixel_by_delta(x, y, 1, -1).into_iter())
+            .chain(self.get_pixel_by_delta(x, y, 1, 0).into_iter())
+            .chain(self.get_pixel_by_delta(x, y, 1, 1).into_iter())
+            .chain(self.get_pixel_by_delta(x, y, 0, 1).into_iter())
+            .chain(self.get_pixel_by_delta(x, y, -1, 1).into_iter())
+            .chain(self.get_pixel_by_delta(x, y, -1, 0).into_iter())
+            .chain(self.get_pixel_by_delta(x, y, -1, -1).into_iter())
     }
 
     pub fn get_pixel_by_delta(&self, x: usize, y: usize, dx: isize, dy: isize) -> Option<Pixel> {

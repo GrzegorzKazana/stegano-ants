@@ -230,6 +230,7 @@ fn init_seeds(
                 y: (y * step + yoff + ye) as f64,
                 z: 0.0,
             };
+            println!("{:#?}", seeds[n]);
             n += 1;
         }
     }
@@ -313,6 +314,20 @@ pub fn slic<I: GenericImage>(
                             as f64;
                         dist += dist_xyz * invwt;
 
+                        println!("invwt: {}", invwt);
+                        println!("s: {:#?}", s);
+                        println!("step: {}, comp: {}", step, compactness);
+                        println!(
+                            "x: {}, y: {}, l: {}, a: {}, b: {}, dist: {}, dist_xyz: {}",
+                            x,
+                            y,
+                            l,
+                            a,
+                            b,
+                            ((l - c.l) * (l - c.l) + (a - c.a) * (a - c.a) + (b - c.b) * (b - c.b)),
+                            dist_xyz
+                        );
+                        panic!();
                         //println!("z {} y {} x {} i {} dist {} dist_vec[i] {}", z, y, x, i, dist, dist_vec[i]);
 
                         if dist < dist_vec[i] {
@@ -526,6 +541,7 @@ pub fn do_segmentation_with_superpixel_size(
 {
     //------------------------------------------------
     let step: u32 = ((superpixel_size as f64).sqrt() + 0.5) as u32;
+    println!("step: {}", step);
 
     let mut seeds_vec: Vec<ClusterInfo> = vec![];
 
@@ -592,6 +608,7 @@ pub fn do_segmentation_with_num_superpixels(
 {
     let mut numlabels: u32 = 0;
     let superpixel_size: f64 = 0.5 + (width * height) as f64 / num_superpixels as f64;
+    println!("superpixel_size {}", superpixel_size);
     return do_segmentation_with_superpixel_size(
         img,
         lab_vec,
