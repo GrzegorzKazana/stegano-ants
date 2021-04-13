@@ -35,7 +35,6 @@ mod images_pixel_map_tests {
         let map = mock_image();
         let neighbours = map
             .get_neighbours_4(1, 1)
-            .iter()
             .map(|px| px.b)
             .collect::<Vec<_>>();
 
@@ -50,7 +49,6 @@ mod images_pixel_map_tests {
         let map = mock_image();
         let neighbours = map
             .get_neighbours_8(1, 1)
-            .iter()
             .map(|px| px.b)
             .collect::<Vec<_>>();
 
@@ -65,7 +63,6 @@ mod images_pixel_map_tests {
         let map = mock_image();
         let neighbours = map
             .get_neighbours_4(3, 1)
-            .iter()
             .map(|px| px.b)
             .collect::<Vec<_>>();
 
@@ -80,7 +77,6 @@ mod images_pixel_map_tests {
         let map = mock_image();
         let neighbours = map
             .get_neighbours_8(3, 1)
-            .iter()
             .map(|px| px.b)
             .collect::<Vec<_>>();
 

@@ -3,6 +3,8 @@ use std::iter;
 
 use crate::common::utils::ExactChainExt;
 
+use super::{LABColor, XYZColor};
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Pixel {
     pub x: usize,
@@ -100,5 +102,33 @@ impl Pixel {
         iter::once(self.r)
             .chain_exact(iter::once(self.g))
             .chain_exact(iter::once(self.b))
+    }
+
+    pub fn to_xyz(&self) -> XYZColor {
+        let r = Self::xyz_pretransform(self.r);
+        let g = Self::xyz_pretransform(self.g);
+        let b = Self::xyz_pretransform(self.b);
+
+        XYZColor {
+            pos_x: self.x,
+            pos_y: self.y,
+            x: r * 0.4124564 + g * 0.3575761 + b * 0.1804375,
+            y: r * 0.2126729 + g * 0.7151522 + b * 0.0721750,
+            z: r * 0.0193339 + g * 0.1191920 + b * 0.9503041,
+        }
+    }
+
+    pub fn to_lab(&self) -> LABColor {
+        self.to_xyz().to_lab()
+    }
+
+    fn xyz_pretransform(channel: u8) -> f32 {
+        let channel_norm = channel as f32 / 255.0;
+
+        iif!(
+            channel_norm <= 0.04045,
+            channel_norm / 12.92,
+            ((channel_norm + 0.055) / 1.055).powf(2.4)
+        )
     }
 }

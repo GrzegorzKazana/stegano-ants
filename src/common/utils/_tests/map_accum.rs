@@ -53,4 +53,18 @@ mod common_utils_map_accum_tests {
 
         assert_eq!(result, expected);
     }
+
+    #[test]
+    fn it_allows_for_collection_with_state() {
+        let input = vec![1, 2, 3, 4];
+        let result = input
+            .iter()
+            .cloned()
+            .map_accum(0, |acc, curr| (acc + curr, acc + curr))
+            .collect_with_state::<Vec<_>>();
+
+        let expected = (10, vec![1, 3, 6, 10]);
+
+        assert_eq!(result, expected);
+    }
 }

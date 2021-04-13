@@ -36,7 +36,7 @@ impl SpatialImageGraphConverter for SpatialEdgeChangeConverter {
     }
 
     fn get_pixel_neighbours(pixel_map: &PixelMap, pixel: &Pixel) -> Vec<Pixel> {
-        pixel_map.get_neighbours_4(pixel.x, pixel.y)
+        pixel_map.get_neighbours_4(pixel.x, pixel.y).collect()
     }
 }
 

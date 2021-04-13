@@ -1,4 +1,5 @@
 mod _tests;
+mod colors;
 mod pixel;
 
 use image::{DynamicImage, GenericImageView, Pixel as ImagePixel};
@@ -6,6 +7,7 @@ use image::{DynamicImage, GenericImageView, Pixel as ImagePixel};
 use crate::common::errors::AppError;
 use crate::images::pixel_map::PixelMap;
 
+pub use colors::{LABColor, XYZColor};
 pub use pixel::Pixel;
 
 pub struct Image {

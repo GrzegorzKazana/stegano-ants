@@ -1,4 +1,4 @@
-mod superpixel_impl;
+mod slic;
 
 use itertools::Itertools;
 use std::collections::HashMap;
@@ -8,12 +8,10 @@ use crate::ant_colony::pheromone::Pheromone;
 use crate::images::image::Pixel;
 use crate::images::pixel_map::PixelMap;
 
-use crate::common::utils::produce_until;
-
 use super::super::FromStrAndPixelMap;
 use super::{SegmentDistances, SegmentId, SegmentToEdgeConverter};
 
-use superpixel_impl::segment;
+use slic::Slic;
 
 pub struct SuperPixelConverter {
     image: PixelMap,
@@ -26,7 +24,7 @@ pub struct SuperPixelConverter {
 impl SuperPixelConverter {
     pub fn new(pixel_map: &PixelMap, target_n_nodes: usize) -> Self {
         let n_superpixels = target_n_nodes * (target_n_nodes - 1) / 2;
-        let labels = Self::generate_exact_super_pixels(pixel_map, n_superpixels);
+        let labels = Slic::from_pixel_map(pixel_map, n_superpixels, 75).run_iterations(10);
 
         let pixels_by_group_id = labels
             .iter()
@@ -40,34 +38,6 @@ impl SuperPixelConverter {
             labels,
             pixels_by_group_id,
             segment_to_node_pair: Self::build_segment_idx_node_lookup(target_n_nodes),
-        }
-    }
-
-    /// unfortunately SLIC superpixel algorithm does not guarantee that we will get
-    /// exact amount of superpixels we requested.
-    /// Here we generate the grouping and make some sketchy operations to adjust the numer of superpixels.
-    /// TODO: rewrite the algo implementation
-    fn generate_exact_super_pixels(
-        pixel_map: &PixelMap,
-        target_n_superpixels: usize,
-    ) -> Vec<usize> {
-        // produce until we get not less superpixels than we want
-        // it is easier to remove surplus than generate new groups
-        let (n_superpixels, labels) = produce_until(
-            (0, vec![]),
-            |_, idx| segment(pixel_map, target_n_superpixels + idx, 20.0),
-            |(super_pixel_count, _), _| *super_pixel_count >= target_n_superpixels,
-        );
-
-        if n_superpixels == target_n_superpixels {
-            return labels;
-        } else {
-            let n_surplus = n_superpixels - target_n_superpixels;
-
-            labels
-                .into_iter()
-                .map(|label| iif!(label >= target_n_superpixels, label - n_surplus, label))
-                .collect()
         }
     }
 

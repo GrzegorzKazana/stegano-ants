@@ -42,7 +42,8 @@ impl MaskImageEmbedder {
 
                     let scaled_pixel = pixel.scale(ratio).increment(increment);
                     let scaled_pixel_capacity =
-                        Self::calculate_n_bits_to_embed_in_pixel(&scaled_pixel);
+                        Self::calculate_n_bits_to_embed_in_pixel(&scaled_pixel)
+                            .min(remaining_to_target);
 
                     let new_accumulator = (
                         remaining_to_embed - capacity,

@@ -34,7 +34,7 @@ impl KMeansConverter {
         // prevents from blowing everything up in homogenous image areas
         let minimum_non_zero_variance = 1.0 / 8.0;
 
-        let neighbours = pixel_map.get_neighbours_8(px.x, px.y);
+        let neighbours = pixel_map.get_neighbours_8(px.x, px.y).collect::<Vec<_>>();
         let variance = PixelMap::variance_of_pixels(&neighbours).max(minimum_non_zero_variance);
 
         1.0 / variance
