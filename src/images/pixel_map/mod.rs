@@ -5,6 +5,7 @@ mod pixelmap_windows;
 use itertools::Itertools;
 use std::convert::TryFrom;
 
+use crate::common::utils::Vec2d;
 use crate::images::image::Image;
 use crate::images::image::Pixel;
 
@@ -125,6 +126,10 @@ impl PixelMap {
             .sum();
 
         diffs / pixels.len() as f32
+    }
+
+    pub fn to_vec2d(&self) -> Vec2d<Pixel> {
+        Vec2d::new(self.pixels.clone(), self.width, self.height)
     }
 
     fn index(&self, x: usize, y: usize) -> Option<usize> {

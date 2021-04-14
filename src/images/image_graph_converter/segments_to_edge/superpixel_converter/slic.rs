@@ -1,13 +1,9 @@
-use itertools::Itertools;
-use std::{
-    collections::BTreeMap,
-    iter::{once, repeat},
-};
+use std::{collections::BTreeMap, iter::once};
 
 use crate::images::image::{LABColor, Pixel};
 use crate::images::pixel_map::PixelMap;
 
-use crate::common::utils::{compare_float, MapAccumExt};
+use crate::common::utils::{compare_float, MapAccumExt, Vec2d, Vec2dCoords};
 
 /// Implementation of Simple Linear Iterative Clustering algorithm
 /// https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/SLIC_Superpixels.pdf
@@ -21,10 +17,10 @@ pub struct Slic {
     grid_interval_s: usize,
     width: usize,
     height: usize,
-    pixels: Vec<LABColor>,
+    pixels: Vec2d<LABColor>,
     clusters: Vec<LABColor>,
-    labels: Vec<usize>,
-    distances: Vec<f32>,
+    labels: Vec2d<usize>,
+    distances: Vec2d<f32>,
 }
 
 impl Slic {
@@ -38,6 +34,9 @@ impl Slic {
             .map(Pixel::to_lab)
             .collect::<Vec<_>>();
 
+        let pixels = Vec2d::new(pixels, pixel_map.width, pixel_map.height);
+        let clusters = Self::generate_inital_clusters(&pixels, n_superpixels, grid_interval_s);
+
         Slic {
             n_pixels,
             n_superpixels,
@@ -46,24 +45,9 @@ impl Slic {
             width: pixel_map.width,
             height: pixel_map.height,
             pixels,
-            clusters: Self::generate_inital_clusters(pixel_map, n_superpixels, grid_interval_s),
-            labels: repeat(0).take(n_pixels).collect(),
-            distances: repeat(f32::MAX).take(n_pixels).collect(),
-        }
-    }
-
-    pub fn empty() -> Self {
-        Slic {
-            n_pixels: 0,
-            n_superpixels: 0,
-            compactness: 10,
-            grid_interval_s: 0,
-            width: 0,
-            height: 0,
-            pixels: vec![],
-            clusters: vec![],
-            labels: vec![],
-            distances: vec![],
+            clusters,
+            labels: Vec2d::fill(0, pixel_map.width, pixel_map.height),
+            distances: Vec2d::fill(f32::MAX, pixel_map.width, pixel_map.height),
         }
     }
 
@@ -74,24 +58,23 @@ impl Slic {
             .enforce_connectivity()
             .enforce_connectivity()
             .labels
+            .to_vec()
     }
 
     fn generate_inital_clusters(
-        pixel_map: &PixelMap,
+        pixels: &Vec2d<LABColor>,
         n_superpixels: usize,
         grid_interval_s: usize,
     ) -> Vec<LABColor> {
-        let pixels = pixel_map.pixels();
         let cluster_center_idx = Self::generate_initial_cluster_indicies(
             n_superpixels,
-            pixel_map.width,
-            pixel_map.height,
+            pixels.width,
+            pixels.height,
             grid_interval_s,
         );
 
         cluster_center_idx
-            .map(|idx| Self::adjust_cluster_initial_position(pixel_map, pixels[idx]))
-            .map(|px| px.to_lab())
+            .map(|coords| Self::adjust_cluster_initial_position(pixels, coords))
             .collect()
     }
 
@@ -100,42 +83,47 @@ impl Slic {
         width: usize,
         height: usize,
         grid_interval_s: usize,
-    ) -> impl Iterator<Item = usize> {
+    ) -> impl Iterator<Item = Vec2dCoords> {
         (0usize..).take(n_superpixels).map(move |i| {
             let px = i * grid_interval_s;
             let x = (px % width).min(width - 1);
             let y = (px / width * grid_interval_s + grid_interval_s / 2).min(height - 1);
 
-            y * width + x
+            (x, y)
         })
     }
 
-    fn adjust_cluster_initial_position(pixel_map: &PixelMap, init_pos: Pixel) -> Pixel {
-        pixel_map
-            .get_neighbours_8(init_pos.x, init_pos.y)
-            .chain(once(init_pos))
+    fn adjust_cluster_initial_position(
+        pixels: &Vec2d<LABColor>,
+        init_coords: Vec2dCoords,
+    ) -> LABColor {
+        let initial = pixels[init_coords];
+
+        pixels
+            .index_neighbours_8(init_coords)
+            .cloned()
+            .chain(once(initial))
             .min_by(|px_a, px_b| {
-                let gradient_a = Self::calc_gradient_around_cluster(pixel_map, px_a);
-                let gradient_b = Self::calc_gradient_around_cluster(pixel_map, px_b);
+                let gradient_a = Self::calc_gradient_around_cluster(pixels, px_a);
+                let gradient_b = Self::calc_gradient_around_cluster(pixels, px_b);
 
                 compare_float(&gradient_a, &gradient_b)
             })
-            .unwrap_or(init_pos)
+            .unwrap_or(initial)
     }
 
-    fn calc_gradient_around_cluster(pixel_map: &PixelMap, px: &Pixel) -> f32 {
-        let top = pixel_map.get_pixel_by_delta(px.x, px.y, 0, -1);
-        let bottom = pixel_map.get_pixel_by_delta(px.x, px.y, 0, 1);
-        let right = pixel_map.get_pixel_by_delta(px.x, px.y, 1, 0);
-        let left = pixel_map.get_pixel_by_delta(px.x, px.y, -1, 0);
+    fn calc_gradient_around_cluster(pixels: &Vec2d<LABColor>, cluster: &LABColor) -> f32 {
+        let top = pixels.index_by_delta((cluster.x, cluster.y), (0, -1));
+        let bottom = pixels.index_by_delta((cluster.x, cluster.y), (0, 1));
+        let right = pixels.index_by_delta((cluster.x, cluster.y), (1, 0));
+        let left = pixels.index_by_delta((cluster.x, cluster.y), (-1, 0));
 
         match (right, left, top, bottom) {
             (Some(right_px), Some(left_px), Some(top_px), Some(bottom_px)) => {
-                right_px.to_lab().diff_sq(&left_px.to_lab())
-                    + bottom_px.to_lab().diff_sq(&top_px.to_lab())
+                right_px.diff_sq(&left_px) + bottom_px.diff_sq(&top_px)
             }
             // we do not want cluster centers to be on image edges
-            _ => f32::INFINITY,
+            _ => f32::MAX,
         }
     }
 
@@ -157,14 +145,8 @@ impl Slic {
             .map_accum(
                 (labels, distances),
                 |(labels, distances), (cluster_idx, cluster)| {
-                    let pixels_in_cluster_area = Self::pixels_around_cluster(
-                        &pixels,
-                        cluster,
-                        width,
-                        height,
-                        grid_interval_s,
-                        compactness,
-                    );
+                    let pixels_in_cluster_area =
+                        Self::pixels_around_cluster(&pixels, cluster, grid_interval_s, compactness);
 
                     let (labels, distances) = Self::update_labels_and_distances_around_cluster(
                         pixels_in_cluster_area,
@@ -174,7 +156,7 @@ impl Slic {
                     );
 
                     let new_cluster =
-                        Self::calculate_new_cluster_center(&labels, &pixels, cluster_idx);
+                        Self::calculate_new_cluster_center(&pixels, &labels, cluster_idx);
 
                     ((labels, distances), new_cluster)
                 },
@@ -195,39 +177,18 @@ impl Slic {
     }
 
     fn pixels_around_cluster<'a>(
-        pixels: &'a [LABColor],
+        pixels: &'a Vec2d<LABColor>,
         cluster: &'a LABColor,
-        width: usize,
-        height: usize,
         grid_interval_s: usize,
         compactness: usize,
-    ) -> impl Iterator<Item = (usize, f32, &'a LABColor)> + 'a {
-        let (cluster_x, cluster_y, interval) = (
-            cluster.x as isize,
-            cluster.y as isize,
-            grid_interval_s as isize,
-        );
+    ) -> impl Iterator<Item = (LABColor, f32)> + 'a {
+        pixels
+            .iter_block((cluster.x, cluster.y), grid_interval_s)
+            .cloned()
+            .map(move |px| {
+                let distance = Self::lab_distance(&px, &cluster, compactness, grid_interval_s);
 
-        let y_start = (cluster_y - interval).max(0);
-        let y_end = (cluster_y + interval).min(height as isize - 1);
-        let y_range = y_start..=y_end;
-
-        y_range
-            .flat_map(move |y| {
-                let x_start = (cluster_x - interval).max(0);
-                let x_end = (cluster_x + interval).min(width as isize - 1);
-
-                let row_starting_idx = width * y as usize;
-                let i_start = row_starting_idx + x_start as usize;
-                let i_end = row_starting_idx + x_end as usize;
-                let i_range = i_start..=i_end;
-
-                i_range.clone().zip_eq(pixels[i_range].iter())
-            })
-            .map(move |(idx, px)| {
-                let distance = Self::lab_distance(px, &cluster, compactness, grid_interval_s);
-
-                (idx, distance, px)
+                (px, distance)
             })
     }
 
@@ -247,37 +208,38 @@ impl Slic {
         d_lab + ratio * d_xy
     }
 
-    fn update_labels_and_distances_around_cluster<'a, I>(
+    fn update_labels_and_distances_around_cluster<I: Iterator<Item = (LABColor, f32)>>(
         pixels_in_cluster_area: I,
-        labels: Vec<usize>,
-        distances: Vec<f32>,
+        labels: Vec2d<usize>,
+        distances: Vec2d<f32>,
         cluster_idx: usize,
-    ) -> (Vec<usize>, Vec<f32>)
-    where
-        I: 'a + Iterator<Item = (usize, f32, &'a LABColor)>,
-    {
+    ) -> (Vec2d<usize>, Vec2d<f32>) {
         pixels_in_cluster_area.fold(
             (labels, distances),
-            |(mut labels, mut distances), (pixel_idx, distance, _)| {
-                if distance < distances[pixel_idx] {
-                    labels[pixel_idx] = cluster_idx;
-                    distances[pixel_idx] = distance;
-                }
+            |(labels, distances), (pixel, distance)| {
+                let coords = (pixel.x, pixel.y);
 
-                (labels, distances)
+                if distance >= distances[coords] {
+                    (labels, distances)
+                } else {
+                    (
+                        labels.assign(coords, cluster_idx),
+                        distances.assign(coords, distance),
+                    )
+                }
             },
         )
     }
 
     fn calculate_new_cluster_center(
-        labels: &Vec<usize>,
-        pixels: &[LABColor],
+        pixels: &Vec2d<LABColor>,
+        labels: &Vec2d<usize>,
         cluster_idx: usize,
     ) -> LABColor {
-        let (cluster_coord_sum, cluster_count) = (0..)
-            .zip(labels.iter())
-            .filter(|(_, assigned_cluster_idx)| **assigned_cluster_idx == cluster_idx)
-            .map(|(idx, _)| pixels[idx])
+        let (cluster_coord_sum, cluster_count) = labels
+            .iter()
+            .filter(|(_, _, assigned_cluster_idx)| **assigned_cluster_idx == cluster_idx)
+            .map(|(x, y, _)| pixels[(x, y)])
             .zip(0..)
             .fold((LABColor::empty(), 0), |(acc_color, _), (px, idx)| {
                 (acc_color.sum(&px), idx + 1)
@@ -286,60 +248,19 @@ impl Slic {
         cluster_coord_sum.scale(1.0 / cluster_count as f32)
     }
 
-    fn index<A: Copy>(&self, data: &[A], x: isize, y: isize) -> Option<A> {
-        let is_x_valid = x >= 0 && x < self.width as isize;
-        let is_y_valid = y >= 0 && y < self.height as isize;
-        let index = self.width as isize * y + x;
-        let is_index_valid = index >= 0 && index < self.n_pixels as isize;
-
-        iif!(
-            is_x_valid && is_y_valid && is_index_valid,
-            data.get(index as usize).cloned(),
-            Option::None
-        )
-    }
-
-    fn index_neighbours_range<'a, A: Copy>(
-        &'a self,
-        data: &'a [A],
-        x: usize,
-        y: usize,
-        range: usize,
-    ) -> impl Iterator<Item = A> + 'a {
-        let (x, y, range) = (x as isize, y as isize, range as isize);
-
-        let x_offsets_range = -range..=range;
-        let y_offsets_range = -range..=range;
-
-        let offsets = x_offsets_range
-            .cartesian_product(y_offsets_range)
-            .filter(|(x, y)| !(*x == 0 && *y == 0));
-
-        offsets.flat_map(move |(x_offset, y_offset)| {
-            self.index(data, x + x_offset, y + y_offset).into_iter()
-        })
-    }
-
     fn enforce_connectivity(self) -> Self {
         // 1 would mean 8 pixels around, (-1, 1) in both directions
         const NEIGHBOUR_RANGE: usize = 2;
         const NEIGHBOUR_COUNT: usize = (2 * NEIGHBOUR_RANGE + 1) * (2 * NEIGHBOUR_RANGE + 1) - 1;
 
-        let pixel_dimensions_1d = (0..self.n_pixels).map(|idx| {
-            let x = idx % self.width;
-            let y = idx / self.width;
-
-            (x, y)
-        });
-
         let labels = self
             .labels
             .iter()
-            .zip(pixel_dimensions_1d)
-            .map(|(label, (x, y))| {
+            .map(|(x, y, label)| {
                 let connected_neighbours = self
-                    .index_neighbours_range(&self.labels, x, y, NEIGHBOUR_RANGE)
-                    .filter(|neighbour_label| *neighbour_label == *label)
+                    .labels
+                    .index_neighbours_range((x, y), NEIGHBOUR_RANGE)
+                    .filter(|neighbour_label| **neighbour_label == *label)
                     .count();
 
                 let is_disconnected = connected_neighbours < NEIGHBOUR_COUNT / 2;
@@ -348,18 +269,24 @@ impl Slic {
                     return *label;
                 }
 
-                self.index_neighbours_range(&self.labels, x, y, NEIGHBOUR_RANGE)
+                let neighbour_label_count = self
+                    .labels
+                    .index_neighbours_range((x, y), NEIGHBOUR_RANGE)
                     .fold(BTreeMap::new(), |mut label_count, label| {
                         let current_count = label_count.get(&label).cloned().unwrap_or(0);
                         label_count.insert(label, current_count + 1);
                         label_count
-                    })
+                    });
+
+                neighbour_label_count
                     .into_iter()
                     .max_by_key(|(_, count)| *count)
-                    .map(|(label, _)| label)
+                    .map(|(label, _)| *label)
                     .unwrap_or(*label)
             })
             .collect();
+
+        let labels = Vec2d::new(labels, self.width, self.height);
 
         Slic { labels, ..self }
     }

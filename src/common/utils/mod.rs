@@ -15,6 +15,7 @@ mod select_top_n_items;
 mod split_once;
 mod unique_pair;
 mod usize_ceil_div;
+mod vec_2d;
 mod weighted_sample;
 
 pub use balanced_divisors::balanced_divisors;
@@ -33,4 +34,5 @@ pub use select_top_n_items::select_top_n_items;
 pub use split_once::split_once;
 pub use unique_pair::UniquePair;
 pub use usize_ceil_div::ceil_div;
+pub use vec_2d::{Vec2d, Vec2dCoords, Vec2dOffset};
 pub use weighted_sample::weighted_sample;
