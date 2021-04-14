@@ -3,15 +3,15 @@
 # to load the args from file use the command:
 # `cargo run -q --release -- `cat args.txt | grep -v ^#``
 
-# --ants=1000
+--ants=1000
 --cycles=10
 # --stop-after=1000
-# --steps=100
+--steps=100
 # --dispatcher=basic
 # --updater=const
 --dispatcher=basic
 --updater=const
---converter=superpixels:10
+# --converter=superpixels:10
 # --converter=kmeans:10
 # --converter=window:40
 # --mask-width=100

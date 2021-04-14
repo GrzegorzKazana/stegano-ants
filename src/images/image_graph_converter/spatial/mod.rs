@@ -16,6 +16,8 @@ pub trait SpatialImageGraphConverter {
 
     fn calc_distance_between_pixels(pixel_a: &Pixel, pixel_b: &Pixel) -> f32;
 
+    fn calc_intensity_from_distance(distance: f32) -> u8;
+
     fn pixel_to_id(pixel_map: &PixelMap, pixel: &Pixel) -> NodeId {
         (pixel.y * pixel_map.width + pixel.x) as NodeId
     }
@@ -92,5 +94,20 @@ pub trait SpatialImageGraphConverter {
                 Pixel::grey(pixel.x, pixel.y, intensity_level)
             })
             .invert()
+    }
+
+    fn construct_conversion_visualization(pixel_map: &PixelMap) -> PixelMap {
+        pixel_map.map(|pixel| {
+            let neighbours = Self::get_pixel_neighbours(pixel_map, pixel);
+            let neighbour_count = neighbours.len();
+            let distances: f32 = neighbours
+                .into_iter()
+                .map(|other| Self::calc_distance_between_pixels(pixel, &other))
+                .sum();
+
+            let intensity = Self::calc_intensity_from_distance(distances / neighbour_count as f32);
+
+            Pixel::grey(pixel.x, pixel.y, intensity)
+        })
     }
 }
