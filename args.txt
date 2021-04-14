@@ -14,6 +14,7 @@
 # --converter=superpixels:10
 # --converter=kmeans:10
 # --converter=window:40
+--converter=i:spatial
 # --mask-width=100
 --target-capacity=50000B
 # tsp

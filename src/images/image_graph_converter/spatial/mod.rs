@@ -22,26 +22,6 @@ pub trait SpatialImageGraphConverter {
         (pixel.y * pixel_map.width + pixel.x) as NodeId
     }
 
-    fn get_pixel_adjacency_list(
-        pixel_map: &PixelMap,
-        pixel: &Pixel,
-        node_id: NodeId,
-    ) -> Vec<AdjacencyListEntry> {
-        Self::get_pixel_neighbours(pixel_map, pixel)
-            .iter()
-            .map(|neighbour_pixel| {
-                let neighbour_id = Self::pixel_to_id(pixel_map, neighbour_pixel);
-                // we make edge distance proportional to pixel distance,
-                // thus ants will try to follow paths of least pixel difference
-                // therefore we need to invert the visualized pheromone, so that
-                // elements of high pixel difference are highlighted
-                let distance = Self::calc_distance_between_pixels(pixel, neighbour_pixel);
-
-                AdjacencyListEntry::new(node_id, neighbour_id, distance)
-            })
-            .collect()
-    }
-
     fn construct_graph(pixel_map: &PixelMap) -> Graph {
         let nodes = pixel_map
             .pixels()
@@ -59,6 +39,22 @@ pub trait SpatialImageGraphConverter {
             .collect();
 
         Graph::from_node_vector(nodes)
+    }
+
+    fn get_pixel_adjacency_list(
+        pixel_map: &PixelMap,
+        pixel: &Pixel,
+        node_id: NodeId,
+    ) -> Vec<AdjacencyListEntry> {
+        Self::get_pixel_neighbours(pixel_map, pixel)
+            .iter()
+            .map(|neighbour_pixel| {
+                let neighbour_id = Self::pixel_to_id(pixel_map, neighbour_pixel);
+                let distance = 1.0 / Self::calc_distance_between_pixels(pixel, neighbour_pixel);
+
+                AdjacencyListEntry::new(node_id, neighbour_id, distance)
+            })
+            .collect()
     }
 
     fn calculate_pixel_intensity_from_pheromone(
@@ -82,18 +78,16 @@ pub trait SpatialImageGraphConverter {
     ) -> PixelMap {
         let pheromone_norm = pheromone.normalize();
 
-        pixel_map
-            .map(|pixel| {
-                let node_id = Self::pixel_to_id(pixel_map, pixel);
-                let edges_adjacent_to_pixel = graph.get_adjacent_edges(&node_id);
-                let intensity_level = Self::calculate_pixel_intensity_from_pheromone(
-                    &pheromone_norm,
-                    &edges_adjacent_to_pixel,
-                );
+        pixel_map.map(|pixel| {
+            let node_id = Self::pixel_to_id(pixel_map, pixel);
+            let edges_adjacent_to_pixel = graph.get_adjacent_edges(&node_id);
+            let intensity_level = Self::calculate_pixel_intensity_from_pheromone(
+                &pheromone_norm,
+                &edges_adjacent_to_pixel,
+            );
 
-                Pixel::grey(pixel.x, pixel.y, intensity_level)
-            })
-            .invert()
+            Pixel::grey(pixel.x, pixel.y, intensity_level)
+        })
     }
 
     fn construct_conversion_visualization(pixel_map: &PixelMap) -> PixelMap {
@@ -105,7 +99,8 @@ pub trait SpatialImageGraphConverter {
                 .map(|other| Self::calc_distance_between_pixels(pixel, &other))
                 .sum();
 
-            let intensity = Self::calc_intensity_from_distance(distances / neighbour_count as f32);
+            let intensity =
+                255 - Self::calc_intensity_from_distance(distances / neighbour_count as f32);
 
             Pixel::grey(pixel.x, pixel.y, intensity)
         })

@@ -87,6 +87,32 @@ impl Graph {
         iif!(edges_count > 0.0, edges_total_length / edges_count, 0.0)
     }
 
+    pub fn invert_distances(self) -> Self {
+        Self {
+            nodes: self
+                .nodes
+                .into_iter()
+                .map(|(id, node)| {
+                    let adjacency_list = node
+                        .adjacency_list
+                        .into_iter()
+                        .map(|edge| {
+                            AdjacencyListEntry::new(edge.from, edge.to, 1.0 / edge.distance)
+                        })
+                        .collect();
+
+                    (
+                        id,
+                        Node {
+                            id: node.id,
+                            adjacency_list,
+                        },
+                    )
+                })
+                .collect(),
+        }
+    }
+
     pub fn estimate_hamiltonian_cycle(&self) -> Option<f32> {
         let cycle_length = self.nodes.len();
         let starting_node = self.nodes.values().next()?;

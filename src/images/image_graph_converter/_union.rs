@@ -17,6 +17,10 @@ pub enum Converters {
     WindowToEdge(WindowToEdgeConverter),
     Kmeans(KMeansConverter),
     SuperPixels(SuperPixelConverter),
+    /// higher order converter, which inverts
+    /// all graph distances to (1 / d)
+    /// and inverts all generated pixelmaps (255 - a)
+    Inverted(Box<Converters>),
 }
 
 impl ImageGraphConverter for Converters {
@@ -26,6 +30,7 @@ impl ImageGraphConverter for Converters {
             Self::WindowToEdge(converter) => converter.img_to_graph(),
             Self::Kmeans(converter) => converter.img_to_graph(),
             Self::SuperPixels(converter) => converter.img_to_graph(),
+            Self::Inverted(converter) => converter.img_to_graph().invert_distances(),
         }
     }
 
@@ -35,6 +40,7 @@ impl ImageGraphConverter for Converters {
             Self::WindowToEdge(converter) => converter.visualize_pheromone(pheromone),
             Self::Kmeans(converter) => converter.visualize_pheromone(pheromone),
             Self::SuperPixels(converter) => converter.visualize_pheromone(pheromone),
+            Self::Inverted(converter) => converter.visualize_pheromone(pheromone).invert(),
         }
     }
 
@@ -44,6 +50,10 @@ impl ImageGraphConverter for Converters {
             Self::WindowToEdge(converter) => converter.visualize_conversion(),
             Self::Kmeans(converter) => converter.visualize_conversion(),
             Self::SuperPixels(converter) => converter.visualize_conversion(),
+            Self::Inverted(converter) => converter
+                .visualize_conversion()
+                .as_ref()
+                .map(PixelMap::invert),
         }
     }
 }
@@ -67,6 +77,11 @@ impl Converters {
             }
             ConverterStringConfig::SuperPixels(opts) => {
                 SuperPixelConverter::from_str_and_pixel_map(pixel_map, opts).map(Self::SuperPixels)
+            }
+            ConverterStringConfig::Inverted(config) => {
+                Self::from_string_config_and_pixel_map(pixel_map, config)
+                    .map(Box::new)
+                    .map(Self::Inverted)
             }
         }
     }

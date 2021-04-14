@@ -30,7 +30,7 @@ pub struct Opts {
 
     #[clap(
         long,
-        default_value = "spatial",
+        default_value = "i:spatial",
         about = "converter type in format <type>:<args>"
     )]
     pub converter: ConverterStringConfig,

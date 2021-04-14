@@ -51,12 +51,12 @@ mod edge_change_converter_tests {
                     AdjacencyListEntry::new(
                         0,
                         1,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         0,
                         3,
-                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                 ],
             },
@@ -66,17 +66,17 @@ mod edge_change_converter_tests {
                     AdjacencyListEntry::new(
                         1,
                         2,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         1,
                         4,
-                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         1,
                         0,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                 ],
             },
@@ -86,12 +86,12 @@ mod edge_change_converter_tests {
                     AdjacencyListEntry::new(
                         2,
                         5,
-                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         2,
                         1,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                 ],
             },
@@ -101,12 +101,12 @@ mod edge_change_converter_tests {
                     AdjacencyListEntry::new(
                         3,
                         0,
-                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         3,
                         4,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                 ],
             },
@@ -116,17 +116,17 @@ mod edge_change_converter_tests {
                     AdjacencyListEntry::new(
                         4,
                         1,
-                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         4,
                         5,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         4,
                         3,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                 ],
             },
@@ -136,12 +136,12 @@ mod edge_change_converter_tests {
                     AdjacencyListEntry::new(
                         5,
                         2,
-                        (900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((900.0 + 900.0 + 900.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                     AdjacencyListEntry::new(
                         5,
                         4,
-                        (100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!(),
+                        1.0 / ((100.0 + 100.0 + 100.0) / MAX_PIXEL_DISTANCE + stability_factor!()),
                     ),
                 ],
             },
@@ -163,12 +163,12 @@ mod edge_change_converter_tests {
             2,
             3,
             vec![
-                Pixel::grey(0, 0, (255.0 * 0.15) as u8), // (0.1 + 0.2) / 2
-                Pixel::grey(1, 0, (255.0 * 1.0 / 3.0) as u8), // (0.1 + 0.4 + 0.5) / 3
-                Pixel::grey(2, 0, (255.0 * 0.5) as u8),  // (0.4 + 0.6) / 2
-                Pixel::grey(0, 1, (255.0 * 0.5) as u8),  // (0.2 + 0.8) / 2
-                Pixel::grey(1, 1, (255.0 * 2.3 / 3.0) as u8), // (0.5 + 0.8 + 1.0) / 3
-                Pixel::grey(2, 1, (255.0 * 0.8) as u8),  // (0.6 + 1.0) / 2
+                Pixel::grey(0, 0, 255 - (255.0 * 0.15) as u8), // 255 - (0.1 + 0.2) / 2
+                Pixel::grey(1, 0, 255 - (255.0 * 1.0 / 3.0) as u8), // 255 - (0.1 + 0.4 + 0.5) / 3
+                Pixel::grey(2, 0, 255 - (255.0 * 0.5) as u8),  // 255 - (0.4 + 0.6) / 2
+                Pixel::grey(0, 1, 255 - (255.0 * 0.5) as u8),  // 255 - (0.2 + 0.8) / 2
+                Pixel::grey(1, 1, 255 - (255.0 * 2.3 / 3.0) as u8), // 255 - (0.5 + 0.8 + 1.0) / 3
+                Pixel::grey(2, 1, 255 - (255.0 * 0.8) as u8),  // 255 - (0.6 + 1.0) / 2
             ],
         )
         .invert();
