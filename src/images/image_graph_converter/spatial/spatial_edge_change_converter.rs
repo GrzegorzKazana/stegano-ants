@@ -14,6 +14,8 @@ pub struct SpatialEdgeChangeConverter {
     graph: Graph,
 }
 
+const MAX_DISTANCE: f32 = 255.0 * 255.0 * 3.0;
+
 impl SpatialEdgeChangeConverter {
     pub fn new(pixel_map: &PixelMap) -> Self {
         SpatialEdgeChangeConverter {
@@ -25,14 +27,16 @@ impl SpatialEdgeChangeConverter {
 
 impl SpatialImageGraphConverter for SpatialEdgeChangeConverter {
     fn calc_distance_between_pixels(pixel_a: &Pixel, pixel_b: &Pixel) -> f32 {
-        const MAX_DISTANCE: f32 = 255.0 * 255.0 * 3.0;
-
         let r_diff = f32::from(pixel_a.r) - f32::from(pixel_b.r);
         let g_diff = f32::from(pixel_a.g) - f32::from(pixel_b.g);
         let b_diff = f32::from(pixel_a.b) - f32::from(pixel_b.b);
         let pixel_distance = r_diff.powi(2) + g_diff.powi(2) + b_diff.powi(2);
 
         (pixel_distance / MAX_DISTANCE) + stability_factor!()
+    }
+
+    fn calc_intensity_from_distance(distance: f32) -> u8 {
+        (distance * MAX_DISTANCE / 3.0).sqrt() as u8
     }
 
     fn get_pixel_neighbours(pixel_map: &PixelMap, pixel: &Pixel) -> Vec<Pixel> {
@@ -47,6 +51,10 @@ impl ImageGraphConverter for SpatialEdgeChangeConverter {
 
     fn visualize_pheromone(&self, pheromone: &Pheromone) -> PixelMap {
         Self::construct_pheromone_visualization(&self.source_image, &self.graph, pheromone)
+    }
+
+    fn visualize_conversion(&self) -> Option<PixelMap> {
+        Some(Self::construct_conversion_visualization(&self.source_image))
     }
 }
 

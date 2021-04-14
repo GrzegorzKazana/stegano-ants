@@ -17,10 +17,15 @@ pub use spatial::SpatialImageGraphConverter;
 
 pub trait ImageGraphConverter: FromStrAndPixelMap {
     /// image in any form is expected to be passed via constructor
+    ///
+    /// graph distances are by default meant to be inversly proportional to region complexity
+    /// (to encourage ants to explore complex regions)
     fn img_to_graph(&self) -> Graph;
 
+    /// higher pheromone value translates to brighter pixels
     fn visualize_pheromone(&self, pheromone: &Pheromone) -> PixelMap;
 
+    /// higher complexity (lower graph distances) translates to bighter pixels
     fn visualize_conversion(&self) -> Option<PixelMap> {
         None
     }
@@ -36,12 +41,19 @@ pub enum ConverterStringConfig {
     WindowToEdge(String),
     KMeans(String),
     SuperPixels(String),
+    Inverted(Box<ConverterStringConfig>),
 }
 
 impl FromStr for ConverterStringConfig {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.starts_with("i:") {
+            return Self::from_str(s.replacen("i:", "", 1).as_ref())
+                .map(Box::new)
+                .map(Self::Inverted);
+        }
+
         let mut config_iter = s.split(":");
         let name = config_iter.next().unwrap_or_default();
         let opts = config_iter.next().map(String::from).unwrap_or_default();
