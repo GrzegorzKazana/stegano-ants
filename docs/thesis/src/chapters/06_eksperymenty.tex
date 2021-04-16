@@ -1,0 +1,183 @@
+\chapter{Wyniki eksperymentów}\label{chap:results}
+{
+    % co i po co
+    %
+    % jak przeprowadzano eksperymenty
+    %   - na jakich obrazach (RGB, rozdzielczość)
+    %   - jakie ukrywane dane (tekst)
+    %   - narzucanie pojemności obrazu w celu sprawdzenia jakości
+    %   - stałe parametry algorytmu (jeśli są (?))
+    %
+    % miary jakości i ich definicje
+    %   - do czego służą
+    %   - wzór
+    %   - jak oddają ludzką percepcję
+    %      - błąd średniokwadratowy (MSE)
+    %      - szczytowy stosunek sygnału do szumu (PSNR)
+    %      - podobieństwo strukturalne (SSIM)
+    %
+    % wyniki eksperymentów
+    %   - metoda oparta o wierzchołki
+    %       - omówienie parametrów algorytmu (czemu/jakie/w jakim zakresie badano)
+    %       - wyniki dla różnych parametrów
+    %       - krótkie wnioski
+    %           - czy wpływ parametrów pokrywa się z intuicją
+    %           - które systemy (dispatcher/updater) się lepiej sprawdziły, czemu
+    %   - metoda oparta o krawędzie
+    %       - omówienie parametrów algorytmu (czemu/jakie/w jakim zakresie badano)
+    %       - omówienie metod segmentacji
+    %       - wyniki dla różnych parametrów
+    %       - krótkie wnioski
+    %           - wpływ parametrów
+    %           - wpływ ilości segmentów (krawędzi)
+    %           - które systemy (dispatcher/updater) się lepiej sprawdziły, czemu
+    %
+    % ocena subiektywna (widzę/nie widzę)
+    %   - czy pokrywa się z miarami liczbowymi
+    %   - od jakiej ilości danych są widoczne
+    %
+    % porównanie z innymi pracami (?)
+    %   - znaleźć popularne obrazy i porównać dla nich wyniki
+    %   - (?) porównanie z zwykłym LSB
+    %   - (?) porównanie z vLSB opartym o proste wykrywanie krawędzi
+
+    % WSTĘP - CO TESTOWANO
+    Aby zbadać skuteczność i efektywność metod zaproponowanych w rozdziale \ref{chap:stegoants} oraz podrozdziale
+    \ref{sec:method}, postanowiono przeprowadzić pewne eksperymenty. Ich celem była walidacja fundamentalnych założeń,
+    takich jak słuszność doboru złożonych sekcji obrazów, sprawdzenie zasadności sposobów wyznaczania reprezentacji
+    grafowej problemu i interpretacji śladu feromonowego, numeryczna ocena degradacji jakości steganogramu oraz
+    subiektywna opinia dotycząca postrzegalności tych zmian. Numeryczna ewaluacja degradacji jakości obrazu pozwoli
+    odnieść uzyskane wyniki do istniejących rozwiązań oraz stwierdzić, czy zaproponowane metody mają swoje zastosowanie.
+
+    % METODA BADAWCZA
+    Weryfikacja polegała na przeprowadzeniu procesu ukrywania danych w bitmapach powszechnie wykorzystywanych w
+    dziedzinie przetwarzania obrazów.
+
+    % OBRAZY
+    Pomimo istnienia alternatywnych zbiorów składających się z syntetycznie
+    spreparowanych obrazów mających na celu wyszczególnienie pewnych cech\cite{Uhlmann2018ACI}, zdecydowano się na
+    wykorzystanie prawdziwych zdjęć, gdyż bardziej odpowiadają one praktycznym zastosowaniom steganografii. W ich
+    doborze kierowano się głównie ilością odniesień w tematycznie powiązanych pracach oraz bieżącymi tendencjami w
+    kwestii wykorzystywania publicznych zbiorów obrazów\cite{NoteOnLena1, NoteOnLena2}. Ostatecznie, zdecydowano się
+    skupić na obrazach \textit{Mandrill (a.k.a Baboon)}, \textit{Airplane (F-16) (a.k.a Jet)} oraz \textit{Peppers},
+    które są udostępniane przez \textit{Uniwersytet Południowej Kalifornii (USC)}\cite{USCDatabase}.
+    %% TODO: tutaj obrazki baboon, f16, peppers
+
+    % DANE
+    Dane które ukrywano w obrazach miały postać tekstu w formacie \textit{ASCII}, lecz po drobnych adaptacjach metody
+    ukrywania danych w obrazie możliwe byłoby ukrywanie dowolnych danych w postaci binarnej. W eksperymentach
+    wykorzystano automatycznie wygenerowany tekst \textit{Lorem ipsum} o rozmiarze $625kB$. Cechą zaproponowanej metody
+    oraz zaimplementowanego programu jest możliwość skalowania wygenerowanej macierzy maskującej w taki sposób, aby
+    można było umieścić zadaną ilość bitów tekstu. Pozwoli to na zbadanie degradacji jakości w zależności od objętości
+    ukrywanego tekstu, oraz ułatwi porównanie rezultatów z innymi metodami.
+
+    % BADANE PARAMETRY
+    Podczas przeprowadzanych eksperymentów, badano wpływ poszczególnych metod każdego z etapów procesu oraz ich
+    parametrów. Porównywane wartości parametrów dotyczą poniższych procesów.
+
+    \begin{enumerate}
+        \item Konstrukcji grafu oraz wizualizacji śladu feromonowego.
+        \begin{itemize}
+            \item Metoda oparta o wierzchołki. Jedynym parametrem jest opcjonalny parametr skalujący $s_0$ obraz
+            wejściowy podczas budowania grafu oraz budowania macierzy maskującej. Jego wartości znajdują się w zakresie
+            $[0, 1]$. Jego domyślna wartość wynosi $1$, i oznacza budowanie grafu o liczbie wierzchołków równej $w
+            \times h$.
+
+            \item Metoda oparta o krawędzie. Do jej parametrów należy algorytm segmentacji oraz docelowa liczba
+            segmentów $N_s$ związana z ilością krawędzi grafu. Podczas badań wykorzystano algorytmy prostego podziału na
+            na prostokąty, algorytm k-średnich oraz algorytm \textit{SLIC} służący do konstrukcji superpikseli.
+        \end{itemize}
+
+        \item Wyznaczenie śladu feromonowego przez różne rodzaje systemów mrówkowych. Do parametrów wspólnych dla
+        każdego z wykorzystanych systemów należy:
+        \begin{itemize}
+            \item ilość mrówek $a$, która domyślnie jest równa ilości wierzchołków grafu $V$,
+            \item liczba wykonanych cykli $C$
+            \item liczba kroków wykonywanych przez mrówki w każdej iteracji algorytmu $S$, dla grafów skonstruowanych na
+            podstawie segmentacji obrazu wynosi jest ona równa ilości wierzchołków $V$
+            \item preferencja względem śladu feromonowego $\alpha$
+            \item preferencja względem widoczności wierzchołka $\beta$
+            \item początkowe natężenie śladu feromonowego $\tau_0$
+            \item współczynnik opisujący prędkość wyparowania śladu feromonowego $\rho$
+        \end{itemize}
+
+        Do porównanych rodzajów systemów należą poniższe odmiany. Z niektórymi z nich związane są dodatkowe parametry
+        oraz domyślne wartości powyższych atrybutów.
+        \begin{itemize}
+            \item model feromon stały,
+            \item model feromon średni,
+            \item model feromon cykliczny,
+            \item system mrowiskowy, który wprowadza prawdopodobieństwo eksploatacji najkrótszej krawędzi $q_0$ oraz
+            ustalona parametr $\alpha = 1$,
+            \item system max-min, który wprowadza ograniczenia wartości śladu feromonowego $[\tau_{min}, \tau_{max}]$.
+            Ich wartości wyznaczane są za pomocą estymaty dotyczącej długości poszukiwanego cyklu. Wartość początkowa
+            feromonu wynosi $\tau_0 = \tau_{max}$.
+        \end{itemize}
+    \end{enumerate}
+
+    % WYKORZYSTANE MIARY JAKOŚCI
+    W celu umożliwienia porównywania jakości steganogramów, zdecydowano się skorzystać z metryk służących
+    do porównawczej analizy obrazów. Zastosowane metryki można podzielić na dwie kategorie, obiektywne i subiektywne.
+    Metryki obiektywne służą do wyznaczenia pewnej wartości charakteryzującej różnicę pomiędzy dwoma sygnałami. W
+    przypadku metryk subiektywnych, ich zadaniem jest również wyznaczenie wartości numerycznej, lecz nacisk kładziony
+    jest na korelację wartości z postrzegalnością zmian przez ludzki układ wzrokowy. Do zastosowanych metryk należą:
+
+    % MSE
+    Błąd średniokwadratowy (ang. \textit{Mean Square Error, MSE}). Jest jedną z najprostszych metryk służących do
+    pomiaru różnic między obrazami. Jej wartości należą do zbioru nieujemnych liczb rzeczywistych, a wartości bliższe
+    zeru stanowią o mniejszym spadku jakości. Do jej zalet należy prostota implementacji i możliwość optymalnej
+    implementacji. Jedną z jej wad jest niska korelacja z postrzeganiem różnic między obrazami przez ludzi oraz
+    nieuwzględnianie informacji o relacji natężenia szumu do wartości sygnału. Jej wartość wyraża wzór \ref{eqt:mse}, w
+    którym $\overline{X}$ oznacza wartość średnią.
+
+    \begin{equation}\label{eqt:mse}
+        MSE = \frac{1}{n} \sum_{i=1}^n (X_i - \overline{X})
+    \end{equation}
+
+    % PSNR
+    Szczytowy stosunek sygnału do szumu (ang. \textit{Peak Signal Noise Ratio, PSNR}). Jest udoskonaleniem błędu
+    średniokwadratowego, gdyż metryka ta uzależnia swoją wartość od maksymalnej wartości przyjmowanej przez sygnał.
+    Oznacza to, że taka sama wartość \textit{PSNR} odpowiada różnicom będących w proporcjonalnym do ilości informacji.
+    Przykładowo, w przypadku \textit{MSE} ta sama wartość będzie przekładać się na różną postrzegalność błędu w obrazie
+    korzystającym z 8 i 24 bitów na kanał. Szczytowy stosunek sygnału do szumu rozwiązuje powyższy problem. W związku z
+    dużym zakresem przyjmowanych wartości metryka korzysta z skali logarytmicznej. Wartościami typowymi przy analizie
+    obrazów korzystających z 8 bitów na jeden kanał jest zakres $[30dB, 50dB]$, przy czym wyższa wartość oznacza
+    mniejszą degradację. Wartość metryki można wyznaczyć za pomocą wzoru \ref{eqt:psnr}.
+
+    \begin{equation}\label{eqt:psnr}
+        PSNR = 10 \cdot log_{10} \frac{MAX^2}{MSE}
+    \end{equation}
+
+    % SSIM
+    Indeks podobieństwa strukturalnego (ang. \textit{Structural Similarity Index, SSIM}). Zdecydowanie bardziej złożoną
+    metryką jest \textit{SSIM}. Jej celem jest uchwycenie złożoności i właściwości postrzegania ludzkiego systemu
+    wzrokowego. Opiera się na założeniu mówiącym o istotności struktury obrazu w odniesieniu do postrzeganych różnic
+    luminancji oraz kontrastu\cite{Wang2004ImageQA, Sara2019ImageQA}. Jej wartość jest zwykle normalizowana do zakresu
+    $[0, 1]$, gdzie wartość $1$ oznacza identyczność obrazów.
+
+    %
+}
+
+% BADANIE PERCEPCJI I OCENY OBRAZÓW
+% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Comparisonoffoursubjectivemethodsforimagequalityassessment.pdf
+% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/ImageQualityAssessment.pdf
+% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Contrast_masking_in_human_vision.pdf
+
+% SSIM https://www.cns.nyu.edu/pub/eero/wang03-reprint.pdf
+% SSIM vs PSNR https://www.semanticscholar.org/paper/Image-Quality-Metrics%3A-PSNR-vs.-SSIM-Hor%C3%A9-Ziou/4a9a98cc86b1e07e548b7edee045275a793f6698
+
+% WYNIKI INNYCH PRAC
+% - lsb/dvt
+% https://www.researchgate.net/publication/329245499_LSB_Substitution_and_PVD_performance_analysis_for_image_steganography
+%
+% - jakaś nakoksana metoda
+% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20novel%20algorithm%20for%20colour%20image%20steganography%20using%20a%20new%20intelligent%20technique%20based%20on%20three%20phases.pdf
+%
+% - wariacje IWT + sztosowe porównanie str. 24
+%   file:///Users/grzegorzkazana/Desktop/Stegano_Ant/A%20Novel%20Image%20Steganographic%20Method%20based%20on%20Integer%20Wavelet%20Transformation%20and%20Particle%20Swarm%20Optimization.pdf
+%
+% - ACO steganography str. 6
+%   file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Ant%20Colony%20Optimization%20ACO%20based%20Data%20Hiding%20in%20Image%20Complex%20Region.pdf
+%
+% - vivbs
+% file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Varying_index_varying_bits_substitution_algorithm_.pdf

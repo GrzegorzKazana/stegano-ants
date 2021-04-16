@@ -193,7 +193,7 @@
         }
     }
 
-    \section{Sposób reprezentacji problemu w postaci grafowej oraz interpretacja śladu feromonowego}
+    \section{Sposób reprezentacji problemu oraz interpretacja śladu feromonowego}\label{sec:method}
     {
         % SPOSÓB GRAFOWEJ REPREZENTACJI + POWROTNA INTERPRETACJA ŚLADU FEROMONOWEGO
         Jak podkreślono w rozdziale \ref{chap:antsys} oraz powyższym podsumowaniu zaproponowanej metody, zadanie
@@ -237,7 +237,9 @@
             W związku z tym, w celu zastosowania powyższej metody wprowadzono pewne zmiany w sposobie uruchamiania i
             działania systemu mrówkowego. Najważniejsza z nich polega na zrezygnowaniu z kończenia przez mrówki pełnych
             cykli. Zamiast tego, ilość wykonywanych kroków w każdej iteracji algorytmu jest również parametrem
-            algorytmu.
+            algorytmu. Dodatkowo, w celu usprawnienia działania algorytmu dla obrazów o dużych rozmiarach, wprowadzono
+            możliwość generowania grafu dla obrazu przeskalowanego oraz ponownego przeskalowania macierzy maskującej do
+            oryginalnych rozmiarów $w \times h$.
 
             Wymusiło to również adaptację części reguł aktualizacji śladu feromonowego. Ponieważ uzyskany graf nie jest
             pełny, istnieje ryzyko przedwczesnego utknięcia mrówki w pozycji z której nie może wykonać kolejnego kroku,
