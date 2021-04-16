@@ -16,6 +16,7 @@ clap = "3.0.0-beta.2"
 rkm = "0.8.1"
 ndarray = "0.12.1"
 num-traits = "0.2.14"
+chrono = "0.4"
 
 flame = { version = "0.2.2", optional = true }
 flamer = { version = "0.3", optional = true }

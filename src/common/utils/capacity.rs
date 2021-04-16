@@ -43,3 +43,13 @@ impl FromStr for Capacity {
         }
     }
 }
+
+impl ToString for Capacity {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Bytes(bytes) => format!("{}B", bytes),
+            Self::Kilobytes(kbytes) => format!("{}kB", kbytes),
+            Self::MegaBytes(mbytes) => format!("{}MB", mbytes),
+        }
+    }
+}

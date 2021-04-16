@@ -94,3 +94,13 @@ impl FromStr for DispatcherStringConfig {
         .ok_or("Failed to parse ant dispatcher type")
     }
 }
+
+impl ToString for DispatcherStringConfig {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Basic(opts) => format!("basic:{}", opts),
+            Self::Biased(opts) => format!("biased:{}", opts),
+            Self::Colony(opts) => format!("colony:{}", opts),
+        }
+    }
+}

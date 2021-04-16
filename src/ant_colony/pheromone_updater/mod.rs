@@ -68,3 +68,15 @@ impl FromStr for UpdaterStringConfig {
         .ok_or("Failed to parse pheromone updater type")
     }
 }
+
+impl ToString for UpdaterStringConfig {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Const(opts) => format!("const:{}", opts),
+            Self::Average(opts) => format!("avg:{}", opts),
+            Self::Cyclical(opts) => format!("cycle:{}", opts),
+            Self::Colony(opts) => format!("colony:{}", opts),
+            Self::MaxMin(opts) => format!("maxmin:{}", opts),
+        }
+    }
+}

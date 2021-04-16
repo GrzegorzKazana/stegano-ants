@@ -31,11 +31,14 @@ type UnionizedColonyRunner = ColonyRunner<UnionizedColony, CliOutputs>;
 pub struct App {
     opts: Opts,
     cli: Rc<CliOutputs>,
+    disk_io: DiskIo,
 }
 
 impl App {
     pub fn new(opts: Opts, cli: Rc<CliOutputs>) -> Self {
-        App { opts, cli }
+        let disk_io = DiskIo::new(&opts);
+
+        App { opts, cli, disk_io }
     }
 
     pub fn run(&self) -> AppResult<ExecutionSummary> {
@@ -51,8 +54,8 @@ impl App {
     fn embed(&self, embed_opts: &EmbedCommand) -> AppResult<EmbeddingSummary> {
         let img_name = &embed_opts.image;
 
-        let transport_image = DiskIo::load_image(img_name)?;
-        let data = DiskIo::load_data(&embed_opts.data)?;
+        let transport_image = self.disk_io.load_image(img_name)?;
+        let data = self.disk_io.load_data(&embed_opts.data)?;
         let (pheromone_image, conversion_image) =
             self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
@@ -62,12 +65,16 @@ impl App {
         let mut bits_iter = data.iter_bits();
         let steganogram = embedder.embed(&mut bits_iter, &transport_image);
 
-        let _ = DiskIo::save_pheromone_image(img_name, &pheromone_image)?;
-        let _ = DiskIo::save_scaled_pheromone_image(img_name, &scaled_pheromone)?;
+        let _ = self
+            .disk_io
+            .save_pheromone_image(img_name, &pheromone_image)?;
+        let _ = self
+            .disk_io
+            .save_scaled_pheromone_image(img_name, &scaled_pheromone)?;
         if let Some(img) = conversion_image {
-            let _ = DiskIo::save_conversion_image(img_name, &img)?;
+            let _ = self.disk_io.save_conversion_image(img_name, &img)?;
         }
-        let output_path = DiskIo::save_steg_image(img_name, &steganogram)?;
+        let output_path = self.disk_io.save_steg_image(img_name, &steganogram)?;
 
         let summary = EmbeddingSummary::new(
             embedder.estimate_embeddable_bits(),
@@ -84,8 +91,8 @@ impl App {
     }
 
     fn extract(&self, extract_opts: &ExtractCommand) -> AppResult<ExtractionSummary> {
-        let transport_image = DiskIo::load_image(&extract_opts.image)?;
-        let steg_image = DiskIo::load_image(&extract_opts.steg)?;
+        let transport_image = self.disk_io.load_image(&extract_opts.image)?;
+        let steg_image = self.disk_io.load_image(&extract_opts.steg)?;
 
         let (pheromone_image, _) = self.generate_pheromone_mask(&self.opts, &transport_image)?;
 
@@ -100,7 +107,7 @@ impl App {
     fn solve_tsp(&self, tsp_opts: &TspCommand) -> AppResult<TspSummary> {
         let mut rng = StdRng::seed_from_u64(self.opts.seed);
 
-        let graph = Self::read_tsp_graph(&mut rng, tsp_opts)?;
+        let graph = self.read_tsp_graph(&mut rng, tsp_opts)?;
         let colony_runner = self.run_colony(&self.opts, rng, graph)?;
         let (last_cycle, last_epoch) = colony_runner
             .last_summaries()
@@ -233,11 +240,11 @@ impl App {
         }
     }
 
-    fn read_tsp_graph(rng: &mut StdRng, tsp_opts: &TspCommand) -> AppResult<Graph> {
+    fn read_tsp_graph(&self, rng: &mut StdRng, tsp_opts: &TspCommand) -> AppResult<Graph> {
         if let Option::Some(n_cities) = tsp_opts.n_cities {
             Some(Graph::random_tsp_graph(rng, n_cities))
         } else if let Option::Some(path) = tsp_opts.graph.as_ref() {
-            let csv = DiskIo::load_csv(path)?;
+            let csv = self.disk_io.load_csv(path)?;
             Some(Graph::from_coordinate_csv(&csv))
         } else {
             None

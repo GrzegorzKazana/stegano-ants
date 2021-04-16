@@ -35,7 +35,7 @@ pub trait FromStrAndPixelMap: Sized {
     fn from_str_and_pixel_map(pixel_map: &PixelMap, config: &str) -> Option<Self>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ConverterStringConfig {
     SpatialEdgeChange(String),
     WindowToEdge(String),
@@ -66,5 +66,17 @@ impl FromStr for ConverterStringConfig {
             _ => None,
         }
         .ok_or("Failed to parse image converter type")
+    }
+}
+
+impl ToString for ConverterStringConfig {
+    fn to_string(&self) -> String {
+        match self {
+            Self::SpatialEdgeChange(opts) => format!("spatial:{}", opts),
+            Self::WindowToEdge(opts) => format!("window:{}", opts),
+            Self::KMeans(opts) => format!("kmeans:{}", opts),
+            Self::SuperPixels(opts) => format!("superpixels:{}", opts),
+            Self::Inverted(opts) => format!("i:{}", opts.to_string()),
+        }
     }
 }

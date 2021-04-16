@@ -6,7 +6,7 @@ use crate::ant_colony::ant_dispatcher::DispatcherStringConfig;
 use crate::ant_colony::pheromone_updater::UpdaterStringConfig;
 use crate::images::image_graph_converter::ConverterStringConfig;
 
-#[derive(Clap, Debug)]
+#[derive(Clap, Debug, Clone)]
 #[clap(version = "1.0.0", author = "Grzegorz K. <kazana.grzegorz@gmail.com>")]
 pub struct Opts {
     #[clap(long, default_value = "42", about = "rng seed")]
@@ -56,11 +56,14 @@ pub struct Opts {
     #[clap(short, long)]
     pub quiet: bool,
 
+    #[clap(long, about = "verbose filenames of output files")]
+    pub verbose_files: bool,
+
     #[clap(subcommand)]
     pub subcmd: SubCommand,
 }
 
-#[derive(Clap, Debug)]
+#[derive(Clap, Debug, Clone)]
 pub enum SubCommand {
     #[clap()]
     Embed(EmbedCommand),
@@ -70,7 +73,7 @@ pub enum SubCommand {
     Tsp(TspCommand),
 }
 
-#[derive(Clap, Debug)]
+#[derive(Clap, Debug, Clone)]
 pub struct EmbedCommand {
     #[clap(short, long, about = "path to transport image")]
     pub image: String,
@@ -79,7 +82,7 @@ pub struct EmbedCommand {
     pub data: String,
 }
 
-#[derive(Clap, Debug)]
+#[derive(Clap, Debug, Clone)]
 pub struct ExtractCommand {
     #[clap(short, long, about = "path to transport image")]
     pub image: String,
@@ -88,11 +91,30 @@ pub struct ExtractCommand {
     pub steg: String,
 }
 
-#[derive(Clap, Debug)]
+#[derive(Clap, Debug, Clone)]
 pub struct TspCommand {
     #[clap(short, long, about = "number of graph nodes")]
     pub n_cities: Option<usize>,
 
     #[clap(short, long, about = "path to tsp graph csv")]
     pub graph: Option<String>,
+}
+
+impl ToString for Opts {
+    fn to_string(&self) -> String {
+        format!(
+            "_a{}_s{}_D{}_U{}_C{}_c{}_m{}_t{}_",
+            self.ants.unwrap_or_default(),
+            self.steps.unwrap_or_default(),
+            self.dispatcher.to_string(),
+            self.updater.to_string(),
+            self.converter.to_string(),
+            self.cycles.unwrap_or_default(),
+            self.mask_width.unwrap_or_default(),
+            self.target_capacity
+                .as_ref()
+                .map(Capacity::to_string)
+                .unwrap_or_default()
+        )
+    }
 }
