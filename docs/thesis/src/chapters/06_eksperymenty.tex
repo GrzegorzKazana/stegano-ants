@@ -54,13 +54,13 @@
     dziedzinie przetwarzania obrazów.
 
     % OBRAZY
-    Pomimo istnienia alternatywnych zbiorów składających się z syntetycznie
-    spreparowanych obrazów mających na celu wyszczególnienie pewnych cech\cite{Uhlmann2018ACI}, zdecydowano się na
-    wykorzystanie prawdziwych zdjęć, gdyż bardziej odpowiadają one praktycznym zastosowaniom steganografii. W ich
-    doborze kierowano się głównie ilością odniesień w tematycznie powiązanych pracach oraz bieżącymi tendencjami w
-    kwestii wykorzystywania publicznych zbiorów obrazów\cite{NoteOnLena1, NoteOnLena2}. Ostatecznie, zdecydowano się
-    skupić na obrazach \textit{Mandrill (a.k.a Baboon)}, \textit{Airplane (F-16) (a.k.a Jet)} oraz \textit{Peppers},
-    które są udostępniane przez \textit{Uniwersytet Południowej Kalifornii (USC)}\cite{USCDatabase}.
+    Pomimo istnienia alternatywnych zbiorów składających się z syntetycznie spreparowanych obrazów mających na celu
+    wyszczególnienie pewnych cech\cite{Uhlmann2018ACI}, zdecydowano się na wykorzystanie prawdziwych zdjęć, gdyż
+    bardziej odpowiadają one praktycznym zastosowaniom steganografii. W ich doborze kierowano się głównie ilością
+    odniesień w tematycznie powiązanych pracach oraz bieżącymi tendencjami w kwestii wykorzystywania publicznych zbiorów
+    obrazów\cite{NoteOnLena1, NoteOnLena2}. Ostatecznie, zdecydowano się skupić na obrazach \textit{Mandrill (a.k.a
+    Baboon)}, \textit{Airplane (F-16) (a.k.a Jet)}, \textit{House} oraz \textit{Peppers}, które są udostępniane przez
+    \textit{Uniwersytet Południowej Kalifornii (USC)}\cite{USCDatabase}.
     %% TODO: tutaj obrazki baboon, f16, peppers
 
     % DANE
@@ -91,7 +91,7 @@
         \item Wyznaczenie śladu feromonowego przez różne rodzaje systemów mrówkowych. Do parametrów wspólnych dla
         każdego z wykorzystanych systemów należy:
         \begin{itemize}
-            \item ilość mrówek $a$, która domyślnie jest równa ilości wierzchołków grafu $V$,
+            \item ilość mrówek $A$, która domyślnie jest równa ilości wierzchołków grafu $V$,
             \item liczba wykonanych cykli $C$
             \item liczba kroków wykonywanych przez mrówki w każdej iteracji algorytmu $S$, dla grafów skonstruowanych na
             podstawie segmentacji obrazu wynosi jest ona równa ilości wierzchołków $V$
@@ -155,6 +155,398 @@
     luminancji oraz kontrastu\cite{Wang2004ImageQA, Sara2019ImageQA}. Jej wartość jest zwykle normalizowana do zakresu
     $[0, 1]$, gdzie wartość $1$ oznacza identyczność obrazów.
 
+    % WYNIKI EKSPERYMENTÓW
+    Eksperymenty rozpoczęto od analizy wyników uzyskanych metodą opartą o budowanie grafu na podstawie wierzchołków.
+
+    % WYNIKI - METODA-WIERZCHOŁKÓW - INVERTED
+    Eksperymenty rozpoczęto od porównania wpływu proporcjonalności długości krawędzie grafu od różnicy pomiędzy
+    pikselami. Jak wspomniano w rozdziale \ref{sec:method}, jeśli długości krawędzi są proporcjonalne do różnicy
+    pikseli, system mrówkowy będzie dążył do odkładania śladu feromonowego w obszarach cechujących mniejszą złożoność.
+    Aby uzyskać zamierzony rezultat, czyli macierz maskującą wskazującą obszary bardziej złożone, konieczne będzie
+    odwrócenie jej wartości. Alternatywnie, jeśli długości pomiędzy pikselami będą odwrotnie proporcjonalne do dzielącej
+    je odległości, system mrówkowy, a co za tym idzie ślad feromonowy, będzie preferował obszary bardziej złożone.
+
+    Wizualizację procesu konwersji obrazu na graf oraz uzyskane macierze maskujące przedstawia rysunek
+    \ref{fig:exp-vertex}. W pierwszej kolumnie umieszczono obrazy objaśniające wynik konwersji bitmapy na graf, w
+    których do poszczególnych pikseli obrazu wejściowego przypisana jest luminancja odwrotnie proporcjonalna do długości
+    krawędzi z nim związanych (obszary ,,atrakcyjniejsze'' dla mrówek cechują się jaśniejszym kolorem). Kolumna druga
+    przedstawia macierze maskujące, które będą decydować o ilości bitów które zostaną zamienione na bity ukrywanej
+    wiadomości. Im jaśniejszy jest dany piksel, tym więcej jego bitów zostanie zamienione. W trzeciej kolumnie
+    przedstawiono macierze maskujące przetransformowane w taki sposób, aby odpowiadające im pojemność ukrywanej
+    wiadomości była taka sama.
+
+    Na podstawie obrazów \ref{fig:exp-vertex-pher} oraz \ref{fig:exp-vertex-inv-pher} można stwierdzić, że obie
+    metody poprawnie wykrywają krawędzie i obszary złożone, lecz po porównaniu macierzy maskujących o tej samej
+    pojemności należy stwierdzić lepszy rezultat procesu w którym długości krawędzi grafu są proporcjonalne do różnicy
+    pomiędzy pikselami, a macierz maskująca zostaje odwrócona. Przeskalowana macierz maskująca
+    \ref{fig:exp-vertex-inv-pher-scaled} gwarantuje bardziej równomierne rozłożenie informacji przy jednoczesnym
+    faworyzowaniu krawędzi o obszarów złożonych.
+
+    \begin{figure}
+        \centering
+        \subfloat[][]{
+            \label{fig:exp-vertex-conv}
+            \includegraphics[width=4cm]{experiments/vertexbased/normal-vs-inverted/2021-04-17-06:25:53house-l_conv_a1000_s100_Dbasic:_Uconst:_Cspatial:_c10_m0_t50000B_}
+
+        }
+        \hspace{8pt}
+        \subfloat[][]{
+            \label{fig:exp-vertex-pher}
+            \includegraphics[width=4cm]{experiments/vertexbased/normal-vs-inverted/2021-04-17-06:25:53house-l_pher_a1000_s100_Dbasic:_Uconst:_Cspatial:_c10_m0_t50000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][]{
+            \label{fig:exp-vertex-pher-scaled}
+            \includegraphics[width=4cm]{experiments/vertexbased/normal-vs-inverted/2021-04-17-06:25:53house-l_pher_scaled_a1000_s100_Dbasic:_Uconst:_Cspatial:_c10_m0_t50000B_}
+        }
+        \\
+        \subfloat[][]{
+            \label{fig:exp-vertex-inv-conv}
+            \includegraphics[width=4cm]{experiments/vertexbased/normal-vs-inverted/2021-04-17-06:26:02house-l_conv_a1000_s100_Dbasic:_Uconst:_Ci:spatial:_c10_m0_t50000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][]{
+            \label{fig:exp-vertex-inv-pher}
+            \includegraphics[width=4cm]{experiments/vertexbased/normal-vs-inverted/2021-04-17-06:26:02house-l_pher_a1000_s100_Dbasic:_Uconst:_Ci:spatial:_c10_m0_t50000B_}
+        }
+        \subfloat[][]{
+            \label{fig:exp-vertex-inv-pher-scaled}
+            \includegraphics[width=4cm]{experiments/vertexbased/normal-vs-inverted/2021-04-17-06:26:02house-l_pher_scaled_a1000_s100_Dbasic:_Uconst:_Ci:spatial:_c10_m0_t50000B_}
+        }
+
+        \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
+        {
+            Porównania wizualizacji konwersji oraz macierzy maskujących.
+            W pierwszym wierszu (\subref{fig:exp-vertex-conv}, \subref{fig:exp-vertex-pher}) przedstawiono obrazy
+            związane z procesem o długości krawędzie odwrotnie proporcjonalnej do różnicy pikseli. W drugim wierszu
+            (\subref{fig:exp-vertex-inv-conv}, \subref{fig:exp-vertex-inv-pher}) długości są proporcjonalne do różnicy
+            pikseli. Pierwsza kolumna przedstawia wizualizacje procesu konwersji bitmapy na graf, druga przestawia
+            uzyskane macierze maskujące, trzecia zawiera macierze maskujące przeskalowane w taki sposób, aby odpowiadała
+            im taka sama pojemność ukrywanej informacji.
+        }
+        \label{fig:exp-vertex}
+    \end{figure}
+
+    % % WYNIKI - METODA-WIERZCHOŁKÓW - C | S | A
+    % Następnie, porównano wpływ ilości iteracji algorytmu (ilość cykli $C$), ilośc kroków wykonanych przez mrówki $S$
+    % w każdym cyklu, oraz ilość mrówek. Ponieważ każdy z powyższych parametrów
+
+    % WYNIKI - METODA-WIERZCHOŁKÓW - RODZAJE SYSTEMÓW
+    Kolejnym parametrem który postanowiono zbadać, jest rodzaj systemu mrówkowego oraz związane z nim parametry.
+    Ponieważ problem rozwiązywany przez mrówki nie jest równoważny z problemem komiwojażera, konieczne jest również
+    ustalenie parametru $S$ określającego ilość kroków wykonywanych przez każdą mrówkę w każdej iteracji algorytmu.
+
+    Wygenerowane macierze maskujące przedstawia rysunek \ref{fig:exp-vertex-pher}. Na ich podstawie można wyciągnąć
+    kilka interesujących wniosków. System mrowiskowy (\textit{Ant-Colony}) oraz system \textit{Max-min} nie odpowiadają
+    charakterystyce zadanego zadania, które jest znacząco różne od klasycznego problemu \textit{TSP}. Przyczyn można
+    doszukiwać się w silnej faworyzacji najlepszego rozwiązania, czyli najkrótszej obranej ścieżki kosztem pozostałych
+    ścieżek. Można wnioskować, że w przedstawionym problemie znalezienie najkrótszej ścieżki łączącej $S + 1$ pikseli
+    spośród $w \times h$ pikseli nie przyczynia się do ogólnego wyznaczenia obszarów obrazu.
+
+    Na dodatkową uwagę zasługuje system z cykliczną reguła aktualizacji śladu feromonowego, gdyż za jego pomocą udało
+    się wyraźnie wyodrębnić jednorodny obszar nieba oraz pewne homogeniczne elementy budynku. Kolejną obserwacją
+    płynącą z powyższego eksperymentu jest istotność doboru ilości mrówek $A$ oraz współczynnika związanego z
+    odparowaniem śladu $\rho$. Macierze lepiej odzwierciedlające faktyczne segmenty obrazów powstały w przypadku
+    konfiguracji charakteryzujących się większą ilością mrówek (na przykład \ref{fig:exp-vertex-pher-pher-cycle3}) lub
+    wyższym współczynnikiem $\rho$ (na przykład \ref{fig:exp-vertex-pher-conv-const1}), przekładającym się na
+    wolniejsze tempo odparowania.
+
+    \begin{figure}
+        \footnotesize
+        \centering
+        \subfloat[][Ant-Density\newline $A=1000$, $S=100$ \newline $\alpha=2$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-conv-const1}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:22house-l_pher_a1000_s100_Dbiased:2,1_Uconst:1,0.2,1_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Ant-Density\newline $A=1000$, $S=100$ \newline $\alpha=2$, $\beta=2$, $\rho=0.9$]{
+            \label{fig:exp-vertex-pher-pher-const2}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:25house-l_pher_a1000_s100_Dbiased:2,2_Uconst:1,0.1,1_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Ant-Density\newline $A=1000$, $S=100$ \newline $\alpha=2$, $\beta=2$, $\rho=0.999$]{
+            \label{fig:exp-vertex-pher-pher-const3}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:25house-l_pher_a1000_s100_Dbiased:2,2_Uconst:1,0.001,1_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \\
+        \subfloat[][Ant-Quantity\newline $A=1000$, $S=100$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-pher-avg1}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:31house-l_pher_a1000_s100_Dbiased:1,1_Uavg:1,0.2,1_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Ant-Quantity\newline $A=1000$, $S=100$ \newline $\alpha=2$, $\beta=2$, $\rho=0.999$]{
+            \label{fig:exp-vertex-pher-pher-avg2}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:29house-l_pher_a1000_s100_Dbiased:2,2_Uavg:1,0.001,1_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \subfloat[][Ant-Quantity\newline $A=10000$, $S=10$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-pher-avg3}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:12house-l_pher_a10000_s10_Dbiased:1,1_Uavg:1,0.2,1_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \\
+        \subfloat[][Ant-Cycle\newline $A=10$, $S=10000$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-pher-cycle1}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:38house-l_pher_a10_s10000_Dbiased:1,1_Ucycle:1,0.2,1,10000_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Ant-Cycle\newline $A=1000$, $S=100$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-pher-cycle2}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:26house-l_pher_a1000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \subfloat[][Ant-Cycle\newline $A=10000$, $S=10$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+
+            \label{fig:exp-vertex-pher-pher-cycle3}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:10house-l_pher_a10000_s10_Dbiased:1,1_Ucycle:1,0.2,1,10_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \\
+        \subfloat[][Ant-Colony\newline $A=10$, $S=10000$ \newline $\alpha=1$, $\beta=1$, $\rho=0.999$]{
+            \label{fig:exp-vertex-pher-pher-colony1}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:35:20house-l_pher_a10_s10000_Dcolony:0.1,1_Ucolony:1,0.2,0.2,10000_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Ant-Colony\newline $A=1000$, $S=100$ \newline $\alpha=1$, $\beta=2$, $\rho=0.999$]{
+            \label{fig:exp-vertex-pher-pher-colony2}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:29house-l_pher_a1000_s100_Dcolony:0.1,2_Ucolony:1,0.001,0.001,100_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \subfloat[][Ant-Colony\newline $A=10000$, $S=10$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-pher-colony3}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:11house-l_pher_a10000_s10_Dcolony:0.1,1_Ucolony:1,0.2,0.2,10_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \\
+        \subfloat[][Max-Min\newline $A=10$, $S=10000$ \newline $\alpha=1$, $\beta=1$, $\rho=0.8$]{
+            \label{fig:exp-vertex-pher-pher-maxmin1}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:38house-l_pher_a10_s10000_Dbiased:1,1_Umaxmin:1,0.2,0.1,10000_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Max-Min\newline $A=1000$, $S=100$ \newline $\alpha=2$, $\beta=2$, $\rho=0.999$]{
+            \label{fig:exp-vertex-pher-pher-maxmin2}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:27house-l_pher_a1000_s100_Dbiased:2,2_Umaxmin:1,0.001,0.1,100_Ci:spatial:_c10_m0_t100000B_}
+        }
+        \subfloat[][Max-Min\newline $A=10000$, $S=10$ \newline $\alpha=1$, $\beta=1$, $\rho=0.9$]{
+            \label{fig:exp-vertex-pher-pher-maxmin3}
+            \includegraphics[width=3cm]{experiments/vertexbased/colony-types/2021-04-17-12:29:12house-l_pher_a10000_s10_Dbiased:1,1_Umaxmin:1,0.2,0.1,10_Ci:spatial:_c10_m0_t100000B_}
+        }
+
+        \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
+        {
+            Macierze maskujące wygenerowane przy pomocy różnych systemów mrówkowych.
+        }
+        \label{fig:exp-vertex-pher}
+    \end{figure}
+
+    % METODA WIERZCHOŁKÓW - SKALOWANIE OBRAZU
+    Ponieważ pozostałe obrazy z zbioru \textit{USC} mają rozmiary $512 \times 512$, zdecydowano się również zbadać wpływ
+    skalowania obrazu podczas tworzenia grafu oraz macierzy maskującej. Wykorzystano system oparty o model cykliczny o
+    parametrach $A=10000$, $S=100$, $\alpha=\beta=1$, $\rho=0.8$, i starano się umieścić $250 000kB$ danych. Na rysunku
+    \ref{fig:exp-vertex-scale} zamieszczono macierze maskujące powstałe przy $s_0 \in \{0.25, 0.5, 0.75, 1.0\}$. Tabela
+    \ref{tab:exp-vertex-scale-errors} zawiera porównanie miar jakości steganogramów.
+
+    Na postawie uzyskanych wyników można stwierdzić że tworzenie grafu na podstawie skalowanego obrazu nie ma znaczącego
+    wpływu na miary jakości steganogramu. Jest to pożądana cecha, ponieważ operacje na mniejszych grafach zajmują
+    zdecydowanie mniej czasu.
+
+    \begin{figure}
+        \footnotesize
+        \centering
+        \subfloat[][Macierz maskująca\newline $s_0 = 0.25$]{
+            \label{fig:exp-vertex-scale0.25-pher}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:53:35airplane_pher_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m128_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Steganogram\newline $s_0 = 0.25$]{
+            \label{fig:exp-vertex-scale0.25-steg}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:53:35airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m128_t250000B_}
+        }
+        \\
+        \subfloat[][Macierz maskująca\newline $s_0 = 0.5$]{
+            \label{fig:exp-vertex-scale0.50-pher}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:53:51airplane_pher_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Steganogram\newline $s_0 = 0.5$]{
+            \label{fig:exp-vertex-scale0.50-steg}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:53:51airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t250000B_}
+        }
+        \\
+        \subfloat[][Macierz maskująca\newline $s_0 = 0.75$]{
+            \label{fig:exp-vertex-scale0.75-pher}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:56:42airplane_pher_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m384_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Steganogram\newline $s_0 = 0.75$]{
+
+            \label{fig:exp-vertex-scale0.75-steg}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:56:43airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m384_t250000B_}
+        }
+        \\
+        \subfloat[][Macierz maskująca\newline $s_0 = 1.0$]{
+            \label{fig:exp-vertex-scale1.0-pher}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:54:02airplane_pher_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m0_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][Steganogram\newline $s_0 = 1.0$]{
+            \label{fig:exp-vertex-scale1.0-steg}
+            \includegraphics[width=4cm]{experiments/vertexbased/scaling/2021-04-17-15:54:02airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m0_t250000B_}
+        }
+
+        \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
+        {
+            Macierze maskujące oraz steganogramy wygenerowane dla różnych wartości skali $s_0$.
+        }
+        \label{fig:exp-vertex-scale}
+    \end{figure}
+
+    \begin{center}
+        \begin{tabular}{ |c|c c c| }
+            \hline
+            Współczynnik skalujący \newline $s_0$ & $MSE$ & $PSNR$ & $SSIM$ \\
+            \hline
+            0.25 & 6.93092 & 39.7568dB & \textbf{0.952935} \\
+            0.5 & 6.67252 & 39.9218dB & 0.951723 \\
+            0.75 & 6.62924 & 39.9501dB & 0.95122 \\
+            1.0 & \textbf{6.61124} & \textbf{39.9619dB} & 0.948736 \\
+            \hline
+        \end{tabular}
+        \label{tab:exp-vertex-scale-errors}
+    \end{center}
+
+    % METODA WIERZCHOŁKÓW - FINAL SHOWDOWN
+    Ostatecznie, postanowiono zbadać wyniki uzyskane na pozostałych obrazach testowych. Uzyskane rezultaty zawiera
+    tabela \ref{tab:exp-vertex-results} a steganogramy rysunek \ref{fig:exp-vertex-results}. Parametry algorytmu
+    zachowano z poprzedniego eksperymentu.
+
+    \begin{center}
+        \begin{tabular}{ |c|c|c c c| }
+            \hline
+            Obraz & objętość danych & $MSE$ & $PSNR$ & $SSIM$ \\
+            \hline
+            Baboon {\footnotesize $512 \times 512$}   & 100 000B (12.71\%) & 0.538851 & 50.85dB & 0.998768 \\
+            Baboon {\footnotesize $512 \times 512$}   & 250 000B (31.78\%) & 6.60594 & 39.9654dB & 0.990015 \\
+            Baboon {\footnotesize $512 \times 512$}   & 500 000B (63.57\%) & 272.732 & 23.8074dB & 0.777025 \\
+            Airplane {\footnotesize $512 \times 512$} & 100 000B (12.71\%) & 0.53689 & 50.8659dB & 0.995503 \\
+            Airplane {\footnotesize $512 \times 512$} & 250 000B (31.78\%) & 6.67252 & 39.9218dB & 0.951723 \\
+            Airplane {\footnotesize $512 \times 512$} & 500 000B (63.57\%) & 311.43 & 23.2311dB & 0.516503 \\
+            Peppers {\footnotesize $512 \times 512$}  & 100 000B (12.71\%) & 0.536934 & 50.8655dB & 0.996048 \\
+            Peppers {\footnotesize $512 \times 512$}  & 250 000B (31.78\%) & 6.71828 & 39.8922dB & 0.958181 \\
+            Peppers {\footnotesize $512 \times 512$}  & 500 000B (63.57\%) & 292.99 & 23.4962dB & 0.502009 \\
+            \hline
+        \end{tabular}
+        \label{tab:exp-vertex-results}
+    \end{center}
+
+    \begin{figure}
+        \footnotesize
+        \centering
+        \subfloat[][$D = 100 000B$]{
+            \label{fig:exp-vertex-results-baboon-100k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:12:31mandrill_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 250 000B$]{
+            \label{fig:exp-vertex-results-baboon-250k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:13:06mandrill_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t250000B_}
+        }
+        \subfloat[][$D = 500 000B$]{
+            \label{fig:exp-vertex-results-baboon-500k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:13:33mandrill_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t500000B_}
+        }
+        \\
+        \subfloat[][$D = 100 000B$]{
+            \label{fig:exp-vertex-results-aiplane-100k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:16:39airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 250 000B$]{
+            \label{fig:exp-vertex-results-aiplane-250k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:17:10airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 500 000B$]{
+            \label{fig:exp-vertex-results-aiplane-500k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:17:35airplane_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t500000B_}
+        }
+        \\
+        \subfloat[][$D = 100 000B$]{
+            \label{fig:exp-vertex-results-airplane-100k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:18:34peppers_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 250 000B$]{
+            \label{fig:exp-vertex-results-airplane-250k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:19:05peppers_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t250000B_}
+        }
+        \subfloat[][$D = 500 000B$]{
+            \label{fig:exp-vertex-results-airplane-500k}
+            \includegraphics[width=3cm]{experiments/vertexbased/results/2021-04-17-17:19:31peppers_steg_a10000_s100_Dbiased:1,1_Ucycle:1,0.2,1,100_Ci:spatial:_c10_m256_t500000B_}
+        }
+
+        \caption[Porównanie rezultatów]
+        {
+            Porównanie uzyskanych steganogramów przy zadanej objętości ukrytej informacji.
+        }
+        \label{fig:exp-vertex-results}
+    \end{figure}
+
+    % Dla każdego z rodzaju systemów przeprowadzono TODO: N kombinacji parametrów oraz wykonano 10 cykli. Wyniki
+    % zamieszczono w tabeli TODO: ref, a najlepsze macierze maskujące dla każdego systemu przedstawia rysunek TODO:. W
+    % każdym przypadku w macierz maskująca została przeskalowana w taki sposób, aby w steganogramie ukryć $50kB$.
+    % Eksperymenty przeprowadzono na przykładzie obrazu \textit{House} o wymiarach $200 \times 200$.
+    % \begin{center}
+    %     \footnotesize
+    %     \begin{tabular}{ |l|c c c c c c|c c c| }
+    %         \hline
+    %         Rodzaj systemu & $A$ & $S$ & $\alpha$ & $\beta$ & $\rho_0$ & $q_0$ & $MSE$ & $PSNR$ & $SSIM$ \\
+    %         \hline
+    %         feromon stały & 10 & 10000 & 1 & 1 & 0.8 & - & 2347.05 & 14.4595dB & 0.163352 \\
+    %         feromon stały & 10000 & 10 & 1 & 1 & 0.8 & - & 1829.54 & 15.5413dB & 0.197731 \\
+    %         feromon stały & 1000 & 100 & 1 & 1 & 0.8 & - & 1878.97 & 15.4255dB & 0.215501 \\
+    %         feromon stały & 1000 & 100 & 1 & 2 & 0.8 & - & 1873.37 & 15.4385dB & 0.217721 \\
+    %         feromon stały & 1000 & 100 & 2 & 1 & 0.8 & - & 1867.24 & 15.4527dB & 0.219012 \\
+    %         feromon stały & 1000 & 100 & 2 & 2 & 0.8 & - & 1870.21 & 15.4458dB & 0.21761 \\
+    %         feromon stały & 1000 & 100 & 2 & 2 & 0.5 & - & 1860.48 & 15.4685dB & 0.217551 \\
+    %         feromon stały & 1000 & 100 & 2 & 2 & 0.9 & - & 1864.67 & 15.4587dB & 0.214871 \\
+    %         feromon stały & 1000 & 100 & 2 & 2 & 0.999 & - & 1842.56 & 15.5105dB & 0.196247 \\
+    %         feromon średni & 10 & 10000 & 1 & 1 & 0.8 & - & 2347.05 & 14.4595dB & 0.163352 \\
+    %         feromon średni & 10000 & 10 & 1 & 1 & 0.8 & - & 1859.78 & 15.4701dB & 0.218718 \\
+    %         feromon średni & 1000 & 100 & 1 & 1 & 0.8 & - & 1874.76 & 15.4353dB & 0.217647 \\
+    %         feromon średni & 1000 & 100 & 1 & 2 & 0.8 & - & 1863.55 & 15.4613dB & 0.219927 \\
+    %         feromon średni & 1000 & 100 & 2 & 1 & 0.8 & - & 1866.55 & 15.4543dB & 0.221946 \\
+    %         feromon średni & 1000 & 100 & 2 & 2 & 0.8 & - & 1871.49 & 15.4429dB & 0.223166 \\
+    %         feromon średni & 1000 & 100 & 2 & 2 & 0.5 & - & 1864.72 & 15.4586dB & 0.224912 \\
+    %         feromon średni & 1000 & 100 & 2 & 2 & 0.9 & - & 1857.8 & 15.4747dB & 0.221431 \\
+    %         feromon średni & 1000 & 100 & 2 & 2 & 0.999 & - & 1863.9 & 15.4605dB & 0.220019 \\
+    %         feromon cykliczny & 10 & 10000 & 1 & 1 & 0.8 & - & 1848.07 & 15.4975dB & 0.218536 \\
+    %         feromon cykliczny & 10000 & 10 & 1 & 1 & 0.8 & - & 1901.89 & 15.3729dB & 0.196128 \\
+    %         feromon cykliczny & 1000 & 100 & 1 & 1 & 0.8 & - & 1924.33 & 15.3219dB & 0.18948 \\
+    %         feromon cykliczny & 1000 & 100 & 1 & 2 & 0.8 & - & 1886.63 & 15.4079dB & 0.208189 \\
+    %         feromon cykliczny & 1000 & 100 & 2 & 1 & 0.8 & - & 1929.84 & 15.3095dB & 0.19839 \\
+    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.8 & - & 1887.68 & 15.4055dB & 0.210202 \\
+    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.5 & - & 1902.63 & 15.3712dB & 0.206376 \\
+    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.9 & - & 1906.93 & 15.3614dB & 0.202576 \\
+    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.999 & - & 1888.45 & 15.4037dB & 0.209342 \\
+    %         sys. mrowiskowy & 10 & 10000 & 1 & 1 & 0.8 & 0.1 & 1863.02 & 15.4626dB & 0.220336 \\
+    %         sys. mrowiskowy & 10000 & 10 & 1 & 1 & 0.8 & 0.1 & 1860.85 & 15.4676dB & 0.227484 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 1 & 0.8 & 0.1 & 1862.1 & 15.4647dB & 0.227632 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 1 & 0.8 & 0.1 & 1862.1 & 15.4647dB & 0.227632 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.8 & 0.1 & 1862.86 & 15.4629dB & 0.224279 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.8 & 0.1 & 1862.86 & 15.4629dB & 0.224279 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.8 & 0.1 & 1862.86 & 15.4629dB & 0.224279 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.5 & 0.1 & 1877.58 & 15.4288dB & 0.219284 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.9 & 0.1 & 1873.54 & 15.4381dB & 0.218873 \\
+    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.999 & 0.1 & 1513.26 & 16.3656dB & 0.231456 \\
+    %         max-min & 10 & 10000 & 1 & 1 & 0.8 & - & 1742.49 & 15.753dB & 0.192021 \\
+    %         max-min & 10000 & 10 & 1 & 1 & 0.8 & - & 1352.97 & 16.8519dB & 0.260953 \\
+    %         max-min & 1000 & 100 & 1 & 1 & 0.8 & - & 1864.2 & 15.4598dB & 0.224875 \\
+    %         max-min & 1000 & 100 & 1 & 2 & 0.8 & - & 1859.62 & 15.4705dB & 0.227705 \\
+    %         max-min & 1000 & 100 & 2 & 1 & 0.8 & - & 1864.2 & 15.4598dB & 0.224875 \\
+    %         max-min & 1000 & 100 & 2 & 2 & 0.8 & - & 1859.62 & 15.4705dB & 0.227705 \\
+    %         max-min & 1000 & 100 & 2 & 2 & 0.5 & - & 1860.59 & 15.4682dB & 0.227674 \\
+    %         max-min & 1000 & 100 & 2 & 2 & 0.9 & - & 1859.62 & 15.4705dB & 0.227705 \\
+    %         max-min & 1000 & 100 & 2 & 2 & 0.999 & - & 1979.46 & 15.1993dB & 0.22613 \\
+    %         \hline
+    %     \end{tabular}
+    % \end{center}
+
+
     %
 }
 
@@ -181,3 +573,5 @@
 %
 % - vivbs
 % file:///Users/grzegorzkazana/Desktop/Stegano_Ant/Varying_index_varying_bits_substitution_algorithm_.pdf
+
+% find docs/thesis/assets/images/experiments/**/*.bmp | ggrep  -oP '^[\w/_:\.,-]+(?=\.bmp)'  | xargs -I XXX convert XXX.bmp XXX.png

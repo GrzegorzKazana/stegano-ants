@@ -3,25 +3,27 @@
 # to load the args from file use the command:
 # `cargo run -q --release -- `cat args.txt | grep -v ^#``
 
---ants=1000
+--ants=10000
+--steps=100
 --cycles=10
 # --stop-after=1000
---steps=100
-# --dispatcher=basic
+--dispatcher=biased:1,1
+--updater=cycle:1,0.2,1,100
 # --updater=const
---dispatcher=basic
---updater=const
+# --dispatcher=colony:0.5,1
+# --updater=colony:1,0.2,0.2,1000
 # --converter=superpixels:10
 # --converter=kmeans:10
 # --converter=window:40
 --converter=i:spatial
-# --mask-width=100
---target-capacity=50000B
+--mask-width=256
+--target-capacity=500000B
+--verbose-files
 # tsp
 # --graph=./assets/tsp/oliver30.csv
 embed
 --data assets/data/lorem_ipsum_large.txt
---image assets/images/baboon/baboon-l.bmp
+--image assets/images/peppers/peppers.bmp
 # extract
 # --steg assets/images/baboon/baboon-l_steg.bmp
 # --image assets/images/baboon/baboon-l.bmp

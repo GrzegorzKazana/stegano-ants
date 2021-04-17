@@ -9,5 +9,6 @@ assets/images/**/*_pher*
 assets/images/**/*_conv*
 
 /docs/thesis/*.*
+/docs/thesis/assets/**/*.bmp
 !/docs/thesis/*.tex
 !/docs/thesis/*.pdf

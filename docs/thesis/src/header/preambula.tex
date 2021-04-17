@@ -5,7 +5,7 @@
 \usepackage{courier}
 \usepackage{etoolbox}
 \usepackage{lmodern}
-\usepackage{graphicx} 
+\usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{tikz}
@@ -57,19 +57,22 @@ escapeinside={@*}{*@},%
 \fancyhead[LE,RO]{\it\thepage}
 
 \fancypagestyle{tylkoNumeryStron}{%
-   \fancyhf{} 
+   \fancyhf{}
    \fancyhead[LE,RO]{\it\thepage}
 }
 
 \fancypagestyle{NumeryStronNazwyRozdzialow}{%
-   \fancyhf{} 
+   \fancyhf{}
    \fancyhead[LO]{\nouppercase{\it\rightmark}}
    \fancyhead[RE]{\nouppercase{\it\leftmark}}
    \fancyhead[LE,RO]{\it\thepage}
 }
 
+% tabelki obrazów
+\usepackage[font=scriptsize]{subfig}
 
-%%%% stylowanie języków obcych 
+
+%%%% stylowanie języków obcych
 \newcommand{\foreign}[1]{\emph{#1}}
 \newcommand{\eng}[1]{{\selectlanguage{british}\foreign{#1}}}
 
