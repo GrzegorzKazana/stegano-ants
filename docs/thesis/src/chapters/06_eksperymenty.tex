@@ -769,6 +769,156 @@
         \label{fig:exp-edge-results}
     \end{figure}
 
+    % OCENA SUBIEKTYWNA
+    % TODO:
+
+    % PORÓWNANIE Z INNYMI METODAMI
+    Ostatnim krokiem związanym z badaniem efektywności zaproponowanych metod było porównanie uzyskanych wyników do
+    powiązanych prac z dziedziny. Udostępnione wyniki badań pozwoliły na utworzenia porównującego zestawienia z metodą
+    \textit{Least Significant Bit}\cite{Solak2018LSBSA}, \textit{Pixel Value Differencing}\cite{Solak2018LSBSA},
+    \textit{Particle Swarm Optimization-Integer Wavelet Transform}\cite{Muhuri2020ANI} oraz metodą opartą o wykrywanie
+    złożonego regionu obrazu za pomocy systemu mrowiskowego\cite{Khan2018AntCO}, do której odniesienie można znaleźć w
+    rozdziale \ref{chap:stegoants}.
+
+    W związku z tym, że w powyższych artykułach przedstawione wyniki zostały podane dla różnych objętości ukrywanych
+    informacji, zdecydowano się umieścić poszczególne porównania w osobnych tabelach. Format zapisu wyników był
+    niejednolity, część prac wyrażała uzyskaną pojemność w postaci udziału procentowego bitów obrazu nośnego, ilości
+    bitów w przeliczeniu na piksel (\textit{bpp}) lub bezwzględnej ilości bajtów. Ponieważ obrazy na których wykonywano
+    eksperymenty są znane, możliwe było ustandaryzowanie przytoczonych wartości.
+
+    Zestawienia z poszczególnymi pracami zawierają tabele \ref{tab:exp-comparison-lsb}, \ref{tab:exp-comparison-pvd},
+    \ref{tab:exp-comparison-pso-iwt} oraz \ref{tab:exp-comparison-aco}.
+
+    \begin{table}
+        \footnotesize
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+        \begin{tabular}{ |l|c c c|c c c|c c c|c c c| }
+            \hline
+             & \multicolumn{3}{c|}{pojemność}
+             & \multicolumn{3}{c|}{\textit{Least Significant Bit}}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ wierzchołki}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ krawędzie} \\
+            \hline
+            Obraz & $bpp$ & $\%$ & $B$ & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} \\
+            \hline
+            \hline
+            Airplane & 2.67 & 11.12\% & 87491B
+                & - & 51.653dB & 0.9970
+                & 0.448012 & 51.6518dB & 0.996091
+                & 0.448212 & 51.6499dB & 0.996274 \\
+            Baboon & 2.67 & 11.12\% & 87491B
+                & - & 51.654 & 0.9997
+                & 0.448806 & 51.6441dB & 0.998958
+                & 0.815562 & 49.0502dB & 0.998527 \\
+            Peppers & 2.67 & 11.12\% & 87491B
+                & - & 51.619 & 0.9998
+                & 0.448665 & 51.6455dB & 0.996699
+                & 0.447144 & 51.6603dB & 0.996707 \\
+            \hline
+        \end{tabular}
+        }
+        \caption{Porównanie miar jakości z uzyskanymi metodą \textit{LSB} w pracy \textit{,,LSB Substitution and PVD
+        performance analysis for image steganography''}}
+        \label{tab:exp-comparison-lsb}
+    \end{table}
+
+    \begin{table}
+        \footnotesize
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+        \begin{tabular}{ |l|c c c|c c c|c c c|c c c| }
+            \hline
+             & \multicolumn{3}{c|}{pojemność}
+             & \multicolumn{3}{c|}{\textit{Pixel Value Differencing}}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ wierzchołki}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ krawędzie} \\
+            \hline
+            Obraz & $bpp$ & $\%$ & $B$ & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} \\
+            \hline
+            \hline
+            Airplane & 4.6699 & 19.45\% & 153023B
+                & - & 40.611dB & 0.9751
+                & 1.55197 & 46.2559dB & 0.985612
+                & 1.64538 & 46.0021dB & 0.986512 \\
+            Baboon & 5.3627 & 22.34\% & 175725B
+                & - & 37.829 & 0.9945
+                & 1.9509 & 45.2624dB & 0.995631
+                & 2.64705 & 43.9371dB & 0.995318 \\
+            Peppers & 4.7177 & 19.65\% & 154590B
+                & - & 40.934 & 0.9980
+                & 1.58698 & 46.159dB & 0.98797
+                & 1.6843 & 45.9005dB & 0.987752 \\
+            \hline
+        \end{tabular}
+        }
+        \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PVD} w pracy \textit{,,LSB Substitution and PVD
+        performance analysis for image steganography''}}
+        \label{tab:exp-comparison-pvd}
+    \end{table}
+
+    \begin{table}
+        \footnotesize
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+        \begin{tabular}{ |l|c|c c c|c c c|c c c| }
+            \hline
+             & \multicolumn{1}{c|}{pojemność}
+             & \multicolumn{3}{c|}{\textit{PSO-IWT}}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ wierzchołki}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ krawędzie} \\
+            \hline
+            Obraz & $B$ & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} \\
+            \hline
+            \hline
+            Airplane & 73728B
+                & - & 41.13dB & -
+                & 0.377247 & 52.3985dB & 0.996529
+                & 0.377784 & 52.3923dB & 0.996848 \\
+            Baboon & 73728B
+                & - & 41.38dB& -
+                & 0.378076 & 52.3889dB & 0.999151
+                & 0.378327 & 52.3861dB & 0.999303 \\
+            \hline
+        \end{tabular}
+        }
+        \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PSO-IWT} w pracy \textit{,,A Novel Image Steganographic Method based on Integer Wavelet Transformation and Particle Swarm Optimization''}}
+        \label{tab:exp-comparison-pso-iwt}
+    \end{table}
+
+    \begin{table}
+        \footnotesize
+        \centering
+        \resizebox{\textwidth}{!}
+        {
+        \begin{tabular}{ |l|c c|c c c|c c c|c c c| }
+            \hline
+             & \multicolumn{2}{c|}{pojemność}
+             & \multicolumn{3}{c|}{\textit{PSO-IWT}}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ wierzchołki}
+             & \multicolumn{3}{p{6cm}|}{\centering Metoda oparta o \\ krawędzie} \\
+            \hline
+            Obraz & \% & $B$ & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} & {\scriptsize $MSE$} & {\scriptsize $PSNR$} & {\scriptsize $SSIM$} \\
+            \hline
+            \hline
+            Baboon & 2.8473\% & 22396B
+                & 0.8409 & 48.88336dB & -
+                & 0.114734 & 57.5678dB & 0.999689
+                & 0.114641 & 57.5713dB & 0.999831 \\
+            Pepper & 2.8661\% & 22544B
+                & 1.0605 & 47.8757dB & -
+                & 0.114882 & 57.5622dB & 0.999162
+                & 0.114989 & 57.5582dB & 0.999111 \\
+            \hline
+        \end{tabular}
+        } \caption{Porównanie miar jakości z uzyskanymi metodą \textit{ACO} w pracy \textit{,,Ant Colony Optimization
+        (ACO) based Data Hiding in Image Complex Region''}}
+        \label{tab:exp-comparison-aco}
+    \end{table}
+
     %
 }
 
