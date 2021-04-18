@@ -24,7 +24,7 @@ pub struct SuperPixelConverter {
 impl SuperPixelConverter {
     pub fn new(pixel_map: &PixelMap, target_n_nodes: usize) -> Self {
         let n_superpixels = target_n_nodes * (target_n_nodes - 1) / 2;
-        let labels = Slic::from_pixel_map(pixel_map, n_superpixels, 75).run_iterations(10);
+        let labels = Slic::from_pixel_map(pixel_map, n_superpixels, 50).run_iterations(10);
 
         let pixels_by_group_id = labels
             .iter()

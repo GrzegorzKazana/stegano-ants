@@ -216,20 +216,17 @@
 
         \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
         {
-            Porównania wizualizacji konwersji oraz macierzy maskujących.
-            W pierwszym wierszu (\subref{fig:exp-vertex-conv}, \subref{fig:exp-vertex-pher}) przedstawiono obrazy
-            związane z procesem o długości krawędzie odwrotnie proporcjonalnej do różnicy pikseli. W drugim wierszu
-            (\subref{fig:exp-vertex-inv-conv}, \subref{fig:exp-vertex-inv-pher}) długości są proporcjonalne do różnicy
-            pikseli. Pierwsza kolumna przedstawia wizualizacje procesu konwersji bitmapy na graf, druga przestawia
-            uzyskane macierze maskujące, trzecia zawiera macierze maskujące przeskalowane w taki sposób, aby odpowiadała
-            im taka sama pojemność ukrywanej informacji.
+            Porównania wizualizacji konwersji oraz macierzy maskujących. W pierwszym wierszu
+            (\subref{fig:exp-vertex-conv}, \subref{fig:exp-vertex-pher}, \subref{fig:exp-vertex-pher-scaled})
+            przedstawiono obrazy związane z procesem o długości krawędzi odwrotnie proporcjonalnej do różnicy pikseli.
+            W drugim wierszu (\subref{fig:exp-vertex-inv-conv}, \subref{fig:exp-vertex-inv-pher},
+            \subref{fig:exp-vertex-inv-pher-scaled}) długości są proporcjonalne do różnicy pikseli. Pierwsza kolumna
+            przedstawia wizualizacje procesu konwersji bitmapy na graf, druga przestawia uzyskane macierze maskujące,
+            trzecia zawiera macierze maskujące przeskalowane w taki sposób, aby odpowiadała im taka sama pojemność
+            ukrywanej informacji.
         }
         \label{fig:exp-vertex}
     \end{figure}
-
-    % % WYNIKI - METODA-WIERZCHOŁKÓW - C | S | A
-    % Następnie, porównano wpływ ilości iteracji algorytmu (ilość cykli $C$), ilośc kroków wykonanych przez mrówki $S$
-    % w każdym cyklu, oraz ilość mrówek. Ponieważ każdy z powyższych parametrów
 
     % WYNIKI - METODA-WIERZCHOŁKÓW - RODZAJE SYSTEMÓW
     Kolejnym parametrem który postanowiono zbadać, jest rodzaj systemu mrówkowego oraz związane z nim parametry.
@@ -336,7 +333,7 @@
     % METODA WIERZCHOŁKÓW - SKALOWANIE OBRAZU
     Ponieważ pozostałe obrazy z zbioru \textit{USC} mają rozmiary $512 \times 512$, zdecydowano się również zbadać wpływ
     skalowania obrazu podczas tworzenia grafu oraz macierzy maskującej. Wykorzystano system oparty o model cykliczny o
-    parametrach $A=10000$, $S=100$, $\alpha=\beta=1$, $\rho=0.8$, i starano się umieścić $250 000kB$ danych. Na rysunku
+    parametrach $A=10000$, $S=100$, $\alpha=\beta=1$, $\rho=0.8$, i starano się umieścić $250kB$ danych. Na rysunku
     \ref{fig:exp-vertex-scale} zamieszczono macierze maskujące powstałe przy $s_0 \in \{0.25, 0.5, 0.75, 1.0\}$. Tabela
     \ref{tab:exp-vertex-scale-errors} zawiera porównanie miar jakości steganogramów.
 
@@ -395,7 +392,8 @@
         \label{fig:exp-vertex-scale}
     \end{figure}
 
-    \begin{center}
+    \begin{table}
+        \centering
         \begin{tabular}{ |c|c c c| }
             \hline
             Współczynnik skalujący \newline $s_0$ & $MSE$ & $PSNR$ & $SSIM$ \\
@@ -406,16 +404,18 @@
             1.0 & \textbf{6.61124} & \textbf{39.9619dB} & 0.948736 \\
             \hline
         \end{tabular}
+        \caption{Miary jakości steganogramów w zależności od współczynnika $s_0$.}
         \label{tab:exp-vertex-scale-errors}
-    \end{center}
+    \end{table}
 
     % METODA WIERZCHOŁKÓW - FINAL SHOWDOWN
     Ostatecznie, postanowiono zbadać wyniki uzyskane na pozostałych obrazach testowych. Uzyskane rezultaty zawiera
     tabela \ref{tab:exp-vertex-results} a steganogramy rysunek \ref{fig:exp-vertex-results}. Parametry algorytmu
     zachowano z poprzedniego eksperymentu.
 
-    \begin{center}
-        \begin{tabular}{ |c|c|c c c| }
+    \begin{table}
+        \centering
+        \begin{tabular}{ |l|c|c c c| }
             \hline
             Obraz & objętość danych & $MSE$ & $PSNR$ & $SSIM$ \\
             \hline
@@ -430,8 +430,9 @@
             Peppers {\footnotesize $512 \times 512$}  & 500 000B (63.57\%) & 292.99 & 23.4962dB & 0.502009 \\
             \hline
         \end{tabular}
+        \caption{Wyniki uzyskane metodą opartą o wierzchołki.}
         \label{tab:exp-vertex-results}
-    \end{center}
+    \end{table}
 
     \begin{figure}
         \footnotesize
@@ -486,66 +487,287 @@
         \label{fig:exp-vertex-results}
     \end{figure}
 
-    % Dla każdego z rodzaju systemów przeprowadzono TODO: N kombinacji parametrów oraz wykonano 10 cykli. Wyniki
-    % zamieszczono w tabeli TODO: ref, a najlepsze macierze maskujące dla każdego systemu przedstawia rysunek TODO:. W
-    % każdym przypadku w macierz maskująca została przeskalowana w taki sposób, aby w steganogramie ukryć $50kB$.
-    % Eksperymenty przeprowadzono na przykładzie obrazu \textit{House} o wymiarach $200 \times 200$.
-    % \begin{center}
-    %     \footnotesize
-    %     \begin{tabular}{ |l|c c c c c c|c c c| }
-    %         \hline
-    %         Rodzaj systemu & $A$ & $S$ & $\alpha$ & $\beta$ & $\rho_0$ & $q_0$ & $MSE$ & $PSNR$ & $SSIM$ \\
-    %         \hline
-    %         feromon stały & 10 & 10000 & 1 & 1 & 0.8 & - & 2347.05 & 14.4595dB & 0.163352 \\
-    %         feromon stały & 10000 & 10 & 1 & 1 & 0.8 & - & 1829.54 & 15.5413dB & 0.197731 \\
-    %         feromon stały & 1000 & 100 & 1 & 1 & 0.8 & - & 1878.97 & 15.4255dB & 0.215501 \\
-    %         feromon stały & 1000 & 100 & 1 & 2 & 0.8 & - & 1873.37 & 15.4385dB & 0.217721 \\
-    %         feromon stały & 1000 & 100 & 2 & 1 & 0.8 & - & 1867.24 & 15.4527dB & 0.219012 \\
-    %         feromon stały & 1000 & 100 & 2 & 2 & 0.8 & - & 1870.21 & 15.4458dB & 0.21761 \\
-    %         feromon stały & 1000 & 100 & 2 & 2 & 0.5 & - & 1860.48 & 15.4685dB & 0.217551 \\
-    %         feromon stały & 1000 & 100 & 2 & 2 & 0.9 & - & 1864.67 & 15.4587dB & 0.214871 \\
-    %         feromon stały & 1000 & 100 & 2 & 2 & 0.999 & - & 1842.56 & 15.5105dB & 0.196247 \\
-    %         feromon średni & 10 & 10000 & 1 & 1 & 0.8 & - & 2347.05 & 14.4595dB & 0.163352 \\
-    %         feromon średni & 10000 & 10 & 1 & 1 & 0.8 & - & 1859.78 & 15.4701dB & 0.218718 \\
-    %         feromon średni & 1000 & 100 & 1 & 1 & 0.8 & - & 1874.76 & 15.4353dB & 0.217647 \\
-    %         feromon średni & 1000 & 100 & 1 & 2 & 0.8 & - & 1863.55 & 15.4613dB & 0.219927 \\
-    %         feromon średni & 1000 & 100 & 2 & 1 & 0.8 & - & 1866.55 & 15.4543dB & 0.221946 \\
-    %         feromon średni & 1000 & 100 & 2 & 2 & 0.8 & - & 1871.49 & 15.4429dB & 0.223166 \\
-    %         feromon średni & 1000 & 100 & 2 & 2 & 0.5 & - & 1864.72 & 15.4586dB & 0.224912 \\
-    %         feromon średni & 1000 & 100 & 2 & 2 & 0.9 & - & 1857.8 & 15.4747dB & 0.221431 \\
-    %         feromon średni & 1000 & 100 & 2 & 2 & 0.999 & - & 1863.9 & 15.4605dB & 0.220019 \\
-    %         feromon cykliczny & 10 & 10000 & 1 & 1 & 0.8 & - & 1848.07 & 15.4975dB & 0.218536 \\
-    %         feromon cykliczny & 10000 & 10 & 1 & 1 & 0.8 & - & 1901.89 & 15.3729dB & 0.196128 \\
-    %         feromon cykliczny & 1000 & 100 & 1 & 1 & 0.8 & - & 1924.33 & 15.3219dB & 0.18948 \\
-    %         feromon cykliczny & 1000 & 100 & 1 & 2 & 0.8 & - & 1886.63 & 15.4079dB & 0.208189 \\
-    %         feromon cykliczny & 1000 & 100 & 2 & 1 & 0.8 & - & 1929.84 & 15.3095dB & 0.19839 \\
-    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.8 & - & 1887.68 & 15.4055dB & 0.210202 \\
-    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.5 & - & 1902.63 & 15.3712dB & 0.206376 \\
-    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.9 & - & 1906.93 & 15.3614dB & 0.202576 \\
-    %         feromon cykliczny & 1000 & 100 & 2 & 2 & 0.999 & - & 1888.45 & 15.4037dB & 0.209342 \\
-    %         sys. mrowiskowy & 10 & 10000 & 1 & 1 & 0.8 & 0.1 & 1863.02 & 15.4626dB & 0.220336 \\
-    %         sys. mrowiskowy & 10000 & 10 & 1 & 1 & 0.8 & 0.1 & 1860.85 & 15.4676dB & 0.227484 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 1 & 0.8 & 0.1 & 1862.1 & 15.4647dB & 0.227632 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 1 & 0.8 & 0.1 & 1862.1 & 15.4647dB & 0.227632 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.8 & 0.1 & 1862.86 & 15.4629dB & 0.224279 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.8 & 0.1 & 1862.86 & 15.4629dB & 0.224279 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.8 & 0.1 & 1862.86 & 15.4629dB & 0.224279 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.5 & 0.1 & 1877.58 & 15.4288dB & 0.219284 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.9 & 0.1 & 1873.54 & 15.4381dB & 0.218873 \\
-    %         sys. mrowiskowy & 1000 & 100 & 1 & 2 & 0.999 & 0.1 & 1513.26 & 16.3656dB & 0.231456 \\
-    %         max-min & 10 & 10000 & 1 & 1 & 0.8 & - & 1742.49 & 15.753dB & 0.192021 \\
-    %         max-min & 10000 & 10 & 1 & 1 & 0.8 & - & 1352.97 & 16.8519dB & 0.260953 \\
-    %         max-min & 1000 & 100 & 1 & 1 & 0.8 & - & 1864.2 & 15.4598dB & 0.224875 \\
-    %         max-min & 1000 & 100 & 1 & 2 & 0.8 & - & 1859.62 & 15.4705dB & 0.227705 \\
-    %         max-min & 1000 & 100 & 2 & 1 & 0.8 & - & 1864.2 & 15.4598dB & 0.224875 \\
-    %         max-min & 1000 & 100 & 2 & 2 & 0.8 & - & 1859.62 & 15.4705dB & 0.227705 \\
-    %         max-min & 1000 & 100 & 2 & 2 & 0.5 & - & 1860.59 & 15.4682dB & 0.227674 \\
-    %         max-min & 1000 & 100 & 2 & 2 & 0.9 & - & 1859.62 & 15.4705dB & 0.227705 \\
-    %         max-min & 1000 & 100 & 2 & 2 & 0.999 & - & 1979.46 & 15.1993dB & 0.22613 \\
-    %         \hline
-    %     \end{tabular}
-    % \end{center}
+    % WYNIKI - METODA-KRAWĘDZI
+    Następnym krokiem eksperymentów było zbadanie metod opartych o budowanie grafu z wyznaczonych krawędzi. W przypadku
+    tej metody, obraz jest dzielony na zadaną ilość segmentów, które odpowiadają krawędziom tworzonego grafu pełnego. W
+    związku z koniecznością budowy grafu pełnego, istotnym ograniczeniem metody jest konieczność takiego doboru ilości
+    segmentów aby spełniała one równanie wyrażające ilość krawędzi $E$ w grafie pełnym o $V$ wierzchołkach $E = \frac{V
+    \times (V - 1)}{2}$. Problem komiwojażera osadzony na tak utworzonym grafie można interpretować jako problem
+    znalezienia $n$ segmentów obrazu tworzących najkrótszy cykl. Długości krawędzi tak powstałego grafu są zależne od
+    różnicy wariancji łączących przez nie segmenty.
 
+    % WYNIKI - METODA-KRAWĘDZI - INVERTED
+    Podobnie jak w przypadku metody opisanej w sekcji TODO:(ref do sekcji powyżej), długości krawędzi grafu mogą być
+    proporcjonalne lub odwrotnie proporcjonalne do wyznaczonej miary odległości. Z tego względu, postanowiono rozpatrzyć
+    ten parametr jako pierwszy.
+
+    Rysunek \ref{fig:exp-edge} przedstawia wizualizację utworzonego grafu oraz uzyskane ślady feromonowe. Porównywane
+    obrazy zostały podzielone metodą superpikseli na $190$ segmentów ($V = 20$). Na podstawie uzyskanych steganogramów
+    możemy zauważyć kołym okiem mankament wariantu w którym długość grafu jest odwrotnie proporcjonalna do różnicy
+    wariancji segmentów (obrazy \ref{fig:exp-edge-conv}, \ref{fig:exp-edge-pher}, \ref{fig:exp-edge-steg}).
+
+    W przypadku rozwiązywania problemu \textit{TSP} ostatecznym wynikiem jest wybranie jedynie $V$ spośród wszystkich
+    krawędzi których jest $\frac{V \times (V - 1)}{2}$. Oznacza to, że gdy system mrówkowy osiągnie zbieżność ślad
+    feromonowy na wszystkich krawędziach poza tymi należącymi do najkrótszej ścieżki będzie bliski zeru. W takim
+    przypadku, do ukrycia zadanej informacji zostanie wykorzystana jedynie znikoma część obrazu nośnego, co negatywnie
+    wpływa na pojemność steganogramu. Wykres \ref{fig:exp-edge-v-vs-e} przedstawia stosunek liczby $V$ do ilości
+    krawędzi grafu w zależności od liczby jego wierzchołków.
+
+    Powyższy problem można rozwiązać na conajmniej dwa sposoby. Pierwszym jest odpowiedni dobór parametrów systemu
+    mrówkowego, który będzie wymuszał na mrówkach częstszą eksplorację (na przykład wybór dużej wartości $\alpha$).
+    Dzięki temu, większa ilość krawędzi będzie odwiedzana, lecz wnosi to również ryzyko otrzymywania nieoptymalnych
+    cykli. Alternatywą jest odwrócenie problemu reprezentowanego przez graf. Jeśli długości krawędzi będą proporcjonalne
+    do różnic wariancji łączonych segmentów, mrówki będą dążyć do znalezienia $V$ krawędzi w których nie należy
+    umieszczać informacji, gdyż nie są wystarczająco złożone. W ten sposób, uzyskany ślad feromonowy wskaże $V - \frac{V
+    \times (V - 1)}{2}$ segmentów w których powinno zostać ukryte najwięcej informacji.
+
+    \begin{figure}
+        \centering
+        \subfloat[][]{
+            \label{fig:exp-edge-conv}
+            \includegraphics[width=4cm]{experiments/edgebased/normal-vs-inverted/2021-04-18-06:06:02house-l_conv_a0_s0_Dbiased:_Ucycle:_Csuperpixels:20_c10_m0_t50000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][]{
+            \label{fig:exp-edge-pher}
+            \includegraphics[width=4cm]{experiments/edgebased/normal-vs-inverted/2021-04-18-06:06:02house-l_pher_a0_s0_Dbiased:_Ucycle:_Csuperpixels:20_c10_m0_t50000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][]{
+            \label{fig:exp-edge-steg}
+            \includegraphics[width=4cm]{experiments/edgebased/normal-vs-inverted/2021-04-18-06:06:02house-l_steg_a0_s0_Dbiased:_Ucycle:_Csuperpixels:20_c10_m0_t50000B_}
+        }
+        \\
+        \subfloat[][]{
+            \label{fig:exp-edge-inv-conv}
+            \includegraphics[width=4cm]{experiments/edgebased/normal-vs-inverted/2021-04-18-06:06:25house-l_conv_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t50000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][]{
+            \label{fig:exp-edge-inv-pher}
+            \includegraphics[width=4cm]{experiments/edgebased/normal-vs-inverted/2021-04-18-06:06:25house-l_pher_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t50000B_}
+        }
+        \subfloat[][]{
+            \label{fig:exp-edge-inv-steg}
+            \includegraphics[width=4cm]{experiments/edgebased/normal-vs-inverted/2021-04-18-06:06:25house-l_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t50000B_}
+        }
+
+        \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
+        {
+            Porównania wizualizacji konwersji, macierzy maskujących oraz uzyskanych steganogramów. W pierwszym wierszu
+            (\subref{fig:exp-edge-conv}, \subref{fig:exp-edge-pher}, \subref{fig:exp-edge-steg}) przedstawiono obrazy
+            związane z procesem o długości krawędzi odwrotnie proporcjonalnej do różnicy wariancji pikseli należących do
+            segmentów. W drugim wierszu (\subref{fig:exp-edge-inv-conv}, \subref{fig:exp-edge-inv-pher},
+            \subref{fig:exp-edge-inv-steg}) długości są proporcjonalne do różnicy wariancji. Pierwsza kolumna
+            przedstawia wizualizacje procesu konwersji bitmapy na graf, druga przestawia uzyskane macierze maskujące,
+            trzecia zawiera uzyskane steganogramy zawierające $50kB$ informacji.
+        }
+        \label{fig:exp-edge}
+    \end{figure}
+
+    \begin{figure}
+        \center
+        \includegraphics[width=8cm]{experiments/edgebased/normal-vs-inverted/V_vs_E.png}
+        \caption
+        {
+            Wykres przedstawia stosunek liczby krawędzi należących do cyklu Hamiltona grafu pełnego o $V$ wierzchołkach
+            i $E$ krawędziach w zależności od liczby wierzchołków.
+        }
+        \label{fig:exp-edge-v-vs-e}
+    \end{figure}
+
+    % O PARAMETRACH
+    Ponieważ rozwiązywany problem był analogiczny do problemu komiwojażera, w trakcie eksperymentów wykorzystano
+    optymalne parametry dla każdego z rodzajów systemu wyznaczone podczas testowania poprawności działania systemu
+    mrówkowego. Ich wartości oraz metodę ich wyznaczenia można znaleźć w rozdziale \ref{chap:implementation}.
+
+    % WYNIKI - METODA-KRAWĘDZI - ILOŚĆ SEGMENTÓW
+    Ważnym aspektem metody wykorzystującą segmentację obrazu jest dobór docelowej ilości grup pikseli. Wartość zbyt
+    niska może powodować powstanie segmentów łączących obszary jednorodne i złożone, co przełoży się na zakodowanie
+    nieoptymalnej ilości bitów w wszystkich pikselach segmentu. Zbyt wysoka ilość, oprócz większej złożoności
+    obliczeniowej, może przełożyć się na stworzenie segmentów zbyt małych, których wariancja nie będzie wiernie oddawać
+    złożoności całego obszaru.
+
+    Rysunek \ref{fig:exp-edge-method} przedstawia segmentację każdego z obrazów nośnych na zadane ilości segmentów z
+    naniesionym śladem feromonowym. W tabeli \ref{tab:exp-edge-results} zawarto wartości miar uzyskanych
+    steganogramów dla zadanej pojemności $25kB$ oraz obrazu nośnego o wymiarach $512 \times 512$.
+
+    Każdą z metod podziału obrazu osiągnięto zbliżone rezultaty, lecz warto zwrócić uwagę na fakt, że metody podziału na
+    prostokąty oraz superpiksele wymagają przekroczenia pewnej wartości granicznej powyżej której osiągane są dobre
+    wyniki.
+
+    W związku z porównywalnymi wynikami poszczególnych metod podziału obrazu, dalej zdecydowano się korzystać z podziału
+    na $20$ superpikseli.
+
+    \begin{figure}
+        \centering
+        \subfloat[][$N_s = 10$]{
+            \label{fig:exp-edge-method-window1}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:54:42airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:window:10_c10_m0_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$N_s = 20$]{
+            \label{fig:exp-edge-method-window2}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:54:42airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:window:20_c10_m0_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$N_s = 35$]{
+            \label{fig:exp-edge-method-window3}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:54:43airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:window:35_c10_m0_t250000B_}
+        }
+        \\
+        \subfloat[][$N_s = 10$]{
+            \label{fig:exp-edge-method-superpixel1}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:54:44airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:10_c10_m0_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$N_s = 20$]{
+            \label{fig:exp-edge-method-superpixel2}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:54:46airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t250000B_}
+        }
+        \subfloat[][$N_s = 35$]{
+            \label{fig:exp-edge-method-superpixel3}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:54:47airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:35_c10_m0_t250000B_}
+        }
+        \\
+        \subfloat[][$N_s = 5$]{
+            \label{fig:exp-edge-method-kmeans1}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:59:31airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:kmeans:5_c10_m0_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$N_s = 10$]{
+            \label{fig:exp-edge-method-kmeans2}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:55:06airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:kmeans:10_c10_m0_t250000B_}
+        }
+        \subfloat[][$N_s = 20$]{
+            \label{fig:exp-edge-method-kmeans3}
+            \includegraphics[width=4cm]{experiments/edgebased/methods/2021-04-18-09:55:41airplane_pher_scaled_a0_s0_Dbiased:_Ucycle:_Ci:kmeans:20_c10_m0_t250000B_}
+        }
+
+        \caption[Macierze maskujące.]
+        {
+
+            Macierze maskujące uzyskane przy podziale obrazu na nienachodzące prostokąty
+            (\subref{fig:exp-edge-method-window1}, \subref{fig:exp-edge-method-window2},
+            \subref{fig:exp-edge-method-window3}), superpiksele (\subref{fig:exp-edge-method-superpixel1},
+            \subref{fig:exp-edge-method-superpixel2}, \subref{fig:exp-edge-method-superpixel3}) i zbiory wyznaczone
+            metodą k-średnich (\subref{fig:exp-edge-method-kmeans1}, \subref{fig:exp-edge-method-kmeans2},
+            \subref{fig:exp-edge-method-kmeans3}).
+
+        }
+        \label{fig:exp-edge-method}
+    \end{figure}
+
+    \begin{table}
+        \centering
+        \begin{tabular}{ |l|c|c c c| }
+            \hline
+            Metoda segmentacji & liczba segmentów & $MSE$ & $PSNR$ & $SSIM$ \\
+            \hline
+            Podział na prostokąty & 10   ($V=5$)  & 1764.78 & 15.6978dB & 0.186649 \\
+                                  & 21   ($V=7$)  & 1764.78 & 15.6978dB & 0.186649 \\
+                                  & 45   ($V=10$) & 27.2669 & 33.8084dB & 0.891967 \\
+                                  & 190  ($V=20$) & 7.25700 & 39.5572dB & \textbf{0.948116} \\
+                                  & 595  ($V=35$) & 6.85841 & 39.8025dB & 0.947396 \\
+                                  & 1225 ($V=50$) & \textbf{6.85694} & \textbf{39.8034dB} & 0.947764 \\
+            \hline
+            Superpiksele          & 10   ($V=5$)  & 1764.78 & 15.6978dB & 0.186649 \\
+                                  & 21   ($V=7$)  & 21.7769 & 34.7848dB & 0.903446 \\
+                                  & 45   ($V=10$) & 19.2949 & 35.3103dB & 0.913704 \\
+                                  & 190  ($V=20$) & 7.07101 & 39.6699dB & \textbf{0.948129} \\
+                                  & 595  ($V=35$) & 6.90553 & 39.7728dB & 0.946333 \\
+                                  & 1225 ($V=50$) & \textbf{6.77511} & \textbf{39.8556dB} & 0.945946 \\
+            \hline
+            Grupowanie k-średnich & 10   ($V=5$)  & 7.89710 & 39.1901dB & 0.940743 \\
+                                  & 21   ($V=7$)  & 7.63390 & 39.3373dB & 0.94536 \\
+                                  & 45   ($V=10$) & 7.30898 & 39.5262dB & 0.948244 \\
+                                  & 190  ($V=20$) & 6.90061 & 39.7759dB & 0.948481 \\
+                                  & 595  ($V=35$) & \textbf{6.76695} & \textbf{39.8608dB} & \textbf{0.949062} \\
+                                  & 1225 ($V=50$) & - & - & - \\
+            \hline
+        \end{tabular}
+        \caption{Miary jakości w zależności od metody segmentacji obrazu.}
+        \label{tab:exp-edge-results}
+    \end{table}
+
+    % METODA KRAWĘDZI - FINAL SHOWDOWN
+    Ostatnim krokiem badań metody opartej o wierzchołki, było porównanie uzyskanych wyników na pozostałych obrazach
+    testowych. Uzyskane rezultaty zawiera tabela \ref{tab:exp-edge-results} a steganogramy rysunek
+    \ref{fig:exp-edge-results}.
+
+    \begin{table}
+        \centering
+        \begin{tabular}{ |l|c|c c c| }
+            \hline
+            Obraz & objętość danych & $MSE$ & $PSNR$ & $SSIM$ \\
+            \hline
+            Baboon {\footnotesize $512 \times 512$}   & 100 000B (12.71\%) & 0.893791 & 48.6524dB & 0.99839 \\
+            Baboon {\footnotesize $512 \times 512$}   & 250 000B (31.78\%) & 7.52079 & 39.4021dB & 0.987705 \\
+            Baboon {\footnotesize $512 \times 512$}   & 500 000B (63.57\%) & 663.829 & 19.9442dB & 0.723623 \\
+            Airplane {\footnotesize $512 \times 512$} & 100 000B (12.71\%) & 0.589252 & 50.4617dB & 0.995266 \\
+            Airplane {\footnotesize $512 \times 512$} & 250 000B (31.78\%) & 7.07101 & 39.6699dB & 0.948129 \\
+            Airplane {\footnotesize $512 \times 512$} & 500 000B (63.57\%) & 362.857 & 22.5674dB & 0.510537 \\
+            Peppers {\footnotesize $512 \times 512$}  & 100 000B (12.71\%) & 0.586621 & 50.4812dB & 0.995526 \\
+            Peppers {\footnotesize $512 \times 512$}  & 250 000B (31.78\%) & 7.21685 & 39.5813dB & 0.951955 \\
+            Peppers {\footnotesize $512 \times 512$}  & 500 000B (63.57\%) & 411.621 & 22.0198dB & 0.47874 \\
+            \hline
+        \end{tabular}
+        \caption{Wyniki uzyskane metodą opartą o wierzchołki.}
+        \label{tab:exp-edge-results}
+    \end{table}
+
+    \begin{figure}
+        \footnotesize
+        \centering
+        \subfloat[][$D = 100 000B$]{
+            \label{fig:exp-edge-results-baboon-100k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54mandrill_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 250 000B$]{
+            \label{fig:exp-edge-results-baboon-250k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54mandrill_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t250000B_}
+        }
+        \subfloat[][$D = 500 000B$]{
+            \label{fig:exp-edge-results-baboon-500k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54mandrill_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t500000B_}
+        }
+        \\
+        \subfloat[][$D = 100 000B$]{
+            \label{fig:exp-edge-results-aiplane-100k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54airplane_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 250 000B$]{
+            \label{fig:exp-edge-results-aiplane-250k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54airplane_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t250000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 500 000B$]{
+            \label{fig:exp-edge-results-aiplane-500k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54airplane_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t500000B_}
+        }
+        \\
+        \subfloat[][$D = 100 000B$]{
+            \label{fig:exp-edge-results-airplane-100k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54peppers_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t100000B_}
+        }
+        \hspace{8pt}
+        \subfloat[][$D = 250 000B$]{
+            \label{fig:exp-edge-results-airplane-250k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54peppers_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t250000B_}
+        }
+        \subfloat[][$D = 500 000B$]{
+            \label{fig:exp-edge-results-airplane-500k}
+            \includegraphics[width=3cm]{experiments/edgebased/results/2021-04-18-12:17:54peppers_steg_a0_s0_Dbiased:_Ucycle:_Ci:superpixels:20_c10_m0_t500000B_}
+        }
+
+        \caption[Porównanie rezultatów]
+        {
+            Porównanie uzyskanych steganogramów przy zadanej objętości ukrytej informacji.
+        }
+        \label{fig:exp-edge-results}
+    \end{figure}
 
     %
 }

@@ -34,5 +34,6 @@
         "editor.wrappingIndent": "same",
         "editor.wordWrapColumn": 120,
         "rewrap.autoWrap.enabled": true
-    }
+    },
+    "workbench.list.openMode": "doubleClick"
 }
