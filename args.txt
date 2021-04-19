@@ -5,16 +5,16 @@
 
 --cycles=10
 #
-# --ants=10000
-# --steps=100
-# --dispatcher=biased:1,1
-# --updater=colony:1,0.2,1,100
-# --converter=i:spatial
-# --mask-width=256
+--ants=10000
+--steps=100
+--dispatcher=biased:1,1
+--updater=cycle:1,0.2,1,100
+--converter=i:spatial
+--mask-width=256
 #
---dispatcher=biased
---updater=cycle
---converter=i:superpixels:20
+# --dispatcher=biased
+# --updater=cycle
+# --converter=i:superpixels:20
 #
 # --converter=kmeans:50
 # --converter=i:window:100
