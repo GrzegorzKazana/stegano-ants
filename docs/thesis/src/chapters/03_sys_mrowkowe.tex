@@ -38,8 +38,8 @@
     rozwiązywania problemów w bardzo szerokim zakresie dziedzin.
 
     Ogólna zasada działania systemów mrówkowych opiera się na obserwacji zachowania prawdziwych mrówek eksplorujących
-    otoczenie w celu odnalezienie pożywienia. Początkowo, każda mrówka porusza się w chaotyczny i losowy sposób
-    przeszukuje najbliższe otoczenie mrowiska. W przypadku, w którym mrówka odnajduje pożywienie, zaczyna ona drogę
+    otoczenie w celu odnalezienie pożywienia. Początkowo, każda mrówka porusza się w chaotyczny i losowy sposób,
+    przeszukując najbliższe otoczenie mrowiska. W przypadku, w którym mrówka odnajduje pożywienie, zaczyna ona drogę
     powrotną do mrowiska. Podczas jej przebywania, mrówka niosąca pokarm nanosi na ścieżkę ślad feromonowy. Ma to na
     celu umożliwienie powrotu do obszaru w którym pokarm został znaleziony. Za równo mrówka która odniosła zdobytą
     żywność, jak i pozostałe mrówki w okolicy podczas swojej losowej wędrówki, zaczynają faworyzować trasy oznaczone
@@ -124,7 +124,7 @@
         Ponieważ metaheurystyka systemu mrówkowego jest oparta o zachowanie mrówek poszukujących najkrótszej drogi do
         pożywienia, oczywiste zdają się być próby zaaplikowania jej do problemu komiwojażera, znanego w anglojęzycznej
         literaturze jako \textit{Travelling Salesman Problem - TSP}. Zadaniem postawionym przed algorytmem poszukującym
-        rozwiązania \textit{TSP} jest znalezienie najkrótszej drogi łączącej wszystkie $n$ miast, w taki sposób że każde
+        rozwiązania \textit{TSP} jest znalezienie najkrótszej drogi łączącej wszystkie $n$ miast w taki sposób, że każde
         miasto zostanie odwiedzone jednokrotnie. Problem komiwojażera jest problemem \textit{NP trudnym}, a
         asymptotyczna złożoność algorytmu przeszukiwania wyczerpującego wynosi $O(n!)$. \textit{TSP} zawdzięcza swoją
         popularność prostocie jego opisu, będącej w opozycji do trudności realizacji jego rozwiązania. Jego pierwsza
@@ -146,7 +146,7 @@
         dynamicznym\cite{Bianchi2008ASO}. Do najszerzej stosowanych należą symulowane wyżarzanie (ang. \textit{Simulated
         Annealing})\cite{Kirkpatrick1983OptimizationBS}, algorytmy genetyczne (ang. \textit{Genetic
         Algorithms})\cite{Fraser1957SimulationOG}, metody optymalizacji cząsteczkowej (ang. \textit{Particle swarm
-        optimization})\cite{Poli2007ParticleSO} oraz opisywane w tym rozdziale systemy mrówkowe o mrowiskowe. Wszystkie
+        optimization})\cite{Poli2007ParticleSO} oraz opisywane w tym rozdziale systemy mrówkowe i mrowiskowe. Wszystkie
         z wymienionych metod były wykorzystywane w rozwiązywaniu problemu komiwojażera\cite{Prabakaran2019ASO,
         Mazidi2017MetaHeuristicAF}.
 
@@ -181,12 +181,12 @@
         niej swoje miasto początkowe. Następnie każda mrówka wybiera drogę prowadzącą z bieżącego miasta $i$ do
         kolejnego miasta $j$, pod warunkiem że miasto $j$ nie zostało już odwiedzone. Prawdopodobieństwo każdego
         przejścia w kroku $t$ jest określone funkcją $P_{ij}(t)$. Po wykonaniu pojedynczego kroku przez każdą mrówkę,
-        może nastąpić następuje proces nakładania śladu feromonowego. Natężenie nakładanego śladu jest określone za
-        pomocą funkcji $\Delta\tau_{ij}(t, t+1)$. Proces wyboru kolejnego miasta i nanoszenia śladu feromonowego jest
-        powtarzany aż do momentu w którym mrówki odwiedziły już wszystkie miasta, lub został osiągnięty warunek końcowy.
-        Po zakończeniu iteracji, która w przypadku zadań polegających na odwiedzeniu wszystkich miast nazywana jest
-        cyklem, następuje naniesienie śladu feromonowego. Algorytm jest wykonywany do momentu realizacji ustalonej
-        liczby iteracji lub braku poprawy rozwiązania\cite{Dorigo1991AntSA}.
+        następuje proces nakładania śladu feromonowego. Natężenie nakładanego śladu jest określone za pomocą funkcji
+        $\Delta\tau_{ij}(t, t+1)$. Proces wyboru kolejnego miasta i nanoszenia śladu feromonowego jest powtarzany aż do
+        momentu w którym mrówki odwiedziły już wszystkie miasta, lub został osiągnięty warunek końcowy. Po zakończeniu
+        iteracji, która w przypadku zadań polegających na odwiedzeniu wszystkich miast nazywana jest cyklem, następuje
+        ponowne naniesienie śladu feromonowego. Algorytm jest wykonywany do momentu realizacji ustalonej liczby iteracji
+        lub braku poprawy rozwiązania\cite{Dorigo1991AntSA}.
 
         Ogólna postać algorytmu może zostać podsumowana w następujący sposób:
 
@@ -197,7 +197,7 @@
             \item \label{step:update} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+1)$.
             \item Powtórz kroki \ref{step:dispatch}-\ref{step:update} do momentu odwiedzenia wszyskich wierzchołków
             przez każdą mrówkę
-            \item \label{step:update_cycle} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+1)$.
+            \item \label{step:update_cycle} Aktualizuj ślad feromonowy za pomocą funkcji $\Delta\tau_{ij}(t, t+n)$.
             \item Powtórz kroki \ref{step:place}-\ref{step:update_cycle}.
         \end{enumerate}
     }
@@ -207,12 +207,12 @@
     {
         Pomysłodawcy systemów mrówkowych, M. Dorgio, V. Maniezzo i A. Colorni, zaproponowali trzy wariacje systemu.
         Każda z nich różni się pod kątem sposobu aktualizacji śladu feromonowego. Są to modele \textit{Ant Density},
-        \textit{Ant Quantity} oraz \textit{Ant cycle}. W dalszych częściach pracy pozwolono sobie stosować odpowiednio
+        \textit{Ant Quantity} oraz \textit{Ant cycle}. W dalszych częściach pracy stosowane są odpowiednio
         nazwy modelu o feromonie stałym, średnim oraz cyklicznym.
 
         Cechą wspólną powyższych modeli jest metoda wyboru krawędzi w kroku $t$. Prawdopodobieństwo, że mrówka
-        znajdująca się w wierzchołku $i$ wybierze krawędź prowadzącą do wierzchołka $j$ jest określona następującym
-        wzorem \ref{eqt:edge_dispatch_propab}.
+        znajdująca się w wierzchołku $i$ wybierze krawędź prowadzącą do wierzchołka $j$ jest określona wzorem
+        \ref{eqt:edge_dispatch_propab}.
 
         \begin{equation}\label{eqt:edge_dispatch_propab}
             P_{ij}(t) = \left\{\begin{matrix}
@@ -288,8 +288,8 @@
         {
             Ostatnim zaproponowanym wariantem systemu mrówkowego jest model feromonu cyklicznego (\textit{Ant Cycle}).
             Różni się on znacząco od poprzednich, gdyż feromon jest aktualizowany jednokrotnie w każdej iteracji
-            algorytmu, a nie po każdorazowym kroku. Wyznaczenie nowego śladu następuje po $n$ krokach, gdzie $n$ jest
-            długością cykli pokonywanych przez mrówki. Przyrost śladu feromonowego $\Delta\tau_{ij}(t, t + 1)$ jest
+            algorytmu, a nie po każdym kroku. Wyznaczenie nowego śladu następuje po $n$ krokach, gdzie $n$ jest
+            długością cykli pokonywanych przez mrówki. Przyrost śladu feromonowego $\Delta\tau_{ij}(t, t + n)$ jest
             obliczany dla każdej krawędzi trasy pokonanej przez każdą z $m$ mrówek, i jest odwrotnie proporcjonalny do
             długości całej trasy. Uzasadnieniem takiego postępowania jest intuicja mówiąca, że znajomość globalnej oceny
             trasy (jej długości) pozwoli lepiej ocenić każde z należących do niej kroków. Regułę obliczania przyrostu
@@ -323,9 +323,9 @@
         % SYS MROWISKOWY
         \subsection{System mrowiskowy}
         {
-            Znaczącym krokiem naprzód, w dziedzinie algorytmów mrówkowych, jest system mrowiskowy zaproponowany przez M.
+            Znaczącym krokiem naprzód w dziedzinie algorytmów mrówkowych, jest system mrowiskowy zaproponowany przez M.
             Dorigo, jednego z twórców systemów mrówkowych, oraz L. Gambardella w roku 1997\cite{Dorigo1997AntCS}. Tym
-            razem, głównym celem pracy było opracowanie zmodyfikowanej wersji algorytmu która mogłaby konkurować z
+            razem głównym celem pracy było opracowanie zmodyfikowanej wersji algorytmu która mogłaby konkurować z
             najlepszymi znanymi algorytmami służącymi do rozwiązywania problemu komiwojażera o dużym rozmiarze
             wejściowym.
 
@@ -351,10 +351,10 @@
                 \item Usprawnienie lokalnej reguły aktualizacji śladu feromonowego. Według eksperymentów, globalna
                 regułą nie nie jest wystarczająca w zapewnianiu akceptowalnych rezultatów. Autorzy testowali różne
                 metody wyznaczania wartości przyrostu śladu feromonowego, w tym metody czerpiące inspirację z
-                wzmacnianych metod uczenia maszynowego \textit{Q learning}\cite{Watkins1989LearningFD}, lecz dobre
-                rezultaty osiągnięto stosując prostszą regułę opisaną wzorem \ref{eqt:ant_colony_local_update_1} oraz
-                \ref{eqt:ant_colony_local_update_2}. Wartość $\rho$ jest współczynnikiem wyparowania niezależnym od
-                $\alpha$, a $V_k$ oznacza krawędź wybraną przez mrówkę $k$.
+                wzmacnianych metod uczenia maszynowego \textit{Q-learning}\cite{Watkins1989LearningFD}. Równie dobre
+                rezultaty osiągnięto stosując prostszą obliczeniowo regułę opisaną wzorem
+                \ref{eqt:ant_colony_local_update_1} oraz \ref{eqt:ant_colony_local_update_2}. Wartość $\rho$ jest
+                współczynnikiem wyparowania niezależnym od $\alpha$, a $V_k$ oznacza krawędź wybraną przez mrówkę $k$.
             \end{itemize}
 
             \begin{equation}\label{eqt:ant_colony_dispatch}
@@ -393,7 +393,7 @@
             \end{equation}
 
             Autorom udało się dowieść, że zaproponowany system mrowiskowy jest w stanie osiągać równie dobre, lub w
-            znacznej części badanych problemów również lepsze wyniki niż inne pozostałe heurystyki. W problemach o
+            znacznej części badanych problemów lepsze wyniki niż inne heurystyki. W problemach o
             rozmiarze 75 i 100 miast, uzyskano lepsze rezultaty niż za pomocą algorytmów genetycznych, elastycznych
             sieci oraz symulowanego wyżarzania. Dodatkowo, autorzy zgłębili temat i osiągalne rezultaty wykorzystania
             heurystyki systemu mrowiskowego jako generatora tras wejściowych do algorytmów lokalnej wyczerpującej
@@ -406,19 +406,19 @@
             Alternatywnym ulepszeniem klasycznego algorytmu mrówkowego, jest system mrówkowy max-min (\textit{Max-Min
             Ant System - MMAS})\cite{Sttzle2000MAXMINAS}. Podobnie jak w przypadku pracy \textit{Ant colony system: a
             cooperative learning approach to the traveling salesman problem}\cite{Dorigo1997AntCS}, głównym celem
-            autorów było zaproponowanie wariantu algorytmu mrówkowego który gwarantuje lepsze wyniki dla problemów
+            autorów było zaproponowanie wariantu algorytmu mrówkowego który gwarantuje lepsze wyniki dla grafów
             większych rozmiarów.
 
-            Autorzy zaproponowali następujące usprawnienia względem systemy mrówkowego zaproponowanego przez M. Dorgio w
-            1991 roku.
+            Autorzy zaproponowali następujące usprawnienia względem systemu mrówkowego opisanego przez M. Dorgio w 1991
+            roku.
 
             \begin{itemize}
                 \item Po każdej iteracji algorytmu, jedynie mrówka która przebyła najkrótszą trasę nanosi ślad
                 feromonowy. Istnieją dwie wariacje tej zasady, według pierwszej wybierana jest najkrótsza trasa w
                 bieżącej iteracji (ang. \textit{iteration best}), a w drugiej wybierana jest najlepsza trasa znaleziona
-                w całkowitym czasie działanie algorytmu. Wzór opisujący regułę aktualizacji śladu feromonowego jest
-                analogiczny do wzoru wyznaczającego przyrost podczas globalnej aktualizacji w systemie mrowiskowym
-                \ref{eqt:ant_colony_global_update_2}.
+                w całkowitym czasie działanie algorytmu (ang. \textit{global best}). Wzór opisujący regułę aktualizacji
+                śladu feromonowego jest analogiczny do wzoru wyznaczającego przyrost podczas globalnej aktualizacji w
+                systemie mrowiskowym \ref{eqt:ant_colony_global_update_2}.
 
                 \item W celu uniknięcia stagnacji algorytmu, polegającej na wybieraniu przez wszystkie mrówki tej samej
                 trasy, wartości śladu feromonowego są ograniczone do wartości będących parametrami działania algorytmu

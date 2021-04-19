@@ -21,9 +21,10 @@
     % CO TO KRYPTOGRAFIA
     W celu podkreślenia cech oraz charakteru metod steganograficznych często przytaczane jest również pojęcie
     kryptografii. Obiektem zainteresowań kryptografii jest uniemożliwienie zrozumienia treści wiadomości przez osoby
-    postronne, pozbawione do niej dostępu. Współcześnie jest to osiągane poprzez stosowanie klucza dzielonego przez
-    osoby zaufane (kryptografia symetryczna) lub par kluczy publicznych i prywatnych (kryptografia asymetryczna). Dzięki
-    ich zastosowaniu, osoba postronna pomimo dostępu do szyfrogramu nie jest w stanie wydobyć tekstu jawnego.
+    postronne, które nie powinny mieć do niej dostępu. Współcześnie jest to osiągane poprzez stosowanie klucza
+    dzielonego przez osoby zaufane (kryptografia symetryczna) lub par kluczy publicznych i prywatnych (kryptografia
+    asymetryczna). Dzięki ich zastosowaniu, osoba postronna pomimo dostępu do szyfrogramu nie jest w stanie wydobyć
+    tekstu jawnego.
 
     % CZYM SIĘ RÓŻNIĄ
     W odróżnieniu od kryptografii, celem technik steganograficznych jest umożliwienie uczestnikom komunikacji
@@ -35,7 +36,8 @@
         Pierwszych przykładów zastosowania steganografii można doszukiwać się już w czasach
         starożytnych\cite{Petitcolas1999InformationHS}. Herodotus, w swoim dziele \textit{Dzieje} opisuje historię
         greckiego polityka Histiajosa, który w celu przekazania poufnej informacji wytatuował ją na skalpie zaufanego
-        niewolnika. Gdy jego włosy odrosły, został on wysłany w celu doręczenia listu oraz ukrytej wiadomości. Do innych
+        niewolnika. Gdy jego włosy odrosły, został on wysłany w celu doręczenia listu oraz ukrytej wiadomości,
+        ujawnionej dopiero po jego ostrzyżeniu. Do innych
         przykładów steganografii można zaliczyć również ukrywanie wiadomości w zapisach nutowych, stosowanie atramentów
         sympatycznych lub technikę mikrokropek\cite{Petitcolas1999InformationHS}, która przeżyła swój renesans w czasach
         zimnej i drugiej wojny światowej.
@@ -86,14 +88,15 @@
         \subsection{Techniki przestrzenne}
         {
             % TECHNIKI PRZESTRZENNE
-            W technikach przestrzennych, obraz jest traktowany jak zbiór punktów (pikseli) umieszczonych w dwuwymiarowym
-            układzie współrzędnych. Zaletą tych metod jest ich intuicyjność oraz przystępność, lecz są to również metody
-            bardziej podatne na ataki polegające na wykryciu lub zniszczeniu ukrytej wiadomości\cite{Sharma2020AnIS}.
+            W technikach przestrzennych, obraz jest traktowany jako zbiór punktów (pikseli) umieszczonych w
+            dwuwymiarowym układzie współrzędnych. Zaletą tych metod jest ich intuicyjność oraz przystępność, lecz są to
+            również metody bardziej podatne na ataki polegające na wykryciu lub zniszczeniu ukrytej
+            wiadomości\cite{Sharma2020AnIS}.
 
             % LSB
             Najbardziej powszechną techniką przestrzenną jest metoda \textit{Least Significant Bit (LSB)}. Jej
-            zastosowanie  sprowadza się do zastąpienia najmniej znaczącego bitu obrazu będącego nośnikiem informacji
-            bitem wiadomości  ukrywanej. W zależności od spadku jakości który uznajemy za akceptowalny, możemy
+            zastosowanie  sprowadza się do zastąpienia najmniej znaczących bitów obrazu będącego nośnikiem informacji
+            bitami wiadomości  ukrywanej. W zależności od spadku jakości który uznajemy za akceptowalny, możemy
             wykorzystać \textit{n} najmniej  znaczących bitów każdego z kanałów \textit{RGB}. Pewnym uszczegółowieniem
             \textit{LSB} jest metoda  \textit{4LSB}. Zakłada ona wykorzystanie dokładnie 4 bitów z każdego bajtu obrazu
             maskującego, co przekłada się  na wykorzystanie 50\% pojemności nośnika. Kosztem tak znacznej pojemności
@@ -202,13 +205,13 @@
             podmienione najmniej znaczące bity, podobnie jak w przestrzennych metodach \textit{LSB}. W celu osiągnięcia
             dużo większej odporności steganogramu na kompresję, Zhiqiang Zhu, N. Zheng, Tong Qiao oraz Ming Xu
             zaproponowali metodę opartą o manipulację znaków współczynników, w odróżnieniu do manipulacji ich
-            wartościami\cite{Zhu2019RobustSB}.
+            wartości\cite{Zhu2019RobustSB}.
 
             % DWT + IWT
             Inną transformacją wykorzystywaną w steganografii jest \textit{Dyskretna transformata falkowa} (ang.
-            \textit{Discrete wavelet transform (DWT)}) oraz jej odpowiednik pozwalający na bezstratną transformację
-            odwrotną - \textit{Całkowitoliczbowa transformata falkowa} (ang. \textit{Integer wavelet transform
-            (IWT)})\cite{Xuan2005LosslessDH}.
+            \textit{Discrete wavelet transform - DWT}) oraz jej odpowiednik pozwalający na bezstratną transformację
+            odwrotną - \textit{Całkowitoliczbowa transformata falkowa} (ang. \textit{Integer wavelet transform -
+            IWT})\cite{Xuan2005LosslessDH}.
 
             Jedną z możliwości transformaty falkowej jest wyodrębnienie części obrazu w której skład wchodzą osobno
             wysokie i niskie pasma częstotliwości. Obraz zostaje kolejno przekształcany wierszami i kolumnami przez

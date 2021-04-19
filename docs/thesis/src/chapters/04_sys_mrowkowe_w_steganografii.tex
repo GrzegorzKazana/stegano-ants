@@ -19,13 +19,13 @@
     %   - metody przekształceń (tzn ograniczenie zakresu wartości, skalowanie itp)
 
     Jak przedstawiono w poprzednich rozdziałach, zagadnienia steganografii oraz systemów mrówkowych są złożone, nawet
-    gdy są analizowane w izolacji. Obie dziedziny mogą zostać powiązane, jeśli spojrzymy na nie jako na parę problemu
+    gdy są analizowane w izolacji. Obie dziedziny mogą zostać powiązane, jeśli spojrzymy na nie jako parę problemu
     optymalizacji oraz metaheurystykę mogącą posłużyć do jego rozwiązania.
 
     % GŁÓWNY PROBLEM: ILOŚĆ vs JAKOŚĆ
-    Wykorzystanie systemów steganograficznych jest bezpośrednio związane z jednoczesną realizacją celów stojących sobie
-    w opozycji. Idealny system steganograficzny, niezależnie od stosowanego medium nośnego, cechuje się jednocześnie
-    dużą pojemnością, odpornością na zakłócenia i zniekształcenia nośnika i niską wykrywalnością istnienia przekazu.
+    Wykorzystanie systemów steganograficznych jest bezpośrednio związane z jednoczesną realizacją celów stojących w
+    opozycji. Idealny system steganograficzny, niezależnie od stosowanego medium nośnego, cechuje się jednocześnie dużą
+    pojemnością, odpornością na zakłócenia i zniekształcenia nośnika i niską wykrywalnością istnienia przekazu.
     Intuicyjnie, lecz również na podstawie wszelkich obserwacji, można zauważyć że jednoczesna maksymalizacja ukrywanego
     przekazu powoduje wzrost cech niepożądanych, takich jak wzrost podatności na ataki steganograficzne. Oznacza to, że
     kluczowym aspektem wszystkich metod steganograficznych jest zachowanie balansu pomiędzy realizacją tych celów. W
@@ -45,7 +45,7 @@
         ich stochastyczny charakter. Podstawowym problemem najprostszych technik steganograficznych, takich jak
         \textit{LSB}, jest sekwencyjność wyboru fragmentów nośnika informacji. W przypadku ukrywania informacji w
         obrazach, najoczywistszym działaniem jest kodowanie danych w kolejnych pikselach obrazu. Takie podejście jest
-        wyjątkowo wrażliwe na najprostsze formy ataków, za równo steganograficznych jak i statystycznych. W celu
+        wyjątkowo podatne na najprostsze formy ataków, za równo steganograficznych jak i statystycznych. W celu
         uniknięcia powyższej podatności, możliwe jest stosowanie dodatkowych kluczy instruujących, które i w jakiej
         kolejności segmenty nośnika należy analizować\cite{AlHusainy2019ASI}. Wykorzystanie stochastycznych procesów
         które zachodzą w znacznej części metaheurystyk, automatycznie rozwiązuje problem przewidywalności umiejscowienia
@@ -81,12 +81,12 @@
 
             % PRZYKŁD - CZĘSTOTLIWOŚCIOWO
             Systemy mrowiskowe mogą zostać wykorzystane za równo w steganografii przy pomocy obrazów cyfrowych w
-            dziedzinie przestrzennej\cite{ZghaerACOStegEN, Khan2018AntCO}, jak i
-            częstotliwościowej\cite{Priya2018HIGHCA}. W artykule \textit{,,High capacity and optimized image
-            steganography technique based on ant colony optimization algorithm''}, zaproponowano metodę opartą o
-            przytoczoną metodę całkowitoliczbowej transformaty falkowej (\textit{IWT}). Twórcy opisali algorytm
-            wykorzystujący system mrowiskowy do ukrycia sekretnej informacji w współczynnikach dziedziny transformaty.
-            Przeprowadzone eksperymenty wykazały wysoką skuteczność metody\cite{Priya2018HIGHCA}.
+            dziedzinie przestrzennej \cite{ZghaerACOStegEN, Khan2018AntCO}, jak i częstotliwościowej
+            \cite{Priya2018HIGHCA}. W artykule \textit{,,High capacity and optimized image steganography technique based
+            on ant colony optimization algorithm''}, zaproponowano metodę opartą o przytoczoną metodę całkowitoliczbowej
+            transformaty falkowej (\textit{IWT}). Twórcy opisali algorytm wykorzystujący system mrowiskowy do ukrycia
+            sekretnej informacji w współczynnikach dziedziny transformaty. Przeprowadzone eksperymenty wykazały wysoką
+            skuteczność metody\cite{Priya2018HIGHCA}.
 
             % PRZYKŁD - PRZESTRZENNIE
             Pomimo że pozostałe przestudiowane prace oparte są o analizę obrazu w technice przestrzennej, sposób
@@ -106,7 +106,7 @@
             reprezentacji jest wykrycie krawędzi oraz złożonych obszarów obrazu, pozwalających na ukrycie większej
             ilości informacji przy jednoczesnej niższej wykrywalności ingerencji w obraz. Po ukończeniu pracy systemu
             mrowiskowego, ustalana jest wartość graniczna feromonu, dla której piksele uznawane są za należące do
-            złożonego segmentu. W ten sposób, obraz zostaje podzielony na dwa zbiory pikseli, w tych związanych z
+            złożonego segmentu. W ten sposób, obraz zostaje podzielony na dwa zbiory pikseli. W tych związanych z
             wartością feromonu przekraczającą wartość graniczną zostaje stosowana technika \textit{LSB}. Pozostałe
             piksele pozostają niezmienione. Za pomocą wyników eksperymentów udaje się dowieźć, jest to skuteczna metoda.
             Jej dodatkową zaletą jest możliwość parametryzacji i zmiany sposobu wyznaczania granicznej wartości
@@ -149,14 +149,15 @@
             informacji. Motywacją reprezentacji obszarów złożonych obrazu jako zbiór rozmyty, odróżniającą ją od
             dyskretnej metody opisanej w pracy \textit{,,Ant Colony Optimization (ACO) based Data Hiding in Image
             Complex Region''}\cite{Khan2018AntCO}, jest jej większy potencjał na uzyskanie dużej pojemności
-            steganogramu. Decydując się na binarny podział obrazu, ograniczamy się do dwóch różnych ilości ukrywanych
-            bitów, w szczególnym przypadku opisanym w przytoczonej pracy ilość wykorzystanych bitów w obszarach nie
-            złożonych wynosił zero. Wadą takiego podejścia, jest niemożliwość wyróżnienia i przez to efektywnego
-            wykorzystania obszarów o średniej złożoności. Umiejscowienie złożoności na ciągłej skali, pozwala
-            skuteczniej podejść do problemu wyznaczania ilości bitów ukrytych w konkretnym pikselu obrazu. W takim
-            podejściu, nie tylko jesteśmy w stanie wykorzystać większą liczbę pikseli, lecz również uzyskany steganogram
-            może cechować się niższą wykrywalnością, gdyż obszary w których ukryto dane nie są oddzielone ostrą
-            krawędzią od pozostałych sekcji obrazu.
+            steganogramu. Decydując się na binarny podział obrazu, rozwiązanie jest ograniczone do wykorzystania dwóch
+            różnych ilości ukrywanych bitów. W szczególnym przypadku opisanym w przytoczonej pracy ilość wykorzystanych
+            bitów w obszarach nie złożonych wynosił zero. Wadą takiego podejścia, jest niemożliwość odróżnienia i przez
+            to efektywnego wykorzystania obszarów o średniej złożoności. Umiejscowienie złożoności na ciągłej skali,
+            pozwala skuteczniej podejść do problemu wyznaczania ilości bitów ukrytych w konkretnym pikselu obrazu. W
+            takim podejściu, nie tylko jesteśmy w stanie wykorzystać większą liczbę pikseli, lecz również uzyskany
+            steganogram może cechować się niższą wykrywalnością, gdyż obszary w których ukryto dane nie są oddzielone
+            ostrą krawędzią od pozostałych sekcji obrazu.
+
         }
 
         % WYKORZYSTANIE MRÓWEK
@@ -212,11 +213,30 @@
         % METODA OPARTA O WIERZCHOŁKI
         \subsection{Metoda oparta o wierzchołki}
         {
-            W pierwszej opisanej metodzie graf jest $(V, E)$ budowany począwszy od wierzchołów. Każdemu pikselowi obrazu
+            W pierwszej opisanej metodzie graf $(V, E)$ jest budowany począwszy od wierzchołów. Każdemu pikselowi obrazu
             wejściowego przypisywany jest jeden wierzchołek tworzonego grafu, co oznacza że zbiór wierzchołków $V$ jest
             równoliczny zbiorowi pikseli obrazu. Krawędzie grafu $E$ prowadzone są pomiędzy sąsiadującymi z sobą
-            pikselami. Sąsiedztwo może być rozumiane jako czterospójne bądź ośmiospójne.
-            %% TODO: obrazek sąsiedztwa 4 i 8 spójnego
+            pikselami. Sąsiedztwo może być rozumiane jako czterospójne bądź ośmiospójne, oba rodzaje przedstawia rysunek
+            \ref{fig:neighbors}.
+
+            \begin{figure}
+                \footnotesize
+                \centering
+                \subfloat[][Sąsiedztwo czterospójne]{
+                    \label{fig:neighbors-4}
+                    \includegraphics[width=4cm]{neighbours-4.png}
+                }
+                \hspace{8pt}
+                \subfloat[][Sąsiedztwo ośmiospójne]{
+                    \label{fig:neighbors-8}
+                    \includegraphics[width=4cm]{neighbours-8.png}
+                }
+
+                \caption[Rodzaje sąsiedztwa]
+                {Rodzaje sąsiedztwa pikseli}
+                \label{fig:neighbors}
+            \end{figure}
+
             Długość krawędzi $E_{ij}$ łączącej piksele reprezentowane przez wierzchołki $V_i$ oraz $V_j$ wyznaczana jest
             na podstawie różnicy wartości łącznej intensywności wszystkich kanałów \textit{RGB}, opisanej wzorem
             \ref{eqt:pixeldiff}. Taki sposób doboru długości krawędzi pozwoli ,,zachęcić'' mrówki do poruszania się, a
@@ -236,8 +256,8 @@
 
             W związku z tym, w celu zastosowania powyższej metody wprowadzono pewne zmiany w sposobie uruchamiania i
             działania systemu mrówkowego. Najważniejsza z nich polega na zrezygnowaniu z kończenia przez mrówki pełnych
-            cykli. Zamiast tego, ilość wykonywanych kroków w każdej iteracji algorytmu jest również parametrem
-            algorytmu. Dodatkowo, w celu usprawnienia działania algorytmu dla obrazów o dużych rozmiarach, wprowadzono
+            cykli. Zamiast tego, ilość wykonywanych kroków w każdej iteracji algorytmu jest kolejnym parametrem
+            algorytmu. W celu usprawnienia działania algorytmu dla obrazów o dużych rozmiarach, wprowadzono
             możliwość generowania grafu dla obrazu przeskalowanego oraz ponownego przeskalowania macierzy maskującej do
             oryginalnych rozmiarów $w \times h$.
 
@@ -282,16 +302,22 @@
                 K_{xy} = 255 * (1 - \frac{\sum_{j \in A_i} \tau_{ij}}{|A_i|})
             \end{equation}
 
-            Rysunek przedstawia obraz wejściowy na który nałożono wartości długości krawędzi związanych z konkretnymi
-            pikselami.
-            %% TODO: obrazek wizualizujący konwersję obrazek -> graf
+            Rysunek \ref{fig:method-vis-vertex} przedstawia obraz wejściowy na który nałożono wartości długości krawędzi
+            związanych z konkretnymi pikselami.
+
+            \begin{figure}
+                \centering
+                \includegraphics{method/spatial_conv.png}
+                \caption{Wizualizacja grafu tworzonego metodą opartą o wierzchołki}
+                \label{fig:method-vis-vertex}
+            \end{figure}
         }
 
         % METODA OPARTA O KRAWĘDZIE
         \subsection{Metoda oparta o krawędzie}
         {
             Drugim zaproponowanym podejściem jest budowanie grafu zaczynając od krawędzi. Pierwszym krokiem jego budowy
-            jest podział obrazu wejściowego na ustaloną liczbę segmentów, przeważnie znacznie mniejszą niż ilość pikseli
+            jest podział obrazu wejściowego na ustaloną liczbę segmentów, znacznie mniejszą niż ilość pikseli
             bitmapy. Każdy segment obrazu jest reprezentowany przez jedną krawędź grafu. Jej długość jest uzależniona od
             wariancji wszystkich pikseli należących do segmentu przez nią opisaną. Podobnie jak w przypadku konstrukcji
             grafu na podstawie wierzchołków, długość krawędzi może być wprost lub odwrotnie proporcjonalna wartości
@@ -309,7 +335,7 @@
             \end{equation}
 
             Kolejno, graf zostaje wykorzystany przez system mrówkowy. Zadanie, które jest postawione przed wirtualnymi
-            mrówkami można interpretować następująco: spośród $|E|$ wszystkich krawędzi, wskaż $|V| + 1$ które pozwolą
+            mrówkami można interpretować następująco: spośród $|E|$ wszystkich krawędzi, wskaż $|V|$ które pozwolą
             na ukrycie informacji w najbardziej złożonych obszarach obrazu. Jest to zadanie równoważne z problemem
             komiwojażera, przez co nie muszą być wprowadzane żadne modyfikacje algorytmu tak jak to miało miejsce w
             metodzie opartej o przekształcenie pikseli w wierzchołki grafu.
@@ -318,11 +344,12 @@
             macierz maskującą, należy nanieść na piksele należące do segmentu $i$ wartość feromonu związaną z krawędzią
             $E_i$. Ponieważ każdy piksel jest przypisany do dokładnie jednego segmentu, wyznaczenie wartości macierzy
             maskującej nie jest problematyczne.
+
             % WYBRANE METODY SEGMENTACJI
             Implementacja powyższej metody jest nierozerwalnie związana z podziałem obrazu na zadaną ilość segmentów.
             Wybór techniki nie jest wyborem oczywistym, gdyż istnieje bardzo wiele sposobów na który można takiego
             podziału dokonać. W związku z powyższym, zdecydowano się wykorzystać trzy różne metody, a następnie porównać
-            ich wyniki. Do wykorzystanych metod należą poniższe.
+            ich wyniki. Do wykorzystanych metod należą poniżej opisane.
 
             \begin{enumerate}
                 \item Podział obrazu na pewną ilość nie nachodzących na siebie prostokątów w osi $x$ i $y$. Konieczny
@@ -334,8 +361,14 @@
                 segmentów znajdujących się na końcach utworzonych wierszy i kolumn. Inną wadą są jednolite krawędzie
                 podziałów - co może przełożyć się na wyraźną różnicę jakości obrazu pomiędzy sąsiadującymi segmentami.
 
-                Rysunek przedstawia wizualizację podziału obrazu powyższą metodą.
-                %% TODO: obrazek wizualizujący konwersję obrazek -> graf, windows
+                Rysunek \ref{fig:method-vis-window} przedstawia wizualizację podziału obrazu powyższą metodą.
+
+                \begin{figure}
+                    \centering
+                    \includegraphics{method/window_conv.png}
+                    \caption{Wizualizacja grafu tworzonego metodą opartą o podział obrazu na nie nachodzące prostokąty}
+                    \label{fig:method-vis-window}
+                \end{figure}
 
                 \item Segmentację obrazu można również przeprowadzić wykorzystując algorytmy grupujące. Jednym z nich
                 jest \textit{k-means}. Jego zastosowanie pozwala na podzielenie danych wejściowych na zadaną ilość $k$
@@ -345,8 +378,14 @@
                 najbliższych sąsiadów. Ponieważ grupowanie nie bierze pod uwagę przestrzennego położenia pikseli,
                 piksele należące do tej samej grupy niekoniecznie muszą do siebie przylegać.
 
-                Na rysunku przedstawiono przykład podziału obrazu na zadaną ilość grup.
-                %% TODO: obrazek wizualizujący konwersję obrazek -> graf, kmeans
+                Na rysunku \ref{fig:method-vis-kmeans} przedstawiono przykład podziału obrazu na zadaną ilość grup.
+
+                \begin{figure}
+                    \centering
+                    \includegraphics{method/kmeans_conv.png}
+                    \caption{Wizualizacja grafu tworzonego metodą opartą o podział obrazu przy użyciu algorytmu k-średnich}
+                    \label{fig:method-vis-kmeans}
+                \end{figure}
 
                 \item Ostatnią wykorzystaną metodą segmentacji obrazu jest podział na superpiksele (ang.
                 \textit{superpixels}). Superpiksele są grupami pikseli które cechują zbliżone wartości składowych w
@@ -357,8 +396,14 @@
                 zastosowania można doszukiwać się w rozwiązywaniu problemów identyfikacji i wyodrębniania obiektów. W
                 przeciwieństwie do algorytmu \textit{k-means}, uzyskane grupy pikseli są spójne.
 
-                Rysunek przedstawia wizualizację podziału obrazu powyższą metodą.
-                %% TODO: obrazek wizualizujący konwersję obrazek -> graf, superpixels
+                Rysunek \ref{fig:method-vis-super} przedstawia wizualizację podziału obrazu powyższą metodą.
+
+                \begin{figure}
+                    \centering
+                    \includegraphics{method/superpixel_conv.png}
+                    \caption{Wizualizacja grafu tworzonego metodą opartą o podział obrazu na superpiksele}
+                    \label{fig:method-vis-super}
+                \end{figure}
             \end{enumerate}
         }
     }
