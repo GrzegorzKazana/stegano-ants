@@ -5,7 +5,6 @@
     %   - zalety/wady
     %       - rust
     %           - kilka cech (iteratory, typy, zarządzanie pamięcią, obsługa błędów, null-safety, brak dziedziczenia)
-    %       - rayon (?)
     %
     % specyfikacja zewnętrzna
     %   - uruchamianie
@@ -24,4 +23,149 @@
     %       - unity
     %       - property based testy
     %   - kompilacja jako walidacja (memory & type safety)
+
+    % WYKORZYSTANE NARZĘDZIA
+    Do implementacji aplikacji umożliwiającej ukrywanie danych w obrazach cyfrowych za pomocą przedstawionych metod
+    wykorzystano język \textit{Rust}. \textit{Rust} jest kompilowanym językiem niskiego poziomu, którego kod wynikowy
+    nie jest uruchamiany za pomocą maszyny wirtualnej. Nie posiada również mechanizmu odśmiecania pamięci (ang.
+    \textit{garbage collection}) ani automatycznego zliczania referencji. Przeciwnie do języków \textit{C} oraz
+    \textit{C++} obowiązek zarządzania pamięcią i gwarantowania bezpieczeństwa jej użycia przeniesiony z dewelopera na
+    rygorystyczny kompilator.
+
+    Głównymi celami realizowanymi przez język \textit{Rust} jest umożliwienie pisania aplikacji wymagających dużej
+    wydajności, współbieżności oraz bezpieczeństwa przy wykorzystaniu nowoczesnych praktyk programistycznych. Kolejnym
+    atutem tego języka jest wbudowany manager pakietów \textit{Cargo} umożliwiający bezproblemowe korzystanie z bogatego
+    wachlarza otwartoźródłowych bibliotek.
+
+    \textit{Rust} jest językiem wieloparadygmatowym, lecz wiele cech będących fundamentem jego popularności oraz
+    bezpieczeństwa czerpie z języków funkcyjnych. Umożliwia pisanie wydajnego i deklaratywnego kodu dzięki rozbudowanym
+    iteratorom (analogicznych do przetwarzania strumieniowego z języka \textit{Java}), oraz algebraicznym typom danych.
+    Ważną decyzją podjętą podczas projektowania języka było zdecydowanie się na wykorzystanie monad \textit{Option} oraz
+    \textit{Result}, co pozwoliło na rezygnację z mechanizmu wyjątków, zapewnienie bezwarunkowego \textit{null
+    safety} oraz umożliwienie kompilatorowi wychwycenia znacznej części najczęściej popełnianych błędów.
+
+    Ekspresywny system typów pozwala na pisanie rozszerzalnego i generycznego kodu. Język \textit{Rust} pozbawiony jest
+    mechanizmu dziedziczenia, które nadużywane może być źródłem nieoczekiwanych zachowań oraz błędów związanych z
+    dzieleniem stanu pomiędzy poszczególnymi klasami bazowymi oraz konfliktami nazw. Alternatywnym rozwiązaniem
+    pozwalającym na ponowne wykorzystanie zachowań są cechy (ang. \textit{trait}). Cechy umożliwiają jedynie
+    współdzielenie interfejsu oraz domyślnych implementacji funkcji związanych z typem danych, lecz nie pozwalają na
+    współdzielenie stanu. Są mechanizmem zbliżonym do klas typów (ang. \textit{typeclasses}) znanych z języka
+    \textit{Haskell}.
+
+
+    % SPECYFIKACJA ZEWNĘTRZNA
+    % zdecydować się na konsolę vs ui
+    \section{Specyfikacja zewnętrzna}
+    {
+
+    }
+
+    % SPECYFIKACJA WEWNĘTRZNA
+    \section{Specyfikacja wewnętrzna}
+    {
+        Kod źródłowy aplikacji został podzielony w taki sposób, że odzwierciedla poruszane domeny. Powstały trzy główne
+        moduły aplikacji: moduł systemu mrówkowego (\textit{ant\_colony}), moduł przetwarzania obrazów (\textit{images})
+        i moduł steganograficzny (\textit{steganography}).
+
+
+        \subsection{Moduł systemu mrówkowego}
+        {
+            W powyższym module zawarto implementację generycznego systemu mrówkowego, który jest parametryzowany
+            strategiami wyboru krawędzi oraz nanoszenia śladu feromonowego. W ten sposób możliwe było efektywne
+            zaimplementowanie wszystkich testowanych modeli systemów: z feromonem stałym, średnim, cyklicznym, systemu
+            mrowiskowego oraz systemu max-min.
+
+            % ANT-DISPATCHER
+            Strategie wyboru krawędzi określone są cechą (ang. \textit{trait}) \textbf{AntDispatcher}. Jest to interfejs
+            wymagający od każdej implementującej go struktury zapewnienia funkcji wybierającej kolejną krawędź dla
+            wskazanej mrówki, grafu oraz śladu feromonowego. Cecha posiada również domyślną implementację funkcji
+            odpowiedzialnej za umieszczenie zadanej liczby mrówek na wierzchołkach grafu w sposób losowy.
+
+            Strukturami implementującymi cechę \textbf{AntDispatcher} są:
+
+            \begin{itemize}
+                \item \textit{BasicAntDispatcher} implementująca wzór \ref{eqt:edge_dispatch_propab} dla $\alpha = \beta
+                = 1$,
+                \item \textit{BiasedAntDispatcher} implementująca wzór \ref{eqt:edge_dispatch_propab}, jest
+                wykorzystywana w wszystkich systemach z wyjątkiem systemu mrowiskowego,
+                \item \textit{ColonyAntDispatcher} implementująca zasadę wyboru krawędzi w systemie mrowiskowym, będącą opisaną wzorem \ref{eqt:ant_colony_dispatch}.
+            \end{itemize}
+
+            % PHEROMONE-UPDATER
+            Kolejną kluczową cechą należącą do tego modułu jest \textbf{PheromoneUpdater}, opisująca strategie
+            odkładania śladu feromonowego na skutek ruchu mrówek. Interfejs wymaga implementacji funkcji inicjalizacji
+            struktury feromonu, jego aktualizacji po wykonaniu kroku przez wszystkie mrówki oraz po wykonaniu całego
+            cyklu. Dwie ostatnie funkcje mają domyślną postać funkcji identycznościowej.
+
+            Powyższa cecha jest implementowana przez następujące struktury:
+
+            \begin{itemize}
+                \item \textit{ConstantPheromoneUpdater} nanoszący stała wartość na każdą odwiedzoną krawędź grafu, jest
+                opisany wzorem \ref{eqt:pheromone-density},
+                \item \textit{AveragePheromoneUpdater} odpowiada modelowi o feromonie średnim, opisanym wzorem \ref{eqt:pheromone-quantity},
+                \item \textit{CyclicalPheromoneUpdater} aktualizujący ślad dla krawędzi w proporcji do długości trasy do
+                której należy (wzór \ref{eqt:pheromone-cycle}),
+                \item \textit{ColonyPheromoneUpdater} nanoszący ślad w każdym kroku algorytmu oraz po zakończeniu cyklu
+                dla krawędzi należących do najkrótszej ścieżki (wzór \ref{eqt:pheromone-cycle}),
+                \item \textit{MaxMinPheromoneUpdater} implementujący logikę aktualizacji śladu feromonowego w systemie
+                max-min (wzór \ref{eqt:ant_colony_global_update_2} oraz \ref{eqt:ant_colony_local_update_2}).
+            \end{itemize}
+
+            Kolejnym ważnym elementem powyższego modułu jest struktura śladu feromonowego \textbf{Pheromone}. Jej
+            implementacja jest oparta o tablicę asocjacyjną (ang. \textit{HashMap}) przypisująca każdego
+            identyfikatorowi krawędzi wartość zmiennoprzecinkową. Zawiera metody umożliwiające skalowanie,
+            inkrementację i normalizację wartości mapy.
+
+            Ostatnim istotnym elementem modułu systemu mrówkowego jest struktura reprezentująca graf. Jego implementacja
+            również wykorzystuje tablicę asocjacyjną, której kluczami są identyfikatory wierzchołków a wartościami
+            struktury wierzchołków zawierające listę sąsiedztwa.
+        }
+
+        \subsection{Moduł przetwarzania obrazów}
+        {
+            Wszelkie operacje związane z odczytem i manipulacją obrazów zostały zawarte w module \textbf{images}. Można
+            w nim wyszczególnić strukturę \textbf{Image} oraz związane z nią funkcje pozwalające na wczytywanie obrazu z
+            dysku, manipulację rozmiarem oraz przekształcenie do struktury \textbf{PixelMap} będącej wygodną abstrakcją
+            nad bitmapami \textit{RGB}. Struktura \textbf{PixelMap} pozwala na iterację kolejnych pikseli, iterację
+            pikseli sąsiadujących z wskazanymi współrzędnymi, dowolne przekształcenie każdego piksela za pomocą
+            przekazanej funkcji oraz wyznaczenie negatywu obrazu.
+
+            Najbardziej złożoną częścią tego modułu jest cecha \textbf{ImageGraphConverter} oraz implementujące je
+            struktury. Jej zadaniem przekształcenie dowolnej instancji bitmapy do grafu oraz przekształcenie śladu
+            feromonowego w macierz maskującą, która jest reprezentowana przez instancję struktury \textbf{PixelMap}.
+
+            Do struktur implementujących powyższą cechę należą:
+
+            \begin{itemize}
+                \item \textit{SpatialEdgeChangeConverter} implementująca metodę opisaną w sekcji
+                \ref{subsec:vertex-method},
+                \item \textit{WindowToEdgeConverter} odpowiedzialną za segmentację obrazu na nienachodzące na siebie
+                prostokąty, opisaną w sekcji \ref{subsec:edge-method},
+                \item \textit{KMeansConverter} dzielącą obraz na grupy pikseli o zbliżonej wariancji sąsiadujących pikseli,
+                \item \textit{SuperPixelConverter} segmentująca obraz na zadaną ilość superpikseli według algorytmu
+                \textit{SLIC}.
+            \end{itemize}
+        }
+
+        \subsection{Moduł steganograficzny}
+        {
+            Ostatnim modułem aplikacji jest moduł odpowiedzialny za ukrywanie informacji w wskazanej bitmapie na
+            podstawie macierzy maskującej. Za równo bitmapa jak i macierz maskująca jest reprezentowana przez struktury
+            \textbf{PixelMap}. Strukturą implementującą powyższą funkcjonalność jest \textbf{MaskImageEmbedder}. W
+            trakcie ukrywania informacji wykorzystywany jest iterator bitów pozwalający na odczyt zadanej ilości
+            kolejnych bitów wiadomości.
+
+            W module zawarto również implementację podstawowych miar jakości obrazów, takich jak błąd średniokwadratowy
+            i szczytowy stosunek sygnału do szumu.
+        }
+    }
+
+
+
+    % WALIDACJA I TESTOWANIE
+    \section{Walidacja i testowanie}
+    {
+
+    }
+    %
 }
