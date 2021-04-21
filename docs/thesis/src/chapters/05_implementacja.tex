@@ -57,7 +57,221 @@
     % zdecydować się na konsolę vs ui
     \section{Specyfikacja zewnętrzna}
     {
+        %
+        Ponieważ funkcjonalność projektu była bardziej znaczącym aspektem niż jego interfejs, program zdecydowano się
+        zaimplementować jako aplikację konsolową. Pomimo wady w postaci mniejszej przystępności dla niedoświadczonego
+        użytkownika, takie rozwiązanie ma również swoje zalety. Umożliwia automatyczne uruchamianie aplikacji dla
+        różnych zestawów danych za pomocą zewnętrznych skryptów i programów, co okazało się bardzo wartościowe podczas
+        ewaluacji rezultatów dla dużej liczby różnych parametrów uruchomieniowych.
 
+        \subsection{Opis parametrów programu}
+        {
+            %
+            Program działa w trzech trybach, a do każdego z nich są przypisane pewne argumenty. Istnieją też parametry
+            nie związane z wybraną pod-komendą. Należą do nich głównie parametry systemu mrówkowego. Szczegółowy opis
+            każdego z nich zawiera lista:
+
+            \begin{itemize}
+                \item \textbf{seed} - ziarno generatora liczb losowych, umożliwia powtarzalność wyników. Domyślnie
+                przyjmuje wartość \textit{42}.
+                \item \textbf{ants} - liczba mrówek w mrowisku. Jeśli nie zostanie podana, system mrowiskowy zostanie
+                zainicjowany z ilością mrówek równą liczbie wierzchołków grafu.
+                \item \textbf{steps} - maksymalna ilość kroków wykonywanych przez mrówki w jednym cyklu. Znajduje
+                zastosowanie jedynie w metodzie budowy grafu opartej o wierzchołki. Domyślnie ilość kroków mrówek jest
+                równa ilości wierzchołków grafu.
+                \item \textbf{dispatcher} - rodzaj strategii wyboru krawędzi przez mrówki. Odpowiada metodom opisanym w
+                sekcji\ref{sec:code_ant_colony}. Dostępne wartości to \lstinline{basic}, \lstinline{biased} oraz
+                \lstinline{colony}. Każdą z wartości może następować lista parametrów wybranej strategii. Jeśli lista
+                parametrów nie zostanie podana, zastosowane będą automatycznie dobrane wartości dla wskazanego problemu.
+                \item \textbf{updater} - rodzaj strategii nanoszenia śladu feromonowego odpowiadających różnym systemom
+                mrówkowym. Dostępne wartości to \lstinline{const}, \lstinline{avg}, \lstinline{cycle},
+                \lstinline{colony} oraz \lstinline{maxmin}. Podobnie jak w przypadku argumentu \textbf{dispatcher},
+                możliwe jest podanie dodatkowych parametrów do każdej strategii po oddzieleniu ich znakiem
+                \lstinline{:}.
+                \item \textbf{converter} - strategia przekształcenia bitmapy w graf, które zostały opisane w
+                \ref{sec:method}. Dostępne wartości to \lstinline{spatial}, \lstinline{window}, \lstinline{kmeans} oraz
+                \lstinline{superpixels}. Każda z nich może zostać poprzedzona znakami \lstinline{i:} aby jednocześnie
+                odwrócić długości wygenerowanego grafu i luminancję każdego z pikseli macierzy maskującej.
+                \item \textbf{cycles} - określa ilość iteracji systemu mrówkowego. Jeśli nie jest podana, musi zostać
+                podany argument \textbf{stop-after}.
+                \item \textbf{stop-after} - określa po ilu iteracjach bez polepszenia rezultatów przeszukiwanie powinno
+                się zatrzymać.
+                \item \textbf{mask-width} - pozwala na przeskalowanie obrazu na którego podstawie tworzony jest graf.
+                \item \textbf{target-capacity} - umożliwia określenie docelowej pojemności steganogramu. Wykorzystywane
+                podczas eksperymentów i pomiarów degradacji jakości obrazu. Przyjmuje wartości liczbowe z jednostką
+                \lstinline{B}, \lstinline{kB} lub \lstinline{MB}.
+                \item \textbf{quiet} - jeśli zostanie podany ten argument, program nie będzie drukował rezultatów na
+                strumień wyjścia.
+                \item \textbf{verbose-files} - decyduje czy generowane artefakty (steganogram, macierz konwersji na
+                graf i macierz maskująca) będą posiadały w nazwie znacznik czasu oraz argumenty uruchomienia.
+            \end{itemize}
+
+
+            Po podaniu głównych argumentów, użytkownik musi wybrać tryb pracy programu. Należą do nich:
+
+            \begin{enumerate}
+                \item \textbf{embed} - tryb ukrywania informacji. Wymaga podania argumentów:
+                    \begin{itemize}
+                        \item \textbf{image} - ścieżka do obrazu nośnego,
+                        \item \textbf{data} - ścieżka do pliku tekstowego zawierającego ukrywaną wiadomość.
+                    \end{itemize}
+
+                    Rezultatem działania programu w tym trybie są 4 obrazy, które znajdują się w tym samym folderze co
+                    obraz nośny. Każdy z wygenerowanych obrazów jest opatrzony przyrostkiem definiującym jego znaczenie.
+
+                    \begin{itemize}
+                        \item \textbf{steg} - utworzony steganogram,
+                        \item \textbf{pher} - macierz maskująca w postaci bitmapy,
+                        \item \textbf{pher\_scaled} - macierz maskująca przeskalowana w taki sposób, aby pomieściła
+                        zadaną ilość danych,
+                        \item \textbf{conv} - przedstawia proces konwersji bitmapy na graf. Każdy piksel posiada
+                        luminancję związaną z odległością na grafie.
+                    \end{itemize}
+
+                \item \textbf{extract} - tryb wydobywania informacji z steganogramu. Wymaga podania argumentów:
+                    \begin{itemize}
+                        \item \textbf{image} - ścieżka do obrazu nośnego,
+                        \item \textbf{steg} - ścieżka do steganogramu.
+                    \end{itemize}
+
+                    Odzyskana informacja zostanie wyświetlona na strumieniu wyjściowym procesu.
+
+                \item \textbf{tsp} - tryb rozwiązywania problemu komiwojażera. Możliwe jest uruchomienie go z
+                następującymi argumentami:
+                    \begin{itemize}
+                        \item \textbf{n-cities} - powoduje wygenerowanie losowego grafu o zadanej ilości wierzchołków,
+                        \item \textbf{graph} - ścieżka do pliku \textit{.csv} zawierającego listę współrzędnych
+                        opisujących wierzchołki grafu.
+                    \end{itemize}
+
+                    Rezultatem pracy tego trybu jest długość najkrótszej ścieżki oraz kolejność odwiedzanych wierzchołków.
+            \end{enumerate}
+
+
+            % HELP
+            Ponadto, użytkownik może się zapoznać z całym wachlarzem opcji uruchomieniowych \ref{code:help} poprzez uruchomienie programu z flagą
+            \textit{--help}.
+
+            \begin{lstlisting}[basicstyle=\tiny, caption=Pomoc programu, label=code:help]
+USAGE:
+    stegano-ants [FLAGS] [OPTIONS] --dispatcher <dispatcher> --updater <updater> <SUBCOMMAND>
+
+FLAGS:
+    -h, --help             Prints help information
+    -q, --quiet
+        --verbose-files    verbose filenames of output files
+    -V, --version          Prints version information
+
+OPTIONS:
+    -a, --ants <ants>                          amount of ants, by default number of nodes
+        --converter <converter>
+            converter type in format <type>:<args> [default: i:spatial]
+
+    -c, --cycles <cycles>                      number of traning cycles
+    -d, --dispatcher <dispatcher>              dispatcher definition in format <type>:<args>
+        --mask-width <mask-width>
+            dimension of the pheromone mask, directly affects graph size, height is calculated
+            automatically
+
+        --seed <seed>                          rng seed [default: 42]
+    -s, --steps <steps>
+            number of ant steps in single cycle, by default number of nodes
+
+        --stop-after <stop-after>
+            train until number of cycles does not provide improvement
+
+        --target-capacity <target-capacity>    target capacity
+    -u, --updater <updater>                    updater type in format <type>:<args>
+
+SUBCOMMANDS:
+    embed
+    extract
+    help       Prints this message or the help of the given subcommand(s)
+    tsp
+            \end{lstlisting}
+            %
+        }
+
+        \subsection{Przykłady użycia}
+        {
+            Poniżej zamieszczono przykładowe uruchomienia programu.
+
+            \begin{enumerate}
+                \item Ukrycie danych w wskazanym pliku przy użyciu systemu mrowiskowego oraz wierzchołkowej metody
+                budowy grafu.
+
+                \begin{lstlisting}
+    stegano-ants \
+        --cycles=10 \
+        --ants=1000 \
+        --steps=100 \
+        --dispatcher=colony \
+        --updater=colony \
+        embed \
+        --data=lorem.txt \
+        --image=photo.bmp
+                \end{lstlisting}
+
+                \item Wydobycie danych z wskazanego steganogramu przy użyciu systemu mrowiskowego oraz wierzchołkowej
+                metody budowy grafu.
+
+                \begin{lstlisting}
+    stegano-ants \
+        --cycles=10 \
+        --ants=1000 \
+        --steps=100 \
+        --dispatcher=colony \
+        --updater=colony \
+        extract \
+        --steg=photo_pher.bmp \
+        --image=photo.bmp
+                \end{lstlisting}
+
+                \item Ukrycie danych w wskazanym pliku przy użyciu systemu max-min z ustalonymi parametrami $\alpha=1$ i
+                $\beta=2$ oraz metodą podziału na 50 superpikseli.
+
+                \begin{lstlisting}
+    stegano-ants \
+        --cycles=10 \
+        --ants=1000 \
+        --steps=100 \
+        --dispatcher=biased:1,2 \
+        --updater=maxmin \
+        --converter=superpixels:50 \
+        embed \
+        --data=lorem.txt \
+        --image=photo.bmp
+                \end{lstlisting}
+
+                \item Ukrycie danych w wskazanym pliku przy użyciu systemu max-min z ustalonymi parametrami $\alpha=1$ i
+                $\beta=2$.
+
+                \begin{lstlisting}
+    stegano-ants \
+        --cycles=10 \
+        --ants=1000 \
+        --steps=100 \
+        --dispatcher=biased:1,2 \
+        --updater=maxmin \
+        embed \
+        --data=lorem.txt \
+        --image=photo.bmp
+                \end{lstlisting}
+
+                \item Poszukiwanie rozwiązania problemu komiwojażera opisanego plikiem \textit{.csv} za pomocą systemu o
+                feromonie cyklicznym. Program zatrzyma działanie po 10 iteracjach bez poprawy rezultatu.
+
+                \begin{lstlisting}
+    stegano-ants \
+        --stop-after=10 \
+        --dispatcher=biased \
+        --updater=cycle \
+        tsp \
+        --graph=tsp.csv
+                \end{lstlisting}
+            \end{enumerate}
+        }
+        %
     }
 
     % SPECYFIKACJA WEWNĘTRZNA
@@ -68,7 +282,7 @@
         i moduł steganograficzny (\textit{steganography}).
 
 
-        \subsection{Moduł systemu mrówkowego}
+        \subsection{Moduł systemu mrówkowego}\label{sec:code_ant_colony}
         {
             W powyższym module zawarto implementację generycznego systemu mrówkowego, który jest parametryzowany
             strategiami wyboru krawędzi oraz nanoszenia śladu feromonowego. W ten sposób możliwe było efektywne
