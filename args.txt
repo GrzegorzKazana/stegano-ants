@@ -16,12 +16,14 @@
 # --updater=cycle
 # --converter=i:superpixels:20
 #
-# --converter=kmeans:50
-# --converter=i:window:100
-# --converter=i:spatial
 --target-capacity=22544B
 # --verbose-files
+# --stop-after=100
+# --dispatcher=biased
+# --updater=maxmin
+# --seed=30
 # tsp
+# --graph=./assets/tsp/kroa100.csv
 # --graph=./assets/tsp/oliver30.csv
 embed
 --data assets/data/lorem_ipsum_large.txt

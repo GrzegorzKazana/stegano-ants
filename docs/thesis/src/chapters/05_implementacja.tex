@@ -165,7 +165,61 @@
     % WALIDACJA I TESTOWANIE
     \section{Walidacja i testowanie}
     {
+        W celu zapewnienia pożądanego działania oraz powtarzalności rezultatów aplikacja została w znacznym stopniu
+        pokryta testami jednostkowymi. Umożliwiło to natychmiastowe wykrycie nieoczekiwanych zmian w działaniu programu
+        oraz umożliwiło dynamiczny rozwój kolejnych modułów aplikacji.
 
+        Kolejnym istotnym zagadnieniem związanym z wykorzystanymi metodami zapewnienia jakości oprogramowania są testy
+        oparte o właściwości (ang. \textit{property based testing}). Jest to technika polegająca na testowaniu kodu dla
+        bardzo dużej ilości generowanych losowo danych wejściowych i sprawdzaniu czy pewne fundamentalne założenia
+        dotyczące danych wyjściowych są wciąż spełnione. Przykładowo, test oparty o właściwość funkcji sortującej
+        tablicę zawierającą wartości liczbowe może sprawdzać czy każdy kolejny element posortowanej tablicy jest większy
+        bądź równy poprzedniemu. W ten sposób jesteśmy w stanie zweryfikować działanie kodu bez określania konkretnych
+        zestawów danych.
+
+        W aplikacji wykorzystano testy oparte o właściwości do zapewnienia odwracalności procesu ukrywania i wydobywania
+        danych z obrazu (złożenie funkcji ukrywającej i funkcji wydobywającej powinno być funkcją identycznościową z
+        względu na argument ukrywanych danych) oraz zapewniania unikalności generowanych identyfikatorów krawędzi
+        łączących wskazane wierzchołki grafu za pomocą metody zaproponowanej przez M. Szudzik\cite{SzudzikFn}.
+
+        \subsection{Rozwiązywanie problemu komiwojażera}
+        {
+            %
+            Aby zweryfikować poprawność implementacji modułu systemu mrówkowego postanowiono sprawdzić jego efektywność
+            w rozwiązywaniu problemu komiwojażera. Krok ten również umożliwił implementację pomocniczych heurystyk
+            służących do automatycznego doboru parametrów strategii wyboru krawędzi przez mrówki oraz odkładania śladu
+            feromonowego. Uzyskane zależności wyprowadzono na postawie eksperymentów wskazówek znajdujących się w
+            pracach opisujących poszczególne systemy mrówkowe\cite{Dorigo1991AntSA, Dorigo1997AntCS,
+            Sttzle2000MAXMINAS}.
+
+            W tabeli \ref{tab:impl-tsp-results} zamieszczono uzyskane rezultaty znanych z literatury problemów o
+            trzydziestu (\textit{oliver30}) i stu miastach (\textit{kroa100}), wraz z powszechnie znanymi najlepszymi
+            rozwiązaniami. Parametry poszczególnych wariantów systemów mrówkowych były konfigurowane za pomocą
+            opracowanych heurystyk. Przyjęto również że ilość mrówek jest równa ilości wierzchołków grafu.
+
+            \begin{table}
+                \centering
+                \begin{tabular}{ |l|c c|c c| }
+                    \hline
+                    & \multicolumn{2}{c|}{\textit{oliver30}} & \multicolumn{2}{c|}{\textit{kroa100}} \\
+                    \hline
+                    Rodzaj systemu & rozwiązanie & iteracja & rozwiązanie & iteracja \\
+                    \hline
+                    \textit{Ant Density} & 446.87012 & 18 & 25606.107 & 30 \\
+                    \textit{Ant Quantity} & 426.54388 & 185 & 23150.693 & 162 \\
+                    \textit{Ant Cycle} & 429.2246 & 119 & 22826.52 & 82 \\
+                    \textit{Ant Colony} & 435.7622 & 178 & 23401.607 & 121 \\
+                    \textit{Max-min Ant System} & 424.69177 & 84 & 22075.67 & 221 \\
+                    \hline
+                    Wynik referencyjny & 423.741 & - & 21282 & - \\
+                    \hline
+                \end{tabular}
+                \caption{Uzyskane rozwiązania problemów \textit{oliver30} oraz \textit{kroa100}.}
+                \label{tab:impl-tsp-results}
+            \end{table}
+            %
+        }
+        %
     }
     %
 }
