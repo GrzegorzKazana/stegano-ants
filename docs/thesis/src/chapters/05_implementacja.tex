@@ -27,30 +27,30 @@
     % WYKORZYSTANE NARZĘDZIA
     Do implementacji aplikacji umożliwiającej ukrywanie danych w obrazach cyfrowych za pomocą przedstawionych metod
     wykorzystano język \textit{Rust}. \textit{Rust} jest kompilowanym językiem niskiego poziomu, którego kod wynikowy
-    nie jest uruchamiany za pomocą maszyny wirtualnej. Nie posiada również mechanizmu odśmiecania pamięci (ang.
-    \textit{garbage collection}) ani automatycznego zliczania referencji. Przeciwnie do języków \textit{C} oraz
-    \textit{C++} obowiązek zarządzania pamięcią i gwarantowania bezpieczeństwa jej użycia przeniesiony z dewelopera na
-    rygorystyczny kompilator.
+    nie jest uruchamiany za pomocą maszyny wirtualnej. Nie posiada również mechanizmu odśmiecania pamięci, (ang.
+    \textit{garbage collection}) ani automatycznego zliczania referencji. W przeciwieństwie do języków \textit{C} oraz
+    \textit{C++} obowiązek zarządzania pamięcią i gwarantowania bezpieczeństwa jej użycia jest w dużej mierze
+    przeniesiony z dewelopera na rygorystyczny kompilator.
 
     Głównymi celami realizowanymi przez język \textit{Rust} jest umożliwienie pisania aplikacji wymagających dużej
     wydajności, współbieżności oraz bezpieczeństwa przy wykorzystaniu nowoczesnych praktyk programistycznych. Kolejnym
-    atutem tego języka jest wbudowany manager pakietów \textit{Cargo} umożliwiający bezproblemowe korzystanie z bogatego
-    wachlarza otwartoźródłowych bibliotek.
+    atutem tego języka jest wbudowany mechanizm zarządzania pakietami \textit{Cargo} umożliwiający bezproblemowe
+    korzystanie z bogatego wachlarza otwartoźródłowych bibliotek.
 
     \textit{Rust} jest językiem wieloparadygmatowym, lecz wiele cech będących fundamentem jego popularności oraz
     bezpieczeństwa czerpie z języków funkcyjnych. Umożliwia pisanie wydajnego i deklaratywnego kodu dzięki rozbudowanym
-    iteratorom (analogicznych do przetwarzania strumieniowego z języka \textit{Java}), oraz algebraicznym typom danych.
+    iteratorom, analogicznych do przetwarzania strumieniowego z języka \textit{Java}, oraz algebraicznym typom danych.
     Ważną decyzją podjętą podczas projektowania języka było zdecydowanie się na wykorzystanie monad \textit{Option} oraz
     \textit{Result}, co pozwoliło na rezygnację z mechanizmu wyjątków, zapewnienie bezwarunkowego \textit{null
     safety} oraz umożliwienie kompilatorowi wychwycenia znacznej części najczęściej popełnianych błędów.
 
     Ekspresywny system typów pozwala na pisanie rozszerzalnego i generycznego kodu. Język \textit{Rust} pozbawiony jest
     mechanizmu dziedziczenia, które nadużywane może być źródłem nieoczekiwanych zachowań oraz błędów związanych z
-    dzieleniem stanu pomiędzy poszczególnymi klasami bazowymi oraz konfliktami nazw. Alternatywnym rozwiązaniem
-    pozwalającym na ponowne wykorzystanie zachowań są cechy (ang. \textit{trait}). Cechy umożliwiają jedynie
-    współdzielenie interfejsu oraz domyślnych implementacji funkcji związanych z typem danych, lecz nie pozwalają na
-    współdzielenie stanu. Są mechanizmem zbliżonym do klas typów (ang. \textit{typeclasses}) znanych z języka
-    \textit{Haskell}.
+    dzieleniem stanu pomiędzy poszczególnymi klasami bazowymi oraz konfliktami identyfikatorów. Alternatywnym
+    rozwiązaniem pozwalającym na wilokrotne wykorzystywanie zachowań są cechy (ang. \textit{trait}). Cechy umożliwiają
+    jedynie współdzielenie interfejsu oraz domyślnych implementacji funkcji związanych z typem danych, lecz nie
+    pozwalają na współdzielenie stanu. Są mechanizmem zbliżonym do klas typów (ang. \textit{typeclasses}) znanych z
+    funkcyjnego języka \textit{Haskell}.
 
 
     % SPECYFIKACJA ZEWNĘTRZNA
@@ -67,18 +67,18 @@
         \subsection{Opis parametrów programu}
         {
             %
-            Program działa w trzech trybach, a do każdego z nich są przypisane pewne argumenty. Istnieją też parametry
-            nie związane z wybraną pod-komendą. Należą do nich głównie parametry systemu mrówkowego. Szczegółowy opis
-            każdego z nich zawiera lista:
+            Program działa w trzech trybach, a każdy z nich jest związany z odpowiednimi argumentami. Istnieją też
+            parametry niezwiązane z wybraną pod-komendą. Należą do nich głównie parametry systemu mrówkowego.
+            Szczegółowy opis każdego z nich zawiera lista:
 
             \begin{itemize}
                 \item \textbf{seed} - ziarno generatora liczb losowych, umożliwia powtarzalność wyników. Domyślnie
                 przyjmuje wartość \textit{42}.
                 \item \textbf{ants} - liczba mrówek w mrowisku. Jeśli nie zostanie podana, system mrowiskowy zostanie
-                zainicjowany z ilością mrówek równą liczbie wierzchołków grafu.
-                \item \textbf{steps} - maksymalna ilość kroków wykonywanych przez mrówki w jednym cyklu. Znajduje
-                zastosowanie jedynie w metodzie budowy grafu opartej o wierzchołki. Domyślnie ilość kroków mrówek jest
-                równa ilości wierzchołków grafu.
+                zainicjowany z liczbą mrówek równą liczbie wierzchołków grafu.
+                \item \textbf{steps} - maksymalna liczba kroków wykonywanych przez mrówki w jednym cyklu. Znajduje
+                zastosowanie jedynie w metodzie budowy grafu opartej na wierzchołkach. Domyślnie liczba kroków mrówek
+                jest równa liczbie wierzchołków grafu.
                 \item \textbf{dispatcher} - rodzaj strategii wyboru krawędzi przez mrówki. Odpowiada metodom opisanym w
                 sekcji\ref{sec:code_ant_colony}. Dostępne wartości to \lstinline{basic}, \lstinline{biased} oraz
                 \lstinline{colony}. Każdą z wartości może następować lista parametrów wybranej strategii. Jeśli lista
@@ -92,7 +92,7 @@
                 \ref{sec:method}. Dostępne wartości to \lstinline{spatial}, \lstinline{window}, \lstinline{kmeans} oraz
                 \lstinline{superpixels}. Każda z nich może zostać poprzedzona znakami \lstinline{i:} aby jednocześnie
                 odwrócić długości wygenerowanego grafu i luminancję każdego z pikseli macierzy maskującej.
-                \item \textbf{cycles} - określa ilość iteracji systemu mrówkowego. Jeśli nie jest podana, musi zostać
+                \item \textbf{cycles} - określa liczbę iteracji systemu mrówkowego. Jeśli nie jest podana, musi zostać
                 podany argument \textbf{stop-after}.
                 \item \textbf{stop-after} - określa po ilu iteracjach bez polepszenia rezultatów przeszukiwanie powinno
                 się zatrzymać.
@@ -139,7 +139,7 @@
                 \item \textbf{tsp} - tryb rozwiązywania problemu komiwojażera. Możliwe jest uruchomienie go z
                 następującymi argumentami:
                     \begin{itemize}
-                        \item \textbf{n-cities} - powoduje wygenerowanie losowego grafu o zadanej ilości wierzchołków,
+                        \item \textbf{n-cities} - powoduje wygenerowanie losowego grafu o zadanej liczbie wierzchołków,
                         \item \textbf{graph} - ścieżka do pliku \textit{.csv} zawierającego listę współrzędnych
                         opisujących wierzchołki grafu.
                     \end{itemize}
@@ -326,7 +326,7 @@ SUBCOMMANDS:
             \end{itemize}
 
             Kolejnym ważnym elementem powyższego modułu jest struktura śladu feromonowego \textbf{Pheromone}. Jej
-            implementacja jest oparta o tablicę asocjacyjną (ang. \textit{HashMap}) przypisująca każdego
+            implementacja jest oparta na tablicy asocjacyjnej (ang. \textit{HashMap}) przypisująca każdego
             identyfikatorowi krawędzi wartość zmiennoprzecinkową. Zawiera metody umożliwiające skalowanie,
             inkrementację i normalizację wartości mapy.
 
@@ -356,7 +356,7 @@ SUBCOMMANDS:
                 \item \textit{WindowToEdgeConverter} odpowiedzialną za segmentację obrazu na nienachodzące na siebie
                 prostokąty, opisaną w sekcji \ref{subsec:edge-method},
                 \item \textit{KMeansConverter} dzielącą obraz na grupy pikseli o zbliżonej wariancji sąsiadujących pikseli,
-                \item \textit{SuperPixelConverter} segmentująca obraz na zadaną ilość superpikseli według algorytmu
+                \item \textit{SuperPixelConverter} segmentująca obraz na zadaną liczbę superpikseli według algorytmu
                 \textit{SLIC}.
             \end{itemize}
         }
@@ -364,9 +364,9 @@ SUBCOMMANDS:
         \subsection{Moduł steganograficzny}
         {
             Ostatnim modułem aplikacji jest moduł odpowiedzialny za ukrywanie informacji w wskazanej bitmapie na
-            podstawie macierzy maskującej. Za równo bitmapa jak i macierz maskująca jest reprezentowana przez struktury
+            podstawie macierzy maskującej. Zarówno bitmapa jak i macierz maskująca jest reprezentowana przez struktury
             \textbf{PixelMap}. Strukturą implementującą powyższą funkcjonalność jest \textbf{MaskImageEmbedder}. W
-            trakcie ukrywania informacji wykorzystywany jest iterator bitów pozwalający na odczyt zadanej ilości
+            trakcie ukrywania informacji wykorzystywany jest iterator bitów pozwalający na odczyt zadanej liczby
             kolejnych bitów wiadomości.
 
             W module zawarto również implementację podstawowych miar jakości obrazów, takich jak błąd średniokwadratowy
@@ -384,17 +384,18 @@ SUBCOMMANDS:
         oraz umożliwiło dynamiczny rozwój kolejnych modułów aplikacji.
 
         Kolejnym istotnym zagadnieniem związanym z wykorzystanymi metodami zapewnienia jakości oprogramowania są testy
-        oparte o właściwości (ang. \textit{property based testing}). Jest to technika polegająca na testowaniu kodu dla
-        bardzo dużej ilości generowanych losowo danych wejściowych i sprawdzaniu czy pewne fundamentalne założenia
-        dotyczące danych wyjściowych są wciąż spełnione. Przykładowo, test oparty o właściwość funkcji sortującej
+        oparte na właściwościach (ang. \textit{property based testing}). Jest to technika polegająca na testowaniu kodu
+        dla bardzo dużej ilości generowanych losowo danych wejściowych i sprawdzaniu czy pewne fundamentalne założenia
+        dotyczące danych wyjściowych są wciąż spełnione. Przykładowo, test oparty na właściwości funkcji sortującej
         tablicę zawierającą wartości liczbowe może sprawdzać czy każdy kolejny element posortowanej tablicy jest większy
-        bądź równy poprzedniemu. W ten sposób jesteśmy w stanie zweryfikować działanie kodu bez określania konkretnych
+        bądź równy poprzedniemu. W ten sposób możliwe jest zweryfikowanie działania kodu bez określania konkretnych
         zestawów danych.
 
-        W aplikacji wykorzystano testy oparte o właściwości do zapewnienia odwracalności procesu ukrywania i wydobywania
-        danych z obrazu (złożenie funkcji ukrywającej i funkcji wydobywającej powinno być funkcją identycznościową z
-        względu na argument ukrywanych danych) oraz zapewniania unikalności generowanych identyfikatorów krawędzi
-        łączących wskazane wierzchołki grafu za pomocą metody zaproponowanej przez M. Szudzik\cite{SzudzikFn}.
+        W aplikacji wykorzystano testy oparte na właściwościach do zapewnienia odwracalności procesu ukrywania i
+        wydobywania danych z obrazu (złożenie funkcji ukrywającej i funkcji wydobywającej powinno być funkcją
+        identycznościową z względu na argument ukrywanych danych) oraz zapewniania unikalności generowanych
+        identyfikatorów krawędzi łączących wskazane wierzchołki grafu za pomocą metody zaproponowanej przez M. Szudzika
+        \cite{SzudzikFn}.
 
         \subsection{Rozwiązywanie problemu komiwojażera}
         {
@@ -402,14 +403,14 @@ SUBCOMMANDS:
             Aby zweryfikować poprawność implementacji modułu systemu mrówkowego postanowiono sprawdzić jego efektywność
             w rozwiązywaniu problemu komiwojażera. Krok ten również umożliwił implementację pomocniczych heurystyk
             służących do automatycznego doboru parametrów strategii wyboru krawędzi przez mrówki oraz odkładania śladu
-            feromonowego. Uzyskane zależności wyprowadzono na postawie eksperymentów wskazówek znajdujących się w
-            pracach opisujących poszczególne systemy mrówkowe\cite{Dorigo1991AntSA, Dorigo1997AntCS,
+            feromonowego. Uzyskane zależności wyprowadzono na postawie eksperymentów oraz wskazówek znajdujących się w
+            pracach opisujących poszczególne systemy mrówkowe \cite{Dorigo1991AntSA, Dorigo1997AntCS,
             Sttzle2000MAXMINAS}.
 
             W tabeli \ref{tab:impl-tsp-results} zamieszczono uzyskane rezultaty znanych z literatury problemów o
             trzydziestu (\textit{oliver30}) i stu miastach (\textit{kroa100}), wraz z powszechnie znanymi najlepszymi
             rozwiązaniami. Parametry poszczególnych wariantów systemów mrówkowych były konfigurowane za pomocą
-            opracowanych heurystyk. Przyjęto również że ilość mrówek jest równa ilości wierzchołków grafu.
+            opracowanych heurystyk. Przyjęto również że liczba mrówek jest równa liczbie wierzchołków grafu.
 
             \begin{table}
                 \centering

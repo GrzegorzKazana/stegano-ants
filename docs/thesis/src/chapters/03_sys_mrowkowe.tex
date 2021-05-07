@@ -32,7 +32,7 @@
     % CO TO
     Systemy mrówkowe (ang. \textit{Ant System - AS}) oraz systemy mrowiskowe (ang. \textit{Ant Colony System - ACS}) są
     metaheurystykami wykorzystywanymi do rozwiązywania trudnych problemów optymalizacyjnych. Ich fundamenty wywodzą się
-    z pracy z 1991 roku, zaproponowanej przez M. Dorgio, V. Maniezzo i A. Colorni\cite{Dorigo1991AntSA}. Jej autorzy
+    z pracy z 1991 roku, zaproponowanej przez M. Dorgio, V. Maniezzo i A. Colorniego \cite{Dorigo1991AntSA}. Jej autorzy
     przedstawili ideę oraz zastosowania algorytmu wzorującego się na zachowaniu mrówek poszukujących pożywania. Od tego
     czasu przedstawiono wiele wariacji oraz ulepszeń algorytmu mrówkowego, a wiele z nich jest obecnie używanych do
     rozwiązywania problemów w bardzo szerokim zakresie dziedzin.
@@ -41,24 +41,24 @@
     otoczenie w celu odnalezienie pożywienia. Początkowo, każda mrówka porusza się w chaotyczny i losowy sposób,
     przeszukując najbliższe otoczenie mrowiska. W przypadku, w którym mrówka odnajduje pożywienie, zaczyna ona drogę
     powrotną do mrowiska. Podczas jej przebywania, mrówka niosąca pokarm nanosi na ścieżkę ślad feromonowy. Ma to na
-    celu umożliwienie powrotu do obszaru w którym pokarm został znaleziony. Za równo mrówka która odniosła zdobytą
-    żywność, jak i pozostałe mrówki w okolicy podczas swojej losowej wędrówki, zaczynają faworyzować trasy oznaczone
+    celu umożliwienie powrotu do obszaru, w którym pokarm został znaleziony. Zarówno mrówka, która odniosła zdobytą
+    żywność, jak i pozostałe mrówki w okolicy podczas swojej losowej wędrówki zaczynają faworyzować trasy oznaczone
     śladem feromonowym. Jeśli na jego końcu ponownie zostanie znalezione pożywienie, na drogę powrotną zostanie nałożona
-    kolejna jego warstwa. Końcowym efektem tego zjawiska jest efekt pozytywnego sprzężenia zwrotnego, gdyż trasy
+    kolejna warstwa feromonu. Końcowym efektem tego zjawiska jest efekt pozytywnego sprzężenia zwrotnego, gdyż trasy
     obierana przez mrówki jednocześnie stają się dla nich bardziej atrakcyjne.
 
     Istotnym aspektem w zjawisku odkładania śladu feromonowego jest jego wyparowywanie pod upływem czasu. Jest to
     kluczowa właściwość, przyczyniająca się do zbieżności tras obieranych przez mrówki do optymalnej (najkrótszej) drogi
-    prowadzącej do pożywienia. Taki stanu rzeczy może być wytłumaczony poprzez analizę ruchu większej ilości mrówek w
+    prowadzącej do pożywienia. Taki stan rzeczy może być wytłumaczony poprzez analizę ruchu większej liczby mrówek w
     pewnym okresie czasu. Ponieważ przebycie dłuższej ścieżki wymaga więcej czasu, średnio mniej mrówek będzie się nią
     poruszać w stosunku do jednostki odległości. To bezpośrednio przekłada się na mniejszą ilość odłożonego śladu oraz
     jego szybsze odparowanie. Pomysłodawcy systemów mrówkowych podsumowują ich ogólne właściwości wyszczególniając
-    następujące cechy\cite{Dorigo1991AntSA}:
+    następujące cechy \cite{Dorigo1991AntSA}:
 
     \begin{itemize}
-        \item pozytywne sprzężenie zwrotne pozwalające na szybkie odkrywanie dobrych rozwiązań,
-        \item rozproszony charakter obliczeń zapobiega przedwczesnej zbieżności do lokalnego minimum,
-        \item zachłanne postępowanie każdej mrówki przyczynia się do znajdowania akceptowalnych rozwiązań w bardzo
+        \item dodatnie sprzężenie zwrotne pozwalające na szybkie odkrywanie dobrych rozwiązań,
+        \item rozproszony charakter obliczeń zapobiegający przedwczesnej zbieżności do lokalnego minimum,
+        \item zachłanne postępowanie każdej mrówki przyczyniające się do znajdowania akceptowalnych rozwiązań w bardzo
         krótkim czasie.
     \end{itemize}
 
@@ -66,11 +66,11 @@
     % SYSTEMY WIELOAGENTOWE
     \section{Systemy wieloagentowe}
     {
-        Ponieważ systemy mrówkowe oraz mrowiskowe można zaliczyć do grupy systemów wieloagentowych (ang. \textit{Multi
-        Agent System - MAS}), istotne jest zrozumienie celów, trudności, zalet oraz ograniczeń tej klasy rozwiązań.
-        Fundamentem systemów wieloagentowych jest pojedynczy agent wchodzący w interakcję z starannie zaprojektowanym
-        środowiskiem. Pomimo braku ścisłej definicji agenta która byłaby w stanie objąć wszystkie istotne przykłady oraz
-        zastosowania systemów, agent musi spełniać następujące kryteria\cite{Balaji2010AnIT}.
+        Ponieważ systemy mrówkowe oraz mrowiskowe można zaliczyć do grupy systemów wieloagentowych (ang.
+        \textit{Multi-Agent System - MAS}), istotne jest zrozumienie celów, trudności, zalet oraz ograniczeń tej klasy
+        rozwiązań. Fundamentem systemów wieloagentowych jest pojedynczy agent wchodzący w interakcję z starannie
+        zaprojektowanym środowiskiem. Pomimo braku ścisłej definicji agenta, która byłaby w stanie objąć wszystkie
+        istotne przykłady oraz zastosowania systemów, agent musi spełniać następujące kryteria \cite{Balaji2010AnIT}.
 
         \begin{itemize}
             \item Zdolność percepcji otoczenia. Sposób postrzegania oraz zakres odbieranych informacji zależy od
@@ -78,7 +78,7 @@
             \item Autonomia. Każdy agent samoistnie dąży do realizacji swoich celów, nie wymaga interakcji z innymi
             agentami ani zewnętrznej ingerencji człowieka w działanie systemu.
             \item Responsywność i proaktywność. Agent pod wpływem bodźców odbieranych z środowiska podejmuje decyzje
-            pozwalające przybliżające go do realizacji celu.
+            przybliżające go do realizacji celu.
             \item Komunikacja i zachowanie społeczne. Interakcja pomiędzy osobnikami jest kluczowym elementem systemów
             wieloagentowych. Pomimo że osobniki są w stanie działać autonomicznie, komunikacja pozwala na dzielnie się
             wiedzą i zdobytym doświadczeniem, co przekłada się na szybsze dążenie do lepszych rozwiązań systemu jako
@@ -89,80 +89,80 @@
             lokalnych celów przekłada się na odkrywanie coraz to lepszych rozwiązań globalnego problemu.
         \end{itemize}
 
-        Ze względu na powyższą charakterystykę oraz ogólną koncepcję systemów wieloagentowych, posiadają one wiele zalet
-        których pozbawione są scentralizowane metody rozwiązywania problemów. Autonomia agentów pozawala na zastosowanie
-        metodyk programowania równoległego i lepszego wykorzystania dostępnych zasobów procesora. Zapewniają również
-        lepszą skalowalność pod kątem rozmiaru problemu - dla większych danych wejściowych możliwe jest uruchomienie
-        większej liczby agentów zaangażowanych w rozwiązanie zadanego problemu. Lokalność i niezależność agentów pozwala
-        na wykorzystanie rozproszonych systemów komputerowych, na przykład klastrów - to z kolej przekłada się na
-        większą niezawodność systemów, gdyż błąd działania pojedynczego agenta nie powoduje awarii całego systemu.
-        Rozproszone systemy wieloagentowe mają również swoje wady, należą do nich narzut komunikacji agentów który może
-        utrudniać równoległe wykonywanie operacji, oraz brak gwarancji osiągnięcia globalnego
-        celu\cite{Dorri2018MultiAgentSA, Balaji2010AnIT}.
+        Ze względu na powyższą charakterystykę oraz ogólną koncepcję systemów wieloagentowych, posiadają one wiele
+        zalet, których pozbawione są scentralizowane metody rozwiązywania problemów. Autonomia agentów pozawala na
+        zastosowanie metodyk programowania równoległego i lepszego wykorzystania dostępnych zasobów procesora.
+        Zapewniają również lepszą skalowalność pod kątem rozmiaru problemu -- dla większych danych wejściowych możliwe
+        jest uruchomienie większej liczby agentów zaangażowanych w rozwiązanie zadanego problemu. Lokalność i
+        niezależność agentów pozwala na wykorzystanie rozproszonych systemów komputerowych, na przykład klastrów -- to z
+        kolei przekłada się na większą niezawodność systemów, gdyż błąd działania pojedynczego agenta nie powoduje
+        awarii całego systemu. Rozproszone systemy wieloagentowe mają również swoje wady, należą do nich narzut
+        komunikacji agentów, który może utrudniać równoległe wykonywanie operacji, oraz brak gwarancji osiągnięcia
+        globalnego celu \cite{Dorri2018MultiAgentSA, Balaji2010AnIT}.
 
         % PRZYKŁADY/ZASTOSOWANIA SYS WIELOAGENTOWYCH
         W związku z szerokim wachlarzem zalet, systemy wieloagentowe znajdują zastosowanie w rozległym spektrum dziedzin
         i aplikacji. Ich przeznaczenia można zaobserwować poczynając od modelowania problemów zbyt złożonych do
-        klasycznej analizy, rozwiązywania zadań wyznaczania drogi, za równo w logistycznych łańcuchach zaopatrzeń jak i
-        w trasowaniu pakietów w sieciach IP, oraz zarządzania i monitorowania systemami takimi jak sieci energetyczne
-        lub platformy chmurowe\cite{Dorri2018MultiAgentSA, Oprea2004ApplicationsOM}.
+        klasycznej analizy, rozwiązywania zadań wyznaczania drogi, zarówno w logistycznych łańcuchach zaopatrzeń jak i
+        w trasowaniu pakietów w sieciach IP, oraz zarządzania i monitorowania systemami, takimi jak sieci energetyczne
+        czy platformy chmurowe \cite{Dorri2018MultiAgentSA, Oprea2004ApplicationsOM}.
 
         % SYS MRÓWKOWE JAKO SYS WIELOAGENTOWE
-        Na podstawie omówionych cech systemów wieloagentowych, możemy wysnuć wiele paralel pomiędzy nimi i systemami
+        Na podstawie omówionych cech systemów wieloagentowych, można wysnuć wiele paralel pomiędzy nimi i systemami
         mrówkowymi. Pojedynczymi agentami są mrówki, które postrzegają środowisko w określony i charakterystyczny sposób
         dla natury problemu. Ich percepcja ogranicza się do postrzegania ich położenia, dostępnych ścieżek oraz śladu
-        feromonowego z nimi związanym. Każda mrówka jest w pełni autonomiczna, gdyż nie wymaga dodatkowej interakcji do
+        feromonowego z nimi związanego. Każda mrówka jest w pełni autonomiczna, gdyż nie wymaga dodatkowej interakcji do
         wykonywania działań prowadzących do realizacji lokalnego celu. Mrówki przejawiają zachowania społeczne oraz
         komunikują się za pomocą nanoszonego śladu feromonowego na ścieżki prowadzące do pożywienia. Dzięki tym cechom,
-        agenci realizujący lokalne cele, czyli znalezienie pożywienia, przyczyniają się do wspólnego osiągnięcia celu
+        agenty realizujące lokalne cele, czyli znalezienie pożywienia, przyczyniają się do wspólnego osiągnięcia celu
         globalnego, jakim jest wyznaczenie najkrótszej drogi do niego prowadzącej.
     }
 
     % ZASTOSOWANIE SYS MRÓWKOWYCH
     \section{Zastosowania systemów mrówkowych}
     {
-        Ponieważ metaheurystyka systemu mrówkowego jest oparta o zachowanie mrówek poszukujących najkrótszej drogi do
-        pożywienia, oczywiste zdają się być próby zaaplikowania jej do problemu komiwojażera, znanego w anglojęzycznej
+        Ponieważ metaheurystyka systemu mrówkowego jest oparta na zachowaniu mrówek poszukujących najkrótszej drogi do
+        pożywienia, oczywiste zdają się być próby zastosowania jej do problemu komiwojażera, znanego w anglojęzycznej
         literaturze jako \textit{Travelling Salesman Problem - TSP}. Zadaniem postawionym przed algorytmem poszukującym
         rozwiązania \textit{TSP} jest znalezienie najkrótszej drogi łączącej wszystkie $n$ miast w taki sposób, że każde
         miasto zostanie odwiedzone jednokrotnie. Problem komiwojażera jest problemem \textit{NP trudnym}, a
         asymptotyczna złożoność algorytmu przeszukiwania wyczerpującego wynosi $O(n!)$. \textit{TSP} zawdzięcza swoją
         popularność prostocie jego opisu, będącej w opozycji do trudności realizacji jego rozwiązania. Jego pierwsza
         formalna definicja została przedstawiona przez matematyka K. Mengera w roku
-        1930\cite{Mazidi2017MetaHeuristicAF}. Od tego czasu naukowcy z wielu dziedzin starali się zaproponować algorytmy
+        1930 \cite{Mazidi2017MetaHeuristicAF}. Od tego czasu naukowcy z wielu dziedzin starali się zaproponować algorytmy
         i heurystyki pozwalające na znalezienie dobrych rozwiązań w czasie wielomianowym. Pomimo braku sukcesu w
         odkryciu algorytmu pozwalającego na znalezienie optymalnego rozwiązania w czasie wielomianowym, poczyniono
         istotny postęp w tworzeniu algorytmów skupionych na odkrywaniu akceptowalnych rozwiązań w krótszym czasie.
 
         Jednym z najważniejszych przełomów w badaniach \textit{TSP}, był algorytm zaproponowany przez N. Christofides w
         roku 1976. Odkryte rozwiązanie gwarantuje znalezienie drogi nie dłuższej od optymalnej o $50\%$ w czasie
-        $O(n^3)$\cite{Christofides1976WorstCaseAO}. Od tego czasu, powstawało wiele alternatywnych rozwiązań, lecz żadne
+        $O(n^3)$ \cite{Christofides1976WorstCaseAO}. Od tego czasu, powstawało wiele alternatywnych rozwiązań, lecz żadne
         z nich nie zdołało obniżyć górnej granicy długości drogi w znaczący sposób.
 
         Alternatywnym podejściem do problemu komiwojażera oraz innych problemów z klasy \textit{NP trudnych}, które
         zyskało na popularności jest stosowanie metaheurystyk, czyli ogólnych schematów i metod przeznaczonych do
         rozwiązywania szerokiej gamy problemów algorytmicznych. Metaheurystyki są najczęściej inspirowane systemami
         występującymi w naturze, i dają dobre rezultaty w problemach optymalizacyjnych problemów o charakterze losowym i
-        dynamicznym\cite{Bianchi2008ASO}. Do najszerzej stosowanych należą symulowane wyżarzanie (ang. \textit{Simulated
-        Annealing})\cite{Kirkpatrick1983OptimizationBS}, algorytmy genetyczne (ang. \textit{Genetic
-        Algorithms})\cite{Fraser1957SimulationOG}, metody optymalizacji cząsteczkowej (ang. \textit{Particle swarm
-        optimization})\cite{Poli2007ParticleSO} oraz opisywane w tym rozdziale systemy mrówkowe i mrowiskowe. Wszystkie
-        z wymienionych metod były wykorzystywane w rozwiązywaniu problemu komiwojażera\cite{Prabakaran2019ASO,
+        dynamicznym \cite{Bianchi2008ASO}. Do najszerzej stosowanych należą symulowane wyżarzanie (ang. \textit{Simulated
+        Annealing}) \cite{Kirkpatrick1983OptimizationBS}, algorytmy genetyczne (ang. \textit{Genetic
+        Algorithms}) \cite{Fraser1957SimulationOG}, metody optymalizacji cząsteczkowej (ang. \textit{Particle Swarm
+        Optimization}) \cite{Poli2007ParticleSO} oraz opisywane w tym rozdziale systemy mrówkowe i mrowiskowe. Wszystkie
+        z wymienionych metod były wykorzystywane w rozwiązywaniu problemu komiwojażera \cite{Prabakaran2019ASO,
         Mazidi2017MetaHeuristicAF}.
 
         Pomimo niesprzecznej wagi i istotności \textit{TSP}, systemy mrówkowe i mrowiskowe znalazły zastosowanie w wielu
         innych problemach. Kluczowym etapem decydującym o możliwości i efektywności rozwiązania zadanego problemu przez
-        system mrówkowy lub mrowiskowy jest wyznaczenie jego odpowiedniej reprezentacji grafowej\cite{Dorigo1991AntSA}.
+        system mrówkowy lub mrowiskowy jest wyznaczenie jego odpowiedniej reprezentacji grafowej \cite{Dorigo1991AntSA}.
         Dodatkową zaletą wynikającą z zastosowania tego rodzaju metaheurystyki jest możliwość rozwiązywania problemów
         dynamicznych, w których warunki ulegają zmianom w trakcie pracy algorytmu. Do problemów rozwiązywanych przez
-        systemy mrówkowe możemy zaliczyć między innymi:
+        systemy mrówkowe można zaliczyć między innymi:
 
         \begin{itemize}
-            \item kwadratowe zagadnienie przydziału (ang. \textit{quadratic assignment problem})\cite{Maniezzo1999TheAS,
+            \item kwadratowe zagadnienie przydziału (ang. \textit{quadratic assignment problem}) \cite{Maniezzo1999TheAS,
             Gambardella1999AntCF},
-            \item harmonogramowanie (ang. \textit{scheduling})\cite{JSSchedulingColoroni94, Merkle2002AntCO},
-            \item marszrutyzacja (ang. \textit{vehicle routing problem})\cite{Bullnheimer1999ApplyingTA},
-            \item trasowanie w sieciach (ang. \textit{routing})\cite{Caro1999AntNetAM, Bonabeau1998RoutingIT}.
+            \item harmonogramowanie (ang. \textit{scheduling}) \cite{JSSchedulingColoroni94, Merkle2002AntCO},
+            \item marszrutyzacja (ang. \textit{vehicle routing problem}) \cite{Bullnheimer1999ApplyingTA},
+            \item trasowanie w sieciach (ang. \textit{routing}) \cite{Caro1999AntNetAM, Bonabeau1998RoutingIT}.
         \end{itemize}
     }
 
@@ -170,7 +170,7 @@
     \section{Zasada działania}
     {
         Ponieważ zachowanie mrówek poszukujących najkrótszej ścieżki do pożywienia najłatwiej i najbardziej intuicyjnie
-        jest analizować w odniesieniu do problemu komiwojażera, zdecydowano się stosować słownictwo oparte o problem
+        jest analizować w odniesieniu do problemu komiwojażera, zdecydowano się stosować słownictwo oparte na problemie
         poruszania się po mapie złożonej z miast połączonych drogami o znanej długości. Ważne jest jednak mieć na uwadze
         fakt, że jest to tylko przykład dydaktyczny, a działanie algorytmu można równie trafnie opisać posługując się
         pojęciami grafu, wierzchołków i krawędzi je łączących.
@@ -186,7 +186,7 @@
         momentu w którym mrówki odwiedziły już wszystkie miasta, lub został osiągnięty warunek końcowy. Po zakończeniu
         iteracji, która w przypadku zadań polegających na odwiedzeniu wszystkich miast nazywana jest cyklem, następuje
         ponowne naniesienie śladu feromonowego. Algorytm jest wykonywany do momentu realizacji ustalonej liczby iteracji
-        lub braku poprawy rozwiązania\cite{Dorigo1991AntSA}.
+        lub braku poprawy rozwiązania \cite{Dorigo1991AntSA}.
 
         Ogólna postać algorytmu może zostać podsumowana w następujący sposób:
 
@@ -250,7 +250,7 @@
         {
             W przypadku modelu o feromonie stałym, przyrost jest stałą wartością $Q$ dla krawędzi którą mrówka zdecyduje
             się przebyć w drodze pomiędzy wierzchołkami $i$ i $j$. Po zakończeniu kroku lub cyklu, wartości te są
-            sumowane dla każdej z $m$ mrówek - jeśli krawędź została przemierzona przez więcej niż jedną mrówkę,
+            sumowane dla każdej z $m$ mrówek -- jeśli krawędź została przemierzona przez więcej niż jedną mrówkę,
             przyrost śladu feromonowego będzie proporcjonalnie większy i jest wyrażony wzorem
             \ref{eqt:pheromone-density}.
 
@@ -309,22 +309,22 @@
             efektywności w rozwiązywaniu problemu komiwojażera. W przypadku każdego z modeli osiągnięto zadowalające
             wyniki, lecz najszybszą zbieżność do optymalnych rozwiązań zaobserwowano w modelu z feromonem cyklicznym.
             Podczas eksperymentów, autorzy uzyskali ówcześnie znane najlepsze rozwiązanie \textit{TSP} dla zbioru
-            Oliver30, lecz nie odnieśli sukcesu w problemach większego rozmiaru - Eilon50 i Elion75. Jednakże, w
+            Oliver30, lecz nie odnieśli sukcesu w problemach większego rozmiaru -- Eilon50 i Elion75. Jednakże, w
             artykule wyraźnie podkreślono, że osiągnięcie najlepszych wyników w problemie komiwojażera nie było głównym
             celem pracy, a problem ten został wybrany jedynie w celach dydaktycznych i porównawczych. Zwrócono
-            jednocześnie uwagę na istotność procesu doboru parametrów algorytmu, takich jak ilość mrówek i współczynnik
+            jednocześnie uwagę na istotność procesu doboru parametrów algorytmu, takich jak liczba mrówek i współczynnik
             wyparowania śladu feromonowego. Zaobserwowano, że dla większości rozwiązywanych problemów osiągano najlepsze
-            rezultaty gdy ilość mrówek $m$ jest zbliżona do ilości wierzchołków $n$ grafu reprezentującego problem. Dla
+            rezultaty gdy liczba mrówek $m$ jest zbliżona do liczby wierzchołków $n$ grafu reprezentującego problem. Dla
             wariantu algorytmu z feromonem cyklicznym, najlepsze rezultaty osiągano dla współczynnika odparowania $(1 -
             \rho)$ bliskiemu $0.5$, i wartości $\alpha$ i $\beta$ będących w stosunku $\frac{\beta}{\alpha}$ zbliżonym
-            do zakresu $[2.5, 5]$ \cite{Dorigo1991AntSA}.
+            do zakresu $[2.5, 5]$  \cite{Dorigo1991AntSA}.
         }
 
         % SYS MROWISKOWY
         \subsection{System mrowiskowy}
         {
             Znaczącym krokiem naprzód w dziedzinie algorytmów mrówkowych, jest system mrowiskowy zaproponowany przez M.
-            Dorigo, jednego z twórców systemów mrówkowych, oraz L. Gambardella w roku 1997\cite{Dorigo1997AntCS}. Tym
+            Dorigo, jednego z twórców systemów mrówkowych, oraz L. Gambardella w roku 1997 \cite{Dorigo1997AntCS}. Tym
             razem głównym celem pracy było opracowanie zmodyfikowanej wersji algorytmu która mogłaby konkurować z
             najlepszymi znanymi algorytmami służącymi do rozwiązywania problemu komiwojażera o dużym rozmiarze
             wejściowym.
@@ -333,11 +333,11 @@
             mrówkowych, zaproponowano wprowadzenie trzech istotnych zmian w zakresie działania algorytmu.
 
             \begin{itemize}
-                \item Rozszerzenie reguły wyboru krawędzi łączącej miasta $i$ i $j$ o dwa tryby działania - eksplorację
+                \item Rozszerzenie reguły wyboru krawędzi łączącej miasta $i$ i $j$ o dwa tryby działania -- eksplorację
                 i eksploatację. Wybór pomiędzy trybem działania jest czyniony na podstawie wartości zmiennej losowej $q$
                 przyjmującej wartości z zakresu $[0, 1]$. Jeśli jej wartość jest mniejsza bądź równa wartości parametru
                 algorytmu $q_0$, mrówka wybierze krawędź maksymalizującą wartość iloczynu widoczności i natężenia śladu
-                feromonowego - jest to strategia eksploatacji. W przeciwnym razie, kolejne miasto $s$ zostanie wybrana
+                feromonowego -- jest to strategia eksploatacji. W przeciwnym razie, kolejne miasto $s$ zostanie wybrana
                 zgodnie z funkcją prawdopodobieństwa zbliżoną do zaproponowanej w systemie mrówkowym. Wzór opisujący
                 wybór kolejnego miasta określa wzór \ref{eqt:ant_colony_dispatch}.
 
@@ -351,7 +351,7 @@
                 \item Usprawnienie lokalnej reguły aktualizacji śladu feromonowego. Według eksperymentów, globalna
                 regułą nie nie jest wystarczająca w zapewnianiu akceptowalnych rezultatów. Autorzy testowali różne
                 metody wyznaczania wartości przyrostu śladu feromonowego, w tym metody czerpiące inspirację z
-                wzmacnianych metod uczenia maszynowego \textit{Q-learning}\cite{Watkins1989LearningFD}. Równie dobre
+                wzmacnianych metod uczenia maszynowego \textit{Q-learning} \cite{Watkins1989LearningFD}. Równie dobre
                 rezultaty osiągnięto stosując prostszą obliczeniowo regułę opisaną wzorem
                 \ref{eqt:ant_colony_local_update_1} oraz \ref{eqt:ant_colony_local_update_2}. Wartość $\rho$ jest
                 współczynnikiem wyparowania niezależnym od $\alpha$, a $V_k$ oznacza krawędź wybraną przez mrówkę $k$.
@@ -393,8 +393,8 @@
             \end{equation}
 
             Autorom udało się dowieść, że zaproponowany system mrowiskowy jest w stanie osiągać równie dobre, lub w
-            znacznej części badanych problemów lepsze wyniki niż inne heurystyki. W problemach o
-            rozmiarze 75 i 100 miast, uzyskano lepsze rezultaty niż za pomocą algorytmów genetycznych, elastycznych
+            znacznej części badanych problemów lepsze wyniki niż inne heurystyki. W problemach o rozmiarze 75 i 100
+            miast, uzyskano lepsze rezultaty niż za pomocą algorytmów genetycznych, regularyzacji metodą elastycznej
             sieci oraz symulowanego wyżarzania. Dodatkowo, autorzy zgłębili temat i osiągalne rezultaty wykorzystania
             heurystyki systemu mrowiskowego jako generatora tras wejściowych do algorytmów lokalnej wyczerpującej
             optymalizacji, takich jak \textit{3-opt}.
@@ -404,8 +404,8 @@
         \subsection{System mrówkowy Max-Min}
         {
             Alternatywnym ulepszeniem klasycznego algorytmu mrówkowego, jest system mrówkowy max-min (\textit{Max-Min
-            Ant System - MMAS})\cite{Sttzle2000MAXMINAS}. Podobnie jak w przypadku pracy \textit{Ant colony system: a
-            cooperative learning approach to the traveling salesman problem}\cite{Dorigo1997AntCS}, głównym celem
+            Ant System - MMAS}) \cite{Sttzle2000MAXMINAS}. Podobnie jak w przypadku pracy \textit{Ant colony system: a
+            cooperative learning approach to the traveling salesman problem} \cite{Dorigo1997AntCS}, głównym celem
             autorów było zaproponowanie wariantu algorytmu mrówkowego który gwarantuje lepsze wyniki dla grafów
             większych rozmiarów.
 
@@ -436,10 +436,10 @@
     {
         Pomimo obszerności powyższego porównania istniejących systemów mrówkowych i mrowiskowych, nie jest ono w żadnym
         stopniu wyczerpujące. Powstało wiele innych rozwiązań charakteryzujących się obiecującymi rezultatami. Należą do
-        nich przykładowo systemy elitystyczne (ang. \textit{Elitist Ant System - EAS})\cite{Dorigo1996AntSO} oraz
-        systemy rankingowe (ang. \textit{Rank Ant System - ASRank})\cite{Bullnheimer1997ANR}. Jak można ocenić,
+        nich przykładowo systemy elitystyczne (ang. \textit{Elitist Ant System - EAS}) \cite{Dorigo1996AntSO} oraz
+        systemy rankingowe (ang. \textit{Rank Ant System - ASRank}) \cite{Bullnheimer1997ANR}. Jak można ocenić,
         dziedzina systemów mrówkowych jest wciąż aktualna w rozwiązywaniu problemów, których rozwiązania są nieosiągalne
-        przy stosowaniu algorytmów wyczerpujących i zachłannych\cite{Dorigo2003TheAC}.
+        przy stosowaniu algorytmów wyczerpujących i zachłannych \cite{Dorigo2003TheAC}.
     }
 }
 
