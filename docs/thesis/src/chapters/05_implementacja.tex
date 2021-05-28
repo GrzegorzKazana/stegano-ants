@@ -30,7 +30,7 @@
     nie jest uruchamiany za pomocą maszyny wirtualnej. Nie posiada również mechanizmu odśmiecania pamięci, (ang.
     \textit{garbage collection}) ani automatycznego zliczania referencji. W przeciwieństwie do języków \textit{C} oraz
     \textit{C++} obowiązek zarządzania pamięcią i gwarantowania bezpieczeństwa jej użycia jest w dużej mierze
-    przeniesiony z dewelopera na rygorystyczny kompilator.
+    przeniesiony z dewelopera na rygorystyczny kompilator \cite{Cosmin2019RustT, Matsakis2014TheRL, RustHomePage}.
 
     Głównymi celami realizowanymi przez język \textit{Rust} jest umożliwienie pisania aplikacji wymagających dużej
     wydajności, współbieżności oraz bezpieczeństwa przy wykorzystaniu nowoczesnych praktyk programistycznych. Kolejnym
@@ -38,11 +38,12 @@
     korzystanie z bogatego wachlarza otwartoźródłowych bibliotek.
 
     \textit{Rust} jest językiem wieloparadygmatowym, lecz wiele cech będących fundamentem jego popularności oraz
-    bezpieczeństwa czerpie z języków funkcyjnych. Umożliwia pisanie wydajnego i deklaratywnego kodu dzięki rozbudowanym
-    iteratorom, analogicznych do przetwarzania strumieniowego z języka \textit{Java}, oraz algebraicznym typom danych.
+    bezpieczeństwa czerpie z języków funkcyjnych. Umożliwia pisanie wydajnego deklaratywnego kodu dzięki rozbudowanym
+    iteratorom, analogicznym do przetwarzania strumieniowego z języka \textit{Java}, oraz algebraicznym typom danych.
     Ważną decyzją podjętą podczas projektowania języka było zdecydowanie się na wykorzystanie monad \textit{Option} oraz
-    \textit{Result}, co pozwoliło na rezygnację z mechanizmu wyjątków, zapewnienie bezwarunkowego \textit{null
-    safety} oraz umożliwienie kompilatorowi wychwycenia znacznej części najczęściej popełnianych błędów.
+    \textit{Result}, co pozwoliło na rezygnację z mechanizmu wyjątków, zapewnienie bezpieczeństwa odwołań pod kątem
+    pustych referencji (ang. \textit{null safety}) oraz umożliwienie kompilatorowi wychwycenia znacznej części
+    najczęściej popełnianych błędów.
 
     Ekspresywny system typów pozwala na pisanie rozszerzalnego i generycznego kodu. Język \textit{Rust} pozbawiony jest
     mechanizmu dziedziczenia, które nadużywane może być źródłem nieoczekiwanych zachowań oraz błędów związanych z
@@ -55,10 +56,10 @@
 
     % SPECYFIKACJA ZEWNĘTRZNA
     % zdecydować się na konsolę vs ui
-    \section{Specyfikacja zewnętrzna}
+    \section{Dokumentacja użytkowa}
     {
         %
-        Ponieważ funkcjonalność projektu była bardziej znaczącym aspektem niż jego interfejs, program zdecydowano się
+        Ponieważ funkcjonalność aplikacji była bardziej znaczącym aspektem niż jej interfejs, program zdecydowano się
         zaimplementować jako aplikację konsolową. Pomimo wady w postaci mniejszej przystępności dla niedoświadczonego
         użytkownika, takie rozwiązanie ma również swoje zalety. Umożliwia automatyczne uruchamianie aplikacji dla
         różnych zestawów danych za pomocą zewnętrznych skryptów i programów, co okazało się bardzo wartościowe podczas
@@ -68,7 +69,7 @@
         {
             %
             Program działa w trzech trybach, a każdy z nich jest związany z odpowiednimi argumentami. Istnieją też
-            parametry niezwiązane z wybraną pod-komendą. Należą do nich głównie parametry systemu mrówkowego.
+            parametry niezwiązane z wybraną podkomendą. Należą do nich głównie parametry systemu mrówkowego.
             Szczegółowy opis każdego z nich zawiera lista:
 
             \begin{itemize}
@@ -80,26 +81,25 @@
                 zastosowanie jedynie w metodzie budowy grafu opartej na wierzchołkach. Domyślnie liczba kroków mrówek
                 jest równa liczbie wierzchołków grafu.
                 \item \textbf{dispatcher} - rodzaj strategii wyboru krawędzi przez mrówki. Odpowiada metodom opisanym w
-                sekcji\ref{sec:code_ant_colony}. Dostępne wartości to \lstinline{basic}, \lstinline{biased} oraz
-                \lstinline{colony}. Każdą z wartości może następować lista parametrów wybranej strategii. Jeśli lista
+                sekcji\ref{sec:code_ant_colony}. Dostępne wartości to \texttt{basic}, \texttt{biased} oraz
+                \texttt{colony}. Każdą z wartości może następować lista parametrów wybranej strategii. Jeśli lista
                 parametrów nie zostanie podana, zastosowane będą automatycznie dobrane wartości dla wskazanego problemu.
                 \item \textbf{updater} - rodzaj strategii nanoszenia śladu feromonowego odpowiadających różnym systemom
-                mrówkowym. Dostępne wartości to \lstinline{const}, \lstinline{avg}, \lstinline{cycle},
-                \lstinline{colony} oraz \lstinline{maxmin}. Podobnie jak w przypadku argumentu \textbf{dispatcher},
+                mrówkowym. Dostępne wartości to \texttt{const}, \texttt{avg}, \mbox{\texttt{cycle},} \texttt{colony} oraz \texttt{maxmin}. Podobnie jak w przypadku argumentu \textbf{dispatcher},
                 możliwe jest podanie dodatkowych parametrów do każdej strategii po oddzieleniu ich znakiem
-                \lstinline{:}.
+                ,,\texttt{:}''.
                 \item \textbf{converter} - strategia przekształcenia bitmapy w graf, które zostały opisane w
-                \ref{sec:method}. Dostępne wartości to \lstinline{spatial}, \lstinline{window}, \lstinline{kmeans} oraz
-                \lstinline{superpixels}. Każda z nich może zostać poprzedzona znakami \lstinline{i:} aby jednocześnie
+                \ref{sec:method}. Dostępne wartości to \texttt{spatial}, \texttt{window}, \texttt{kmeans} oraz
+                \texttt{superpixels}. Każda z nich może zostać poprzedzona znakami ,,\texttt{i:}'' aby jednocześnie
                 odwrócić długości wygenerowanego grafu i luminancję każdego z pikseli macierzy maskującej.
                 \item \textbf{cycles} - określa liczbę iteracji systemu mrówkowego. Jeśli nie jest podana, musi zostać
                 podany argument \textbf{stop-after}.
                 \item \textbf{stop-after} - określa po ilu iteracjach bez polepszenia rezultatów przeszukiwanie powinno
                 się zatrzymać.
                 \item \textbf{mask-width} - pozwala na przeskalowanie obrazu na którego podstawie tworzony jest graf.
-                \item \textbf{target-capacity} - umożliwia określenie docelowej pojemności steganogramu. Wykorzystywane
+                \item \textbf{target-capacity} - pozwala na określenie docelowej pojemności steganogramu. Wykorzystywane
                 podczas eksperymentów i pomiarów degradacji jakości obrazu. Przyjmuje wartości liczbowe z jednostką
-                \lstinline{B}, \lstinline{kB} lub \lstinline{MB}.
+                \texttt{B}, \texttt{kB} lub \texttt{MB}.
                 \item \textbf{quiet} - jeśli zostanie podany ten argument, program nie będzie drukował rezultatów na
                 strumień wyjścia.
                 \item \textbf{verbose-files} - decyduje czy generowane artefakty (steganogram, macierz konwersji na
@@ -123,7 +123,7 @@
                         \item \textbf{steg} - utworzony steganogram,
                         \item \textbf{pher} - macierz maskująca w postaci bitmapy,
                         \item \textbf{pher\_scaled} - macierz maskująca przeskalowana w taki sposób, aby pomieściła
-                        zadaną ilość danych,
+                        zadaną liczbę danych,
                         \item \textbf{conv} - przedstawia proces konwersji bitmapy na graf. Każdy piksel posiada
                         luminancję związaną z odległością na grafie.
                     \end{itemize}
@@ -149,8 +149,8 @@
 
 
             % HELP
-            Ponadto, użytkownik może się zapoznać z całym wachlarzem opcji uruchomieniowych \ref{code:help} poprzez uruchomienie programu z flagą
-            \textit{--help}.
+            Ponadto, użytkownik może się zapoznać z całym wachlarzem opcji uruchomieniowych poprzez uruchomienie
+            programu z flagą \textit{--help} (listing \ref{code:help}).
 
             \begin{lstlisting}[basicstyle=\tiny, caption=Pomoc programu, label=code:help]
 USAGE:
@@ -194,10 +194,10 @@ SUBCOMMANDS:
 
         \subsection{Przykłady użycia}
         {
-            Poniżej zamieszczono przykładowe uruchomienia programu.
+            Poniżej zamieszczono przykładowe uruchomienia programu:
 
             \begin{enumerate}
-                \item Ukrycie danych w wskazanym pliku przy użyciu systemu mrowiskowego oraz wierzchołkowej metody
+                \item Ukrycie danych we wskazanym pliku przy użyciu systemu mrowiskowego oraz wierzchołkowej metody
                 budowy grafu.
 
                 \begin{lstlisting}
@@ -227,8 +227,8 @@ SUBCOMMANDS:
         --image=photo.bmp
                 \end{lstlisting}
 
-                \item Ukrycie danych w wskazanym pliku przy użyciu systemu max-min z ustalonymi parametrami $\alpha=1$ i
-                $\beta=2$ oraz metodą podziału na 50 superpikseli.
+                \item Ukrycie danych we wskazanym pliku przy użyciu systemu max-min z ustalonymi parametrami $\alpha=1$
+                i $\beta=2$ oraz metodą podziału na 50 superpikseli.
 
                 \begin{lstlisting}
     stegano-ants \
@@ -243,8 +243,8 @@ SUBCOMMANDS:
         --image=photo.bmp
                 \end{lstlisting}
 
-                \item Ukrycie danych w wskazanym pliku przy użyciu systemu max-min z ustalonymi parametrami $\alpha=1$ i
-                $\beta=2$.
+                \item Ukrycie danych we wskazanym pliku przy użyciu systemu max-min z ustalonymi parametrami $\alpha=1$
+                i $\beta=2$.
 
                 \begin{lstlisting}
     stegano-ants \
@@ -275,7 +275,7 @@ SUBCOMMANDS:
     }
 
     % SPECYFIKACJA WEWNĘTRZNA
-    \section{Specyfikacja wewnętrzna}
+    \section{Dokumentacja programowa}
     {
         Kod źródłowy aplikacji został podzielony w taki sposób, że odzwierciedla poruszane domeny. Powstały trzy główne
         moduły aplikacji: moduł systemu mrówkowego (\textit{ant\_colony}), moduł przetwarzania obrazów (\textit{images})
@@ -290,12 +290,12 @@ SUBCOMMANDS:
             mrowiskowego oraz systemu max-min.
 
             % ANT-DISPATCHER
-            Strategie wyboru krawędzi określone są cechą (ang. \textit{trait}) \textbf{AntDispatcher}. Jest to interfejs
+            Strategie wyboru krawędzi określone są cechą (ang. \textit{trait}) \texttt{AntDispatcher}. Jest to interfejs
             wymagający od każdej implementującej go struktury zapewnienia funkcji wybierającej kolejną krawędź dla
             wskazanej mrówki, grafu oraz śladu feromonowego. Cecha posiada również domyślną implementację funkcji
             odpowiedzialnej za umieszczenie zadanej liczby mrówek na wierzchołkach grafu w sposób losowy.
 
-            Strukturami implementującymi cechę \textbf{AntDispatcher} są:
+            Strukturami implementującymi cechę \texttt{AntDispatcher} są:
 
             \begin{itemize}
                 \item \textit{BasicAntDispatcher} implementująca wzór \ref{eqt:edge_dispatch_propab} dla $\alpha = \beta
@@ -306,7 +306,7 @@ SUBCOMMANDS:
             \end{itemize}
 
             % PHEROMONE-UPDATER
-            Kolejną kluczową cechą należącą do tego modułu jest \textbf{PheromoneUpdater}, opisująca strategie
+            Kolejną kluczową cechą należącą do tego modułu jest \texttt{PheromoneUpdater}, opisująca strategie
             odkładania śladu feromonowego na skutek ruchu mrówek. Interfejs wymaga implementacji funkcji inicjalizacji
             struktury feromonu, jego aktualizacji po wykonaniu kroku przez wszystkie mrówki oraz po wykonaniu całego
             cyklu. Dwie ostatnie funkcje mają domyślną postać funkcji identycznościowej.
@@ -325,8 +325,8 @@ SUBCOMMANDS:
                 max-min (wzór \ref{eqt:ant_colony_global_update_2} oraz \ref{eqt:ant_colony_local_update_2}).
             \end{itemize}
 
-            Kolejnym ważnym elementem powyższego modułu jest struktura śladu feromonowego \textbf{Pheromone}. Jej
-            implementacja jest oparta na tablicy asocjacyjnej (ang. \textit{HashMap}) przypisująca każdego
+            Kolejnym ważnym elementem powyższego modułu jest struktura śladu feromonowego \texttt{Pheromone}. Jej
+            implementacja jest oparta na tablicy asocjacyjnej (ang. \textit{HashMap}) przypisującej każdemu
             identyfikatorowi krawędzi wartość zmiennoprzecinkową. Zawiera metody umożliwiające skalowanie,
             inkrementację i normalizację wartości mapy.
 
@@ -337,16 +337,16 @@ SUBCOMMANDS:
 
         \subsection{Moduł przetwarzania obrazów}
         {
-            Wszelkie operacje związane z odczytem i manipulacją obrazów zostały zawarte w module \textbf{images}. Można
-            w nim wyszczególnić strukturę \textbf{Image} oraz związane z nią funkcje pozwalające na wczytywanie obrazu z
-            dysku, manipulację rozmiarem oraz przekształcenie do struktury \textbf{PixelMap} będącej wygodną abstrakcją
-            nad bitmapami \textit{RGB}. Struktura \textbf{PixelMap} pozwala na iterację kolejnych pikseli, iterację
+            Wszelkie operacje związane z odczytem i manipulacją obrazów zostały zawarte w module \texttt{images}. Można
+            w nim wyszczególnić strukturę \texttt{Image} oraz związane z nią funkcje pozwalające na wczytywanie obrazu z
+            dysku, manipulację rozmiarem oraz przekształcenie do struktury \texttt{PixelMap} będącej wygodną abstrakcją
+            nad bitmapami \textit{RGB}. Struktura \texttt{PixelMap} pozwala na iterację kolejnych pikseli, iterację
             pikseli sąsiadujących z wskazanymi współrzędnymi, dowolne przekształcenie każdego piksela za pomocą
             przekazanej funkcji oraz wyznaczenie negatywu obrazu.
 
-            Najbardziej złożoną częścią tego modułu jest cecha \textbf{ImageGraphConverter} oraz implementujące je
+            Najbardziej złożoną częścią tego modułu jest cecha \texttt{ImageGraphConverter} oraz implementujące je
             struktury. Jej zadaniem przekształcenie dowolnej instancji bitmapy do grafu oraz przekształcenie śladu
-            feromonowego w macierz maskującą, która jest reprezentowana przez instancję struktury \textbf{PixelMap}.
+            feromonowego w macierz maskującą, która jest reprezentowana przez instancję struktury \texttt{PixelMap}.
 
             Do struktur implementujących powyższą cechę należą:
 
@@ -363,9 +363,9 @@ SUBCOMMANDS:
 
         \subsection{Moduł steganograficzny}
         {
-            Ostatnim modułem aplikacji jest moduł odpowiedzialny za ukrywanie informacji w wskazanej bitmapie na
-            podstawie macierzy maskującej. Zarówno bitmapa jak i macierz maskująca jest reprezentowana przez struktury
-            \textbf{PixelMap}. Strukturą implementującą powyższą funkcjonalność jest \textbf{MaskImageEmbedder}. W
+            Ostatnim modułem aplikacji jest moduł odpowiedzialny za ukrywanie informacji we wskazanej bitmapie na
+            podstawie macierzy maskującej. Zarówno bitmapa jak i macierz maskująca są reprezentowane przez struktury
+            \texttt{PixelMap}. Strukturą implementującą powyższą funkcjonalność jest \texttt{MaskImageEmbedder}. W
             trakcie ukrywania informacji wykorzystywany jest iterator bitów pozwalający na odczyt zadanej liczby
             kolejnych bitów wiadomości.
 
@@ -377,7 +377,7 @@ SUBCOMMANDS:
 
 
     % WALIDACJA I TESTOWANIE
-    \section{Walidacja i testowanie}
+    \section{Weryfikacja i testowanie}
     {
         W celu zapewnienia pożądanego działania oraz powtarzalności rezultatów aplikacja została w znacznym stopniu
         pokryta testami jednostkowymi. Umożliwiło to natychmiastowe wykrycie nieoczekiwanych zmian w działaniu programu
@@ -385,11 +385,11 @@ SUBCOMMANDS:
 
         Kolejnym istotnym zagadnieniem związanym z wykorzystanymi metodami zapewnienia jakości oprogramowania są testy
         oparte na właściwościach (ang. \textit{property based testing}). Jest to technika polegająca na testowaniu kodu
-        dla bardzo dużej ilości generowanych losowo danych wejściowych i sprawdzaniu czy pewne fundamentalne założenia
+        dla bardzo dużej liczby generowanych losowo danych wejściowych i sprawdzaniu czy pewne fundamentalne założenia
         dotyczące danych wyjściowych są wciąż spełnione. Przykładowo, test oparty na właściwości funkcji sortującej
-        tablicę zawierającą wartości liczbowe może sprawdzać czy każdy kolejny element posortowanej tablicy jest większy
-        bądź równy poprzedniemu. W ten sposób możliwe jest zweryfikowanie działania kodu bez określania konkretnych
-        zestawów danych.
+        tablicę zawierającą wartości liczbowe może sprawdzać, czy każdy kolejny element posortowanej tablicy jest
+        większy bądź równy poprzedniemu. W ten sposób możliwe jest zweryfikowanie działania kodu bez określania
+        konkretnych zestawów danych.
 
         W aplikacji wykorzystano testy oparte na właściwościach do zapewnienia odwracalności procesu ukrywania i
         wydobywania danych z obrazu (złożenie funkcji ukrywającej i funkcji wydobywającej powinno być funkcją
@@ -407,30 +407,52 @@ SUBCOMMANDS:
             pracach opisujących poszczególne systemy mrówkowe \cite{Dorigo1991AntSA, Dorigo1997AntCS,
             Sttzle2000MAXMINAS}.
 
-            W tabeli \ref{tab:impl-tsp-results} zamieszczono uzyskane rezultaty znanych z literatury problemów o
-            trzydziestu (\textit{oliver30}) i stu miastach (\textit{kroa100}), wraz z powszechnie znanymi najlepszymi
-            rozwiązaniami. Parametry poszczególnych wariantów systemów mrówkowych były konfigurowane za pomocą
-            opracowanych heurystyk. Przyjęto również że liczba mrówek jest równa liczbie wierzchołków grafu.
-
-            \begin{table}
+            W tabeli \ref{tab:impl-tsp-results-oliver} oraz \ref{tab:impl-tsp-results-kroa} zamieszczono uzyskane
+            rezultaty znanych z literatury problemów o trzydziestu (\textit{oliver30}) i stu miastach
+            (\textit{kroa100}), wraz z powszechnie znanymi najlepszymi rozwiązaniami. Parametry poszczególnych wariantów
+            systemów mrówkowych były konfigurowane za pomocą opracowanych heurystyk. Przyjęto również że liczba mrówek
+            jest równa liczbie wierzchołków grafu.
+%
+            \begin{table}[H]
                 \centering
-                \begin{tabular}{ |l|c c|c c| }
+                \caption{Uzyskane rozwiązania problemu \textit{oliver30}}
+                \begin{tabular}{ |l|c c c|c c| }
                     \hline
-                    & \multicolumn{2}{c|}{\textit{oliver30}} & \multicolumn{2}{c|}{\textit{kroa100}} \\
+                    & \multicolumn{3}{c|}{średnia z 10} & \multicolumn{2}{c|}{najlepszy wynik} \\
                     \hline
-                    Rodzaj systemu & rozwiązanie & iteracja & rozwiązanie & iteracja \\
+                    Rodzaj systemu & rozwiązanie & $\sigma$ & iteracja & rozwiązanie & iteracja \\
                     \hline
-                    \textit{Ant Density} & 446.87012 & 18 & 25606.107 & 30 \\
-                    \textit{Ant Quantity} & 426.54388 & 185 & 23150.693 & 162 \\
-                    \textit{Ant Cycle} & 429.2246 & 119 & 22826.52 & 82 \\
-                    \textit{Ant Colony} & 435.7622 & 178 & 23401.607 & 121 \\
-                    \textit{Max-min Ant System} & 424.69177 & 84 & 22075.67 & 221 \\
+                    \textit{Ant Density} & 457.095 & 19.239 & 38 & 423.949 & 25 \\
+                    \textit{Ant Quantity} & 426.195 & 1.760 & 302 & 423.912 & 164 \\
+                    \textit{Ant Cycle} & 426.009 & 0.928 & 178 & 424.635 & 247 \\
+                    \textit{Ant Colony} & 429.092 & 3.712 & 216 & 423.912 & 520 \\
+                    \textit{Max-min Ant System} & 424.485 & 0.516 & 78 & 423.741 & 82 \\
                     \hline
-                    Wynik referencyjny & 423.741 & - & 21282 & - \\
+                    Wynik referencyjny & - & - & - & 423.741 & - \\
                     \hline
                 \end{tabular}
-                \caption{Uzyskane rozwiązania problemów \textit{oliver30} oraz \textit{kroa100}.}
-                \label{tab:impl-tsp-results}
+                \label{tab:impl-tsp-results-oliver}
+            \end{table}
+
+            \begin{table}[H]
+                \centering
+                \caption{Uzyskane rozwiązania problemu \textit{kroa100}}
+                \begin{tabular}{ |l|c c c|c c| }
+                    \hline
+                    & \multicolumn{3}{c|}{średnia z 10} & \multicolumn{2}{c|}{najlepszy wynik} \\
+                    \hline
+                    Rodzaj systemu & rozwiązanie & $\sigma$ & iteracja & rozwiązanie & iteracja \\
+                    \hline
+                    \textit{Ant Density} & 25217.165 & 766.781 & 59 & 24036.602 & 38 \\
+                    \textit{Ant Quantity} & 22783.5697 & 164.390 & 432 & 22608.320 & 833 \\
+                    \textit{Ant Cycle} & 22706.715 & 216.838 & 214 & 22327.793 & 178 \\
+                    \textit{Ant Colony} & 22927.429 & 313.364 & 229 & 22526.941 & 679 \\
+                    \textit{Max-min Ant System} & 21628.440 & 199.410 & 380 & 21377.504 & 354 \\
+                    \hline
+                    Wynik referencyjny & - & - & - & 21282 & - \\
+                    \hline
+                \end{tabular}
+                \label{tab:impl-tsp-results-kroa}
             \end{table}
             %
         }

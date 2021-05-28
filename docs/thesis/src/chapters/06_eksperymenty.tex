@@ -43,11 +43,11 @@
 
     % WSTĘP - CO TESTOWANO
     Aby zbadać skuteczność i efektywność metod zaproponowanych w rozdziale \ref{chap:stegoants} oraz podrozdziale
-    \ref{sec:method}, postanowiono przeprowadzić eksperymenty. Ich celem była walidacja fundamentalnych założeń, takich
-    jak słuszność doboru złożonych sekcji obrazów, sprawdzenie zasadności sposobów wyznaczania reprezentacji grafowej
-    problemu i interpretacji śladu feromonowego, numeryczna ocena degradacji jakości steganogramu oraz subiektywna ocena
-    postrzegalności tych zmian. Numeryczna ewaluacja degradacji jakości obrazu pozwoli odnieść uzyskane wyniki do
-    istniejących rozwiązań oraz stwierdzić, czy zaproponowane metody mają swoje zastosowanie.
+    \ref{sec:method}, postanowiono przeprowadzić eksperymenty. Ich celem była weryfikacja fundamentalnych założeń,
+    takich jak słuszność doboru złożonych sekcji obrazów, sprawdzenie zasadności sposobów wyznaczania reprezentacji
+    grafowej problemu i interpretacji śladu feromonowego, numeryczna ocena degradacji jakości steganogramu oraz
+    subiektywna ocena postrzegalności tych zmian. Numeryczna ewaluacja degradacji jakości obrazu pozwoliła odnieść
+    uzyskane wyniki do istniejących rozwiązań oraz stwierdzić, czy zaproponowane metody mają swoje zastosowanie.
 
     % METODA BADAWCZA
     \section{Metoda badawcza}
@@ -64,8 +64,8 @@
             zdjęć, które bardziej odzwierciedlają praktyczne zastosowaniom steganografii. W ich doborze kierowano się
             głównie liczbą odniesień w powiązanych pracach oraz bieżącymi tendencjami w kwestii wykorzystywania
             publicznych zbiorów obrazów \cite{NoteOnLena1, NoteOnLena2}. Ostatecznie, zdecydowano się skupić na obrazach
-            \textit{Mandrill (a.k.a Baboon)}, \textit{Airplane (F-16) (a.k.a Jet)}, \textit{House} oraz
-            \textit{Peppers}, które są udostępniane przez \textit{Uniwersytet Południowej Kalifornii
+            \textit{Mandrill} (znany także jako \textit{Baboon)}, \textit{Airplane (F-16) (a.k.a Jet)}, \textit{House}
+            oraz \textit{Peppers}, które są udostępniane przez \textit{Uniwersytet Południowej Kalifornii
             \textnormal{(}USC\textnormal{)}} \cite{USCDatabase}. Przedstawione są na rysunku \ref{fig:exp-images}.
 
             \begin{figure}
@@ -91,7 +91,7 @@
                 }
 
                 \caption[Porównanie obrazów]
-                {Obrazy wykorzystane w eksperymentach.}
+                {Obrazy wykorzystane w eksperymentach}
                 \label{fig:exp-images}
             \end{figure}
         }
@@ -105,52 +105,52 @@
             eksperymentach wykorzystano automatycznie wygenerowany tekst \textit{Lorem ipsum} o rozmiarze $625kB$, lecz
             podczas eksperymentów wykorzystywano jedynie jego część. Cechą zaproponowanej metody oraz zaimplementowanego
             programu jest możliwość skalowania wygenerowanej macierzy maskującej w taki sposób, aby można było umieścić
-            zadaną liczbę bitów tekstu. Pozwoli to na zbadanie degradacji jakości w zależności od objętości ukrywanego
-            tekstu, oraz ułatwi porównanie rezultatów z innymi metodami.
+            zadaną liczbę bitów tekstu. Pozwala to na zbadanie degradacji jakości w zależności od objętości ukrywanego
+            tekstu oraz ułatwi porównanie rezultatów z innymi metodami.
             %
         }
 
         % BADANE PARAMETRY
         \subsection{Badane parametry}
         {
-            Podczas przeprowadzanych eksperymentów, badano wpływ poszczególnych metod każdego z etapów procesu oraz ich
-            parametrów. Porównywane wartości parametrów dotyczą poniższych procesów.
+            Podczas przeprowadzanych eksperymentów badano wykorzystane metody każdego z etapów procesu oraz ich
+            parametry. Porównywane wartości parametrów dotyczą:
 
             \begin{enumerate}
                 \item Konstrukcji grafu oraz wizualizacji śladu feromonowego.
                 \begin{itemize}
-                    \item Metoda oparta na wierzchołkach. Jedynym parametrem jest opcjonalny parametr skalujący $s_0$
+                    \item Metoda oparta na wierzchołkach. Jedynym parametrem jest opcjonalny parametr $s_0$ skalujący
                     obraz wejściowy podczas budowania grafu oraz budowania macierzy maskującej. Jego wartości znajdują
-                    się w zakresie $[0, 1]$. Jego domyślna wartość wynosi $1$, i oznacza budowanie grafu o liczbie
-                    wierzchołków równej $w \times h$.
+                    się w zakresie $[0, 1]$. Jego domyślna wartość wynosi $1$ i oznacza budowanie grafu o liczbie
+                    wierzchołków równej $w \cdot h$.
 
                     \item Metoda oparta na krawędziach. Do jej parametrów należy algorytm segmentacji oraz docelowa
                     liczba segmentów $N_s$ związana z liczbą krawędzi grafu. Podczas badań wykorzystano algorytmy
-                    prostego podziału na prostokąty, algorytm k-średnich oraz algorytm \textit{SLIC} służący do
+                    prostego podziału na prostokąty, algorytm \textit{k}-średnich oraz algorytm \textit{SLIC} służący do
                     konstrukcji superpikseli.
                 \end{itemize}
 
                 \item Wyznaczenie śladu feromonowego przez różne rodzaje systemów mrówkowych. Do parametrów wspólnych
-                dla każdego z wykorzystanych systemów należy:
+                dla każdego z wykorzystanych systemów należą:
                 \begin{itemize}
                     \item liczba mrówek $A$, która domyślnie jest równa liczbie wierzchołków grafu $V$,
-                    \item liczba wykonanych cykli $C$
+                    \item liczba wykonanych cykli $C$,
                     \item liczba kroków wykonywanych przez mrówki w każdej iteracji algorytmu $S$, dla grafów
-                    skonstruowanych na podstawie segmentacji obrazu wynosi jest ona równa liczbie wierzchołków $V$
-                    \item preferencja względem śladu feromonowego $\alpha$
-                    \item preferencja względem widoczności wierzchołka $\beta$
-                    \item początkowe natężenie śladu feromonowego $\tau_0$
-                    \item współczynnik opisujący prędkość wyparowania śladu feromonowego $\rho$
+                    skonstruowanych na podstawie segmentacji obrazu jest ona równa liczbie wierzchołków $V$,
+                    \item preferencja względem śladu feromonowego $\alpha$,
+                    \item preferencja względem widoczności wierzchołka $\beta$,
+                    \item początkowa wartość śladu feromonowego $\tau_0$,
+                    \item współczynnik opisujący szybkość wyparowania śladu feromonowego $\rho$.
                 \end{itemize}
 
-                Do porównanych rodzajów systemów należą poniższe odmiany. Z niektórymi z nich związane są dodatkowe
-                parametry oraz domyślne wartości powyższych atrybutów.
+                Do porównanych rodzajów systemów należą poniższe odmiany (z niektórymi z nich związane są dodatkowe
+                parametry oraz domyślne wartości powyższych):
                 \begin{itemize}
-                    \item model feromon stały,
-                    \item model feromon średni,
-                    \item model feromon cykliczny,
-                    \item system mrowiskowy, który wprowadza prawdopodobieństwo eksploatacji najkrótszej krawędzi $q_0$
-                    oraz ustalona parametr $\alpha = 1$,
+                    \item model: feromon stały,
+                    \item model: feromon średni,
+                    \item model: feromon cykliczny,
+                    \item system mrowiskowy, który wprowadza prawdopodobieństwo eksploatacji $q_0$ oraz ustala parametr
+                    $\alpha = 1$,
                     \item system max-min, który wprowadza ograniczenia wartości śladu feromonowego $[\tau_{min},
                     \tau_{max}]$. Ich wartości wyznaczane są za pomocą estymaty dotyczącej długości poszukiwanego cyklu.
                     Wartość początkowa feromonu wynosi $\tau_0 = \tau_{max}$.
@@ -172,15 +172,22 @@
         \begin{itemize}
             \item Błąd średniokwadratowy (ang. \textit{Mean Square Error - MSE}).
 
-            Jest jedną z najprostszych metryk służących do pomiaru różnic między obrazami. Jej wartości należą do zbioru
-            nieujemnych liczb rzeczywistych, a wartości bliższe zeru stanowią o mniejszym spadku jakości. Do jej zalet
-            należy prostota implementacji i możliwość optymalnej implementacji. Jedną z jej wad jest niska korelacja z
-            postrzeganiem różnic między obrazami przez ludzi oraz nieuwzględnianie informacji o relacji natężenia szumu
-            do wartości sygnału. Jej wartość wyraża wzór \ref{eqt:mse}, w którym $\overline{X}$ oznacza wartość średnią.
+            Jest jedną z najprostszych metryk służących do pomiaru różnic między obrazami. Jego wartości należą do
+            zbioru nieujemnych liczb rzeczywistych, a wartości bliższe zeru stanowią o mniejszym spadku jakości. Do jej
+            zalet należy prostota implementacji i możliwość optymalnej implementacji. Jedną z jej wad jest niska
+            korelacja z postrzeganiem różnic między obrazami przez ludzi oraz nieuwzględnianie informacji o relacji
+            natężenia szumu do wartości sygnału. Jego wartość wyraża wzór:
 
             \begin{equation}\label{eqt:mse}
-                MSE = \frac{1}{n} \sum_{i=1}^n (X_i - \overline{X})
+                \mathit{MSE} = \frac{1}{n} \sum_{i=1}^n (X_i - \overline{X})
             \end{equation}
+
+            gdzie:
+            \begin{description}
+                \item $n$ - ilość obserwacji
+                \item $X_i$ - wartość sygnału
+                \item $\overline{X}$ - średnia wartość sygnału
+            \end{description}
 
             \item Szczytowy stosunek sygnału do szumu (ang. \textit{Peak Signal Noise Ratio - PSNR}).
 
@@ -191,11 +198,17 @@
             Szczytowy stosunek sygnału do szumu rozwiązuje powyższy problem. W związku z dużym zakresem przyjmowanych
             wartości metryka korzysta z skali logarytmicznej. Wartościami typowymi przy analizie obrazów korzystających
             z 8 bitów na jeden kanał jest zakres $[30dB, 50dB]$, przy czym wyższa wartość oznacza mniejszą degradację.
-            Wartość metryki można wyznaczyć za pomocą wzoru \ref{eqt:psnr}.
+            Wartość metryki można wyznaczyć za pomocą wzoru:
 
             \begin{equation}\label{eqt:psnr}
-                PSNR = 10 \cdot log_{10} \frac{MAX^2}{MSE}
+                \mathit{PSNR} = 10 \cdot log_{10} \frac{\mathit{MAX}^2}{\mathit{MSE}}
             \end{equation}
+
+            gdzie:
+            \begin{description}
+                \item $\mathit{MAX}$ - maksymalna wartość sygnału
+                \item $\mathit{MSE}$ - błąd średniokwadratowy
+            \end{description}
 
             \item Indeks podobieństwa strukturalnego (ang. \textit{Structural Similarity Index, SSIM}).
 
@@ -210,35 +223,35 @@
     \section{Wyniki eksperymentów}
     {
         %
-        Eksperymenty rozpoczęto od analizy wyników uzyskanych metodą opartą na budowanie grafu na podstawie
+        Eksperymenty rozpoczęto od analizy wyników uzyskanych metodą opartą na budowaniu grafu na podstawie
         wierzchołków.
 
         % WYNIKI - METODA-WIERZCHOŁKÓW - INVERTED
         \subsection{Metoda oparta na wierzchołkach}
         {
-            Eksperymenty rozpoczęto od porównania wpływu proporcjonalności długości krawędzie grafu od różnicy pomiędzy
+            Eksperymenty rozpoczęto od porównania wpływu proporcjonalności długości krawędzi grafu do różnicy pomiędzy
             pikselami. Jak wspomniano w rozdziale \ref{sec:method}, jeśli długości krawędzi są proporcjonalne do różnicy
             pikseli, system mrówkowy będzie dążył do odkładania śladu feromonowego w obszarach cechujących mniejszą
             złożoność. Aby uzyskać zamierzony rezultat, czyli macierz maskującą wskazującą obszary bardziej złożone,
-            konieczne będzie odwrócenie jej wartości. Alternatywnie, jeśli długości pomiędzy pikselami będą odwrotnie
+            konieczne jest odwrócenie jej wartości. Alternatywnie, jeśli długości pomiędzy pikselami będą odwrotnie
             proporcjonalne do dzielącej je odległości, system mrówkowy, a co za tym idzie ślad feromonowy, będzie
             preferował obszary bardziej złożone.
 
             Wizualizację procesu konwersji obrazu na graf oraz uzyskane macierze maskujące przedstawia rysunek
             \ref{fig:exp-vertex}. W pierwszej kolumnie umieszczono obrazy objaśniające wynik konwersji bitmapy na graf,
             w których do poszczególnych pikseli obrazu wejściowego przypisana jest luminancja odwrotnie proporcjonalna
-            do długości krawędzi z nim związanych (obszary ,,atrakcyjniejsze'' dla mrówek cechują się jaśniejszym
-            kolorem). Kolumna druga przedstawia macierze maskujące, które będą decydować o liczbie bitów które zostaną
-            zamienione na bity ukrywanej wiadomości. Im jaśniejszy jest dany piksel, tym więcej jego bitów zostanie
-            zamienione. W trzeciej kolumnie przedstawiono macierze maskujące przetransformowane w taki sposób, aby
-            odpowiadające im pojemność ukrywanej wiadomości była taka sama.
+            do długości krawędzi z nim związanych (obszary ,,atrakcyjniejsze'' dla mrówek cechują się są reprezentowane
+            przez jaśniejsze piksele). Kolumna druga przedstawia macierze maskujące, które będą decydować o liczbie
+            bitów, które zostaną zamienione na bity ukrywanej wiadomości. Im jaśniejszy jest dany piksel, tym więcej
+            jego bitów zostanie zamienionych. W trzeciej kolumnie przedstawiono macierze maskujące przetransformowane w
+            taki sposób, aby odpowiadające im pojemność ukrywanej wiadomości była taka sama.
 
             Na podstawie obrazów \ref{fig:exp-vertex-pher} oraz \ref{fig:exp-vertex-inv-pher} można stwierdzić, że obie
             metody poprawnie wykrywają krawędzie i obszary złożone, lecz po porównaniu macierzy maskujących o tej samej
-            pojemności należy stwierdzić lepszy rezultat procesu w którym długości krawędzi grafu są proporcjonalne do
+            pojemności należy stwierdzić lepszy rezultat procesu, w którym długości krawędzi grafu są proporcjonalne do
             różnicy pomiędzy pikselami, a macierz maskująca zostaje odwrócona. Przeskalowana macierz maskująca
             \ref{fig:exp-vertex-inv-pher-scaled} gwarantuje bardziej równomierne rozłożenie informacji przy jednoczesnym
-            faworyzowaniu krawędzi o obszarów złożonych.
+            faworyzowaniu obszarów złożonych.
 
             \begin{figure}
                 \centering
@@ -278,25 +291,25 @@
                     \subref{fig:exp-vertex-inv-pher-scaled}) długości są proporcjonalne do różnicy pikseli. Pierwsza
                     kolumna przedstawia wizualizacje procesu konwersji bitmapy na graf, druga przestawia uzyskane
                     macierze maskujące, trzecia zawiera macierze maskujące przeskalowane w taki sposób, aby odpowiadała
-                    im taka sama pojemność ukrywanej informacji.}
+                    im taka sama pojemność ukrywanej informacji}
                 \label{fig:exp-vertex}
             \end{figure}
 
             % WYNIKI - METODA-WIERZCHOŁKÓW - RODZAJE SYSTEMÓW
-            Kolejnym parametrem który postanowiono zbadać, jest rodzaj systemu mrówkowego oraz związane z nim parametry.
-            Ponieważ problem rozwiązywany przez mrówki nie jest równoważny z problemem komiwojażera, konieczne jest
-            również ustalenie parametru $S$ określającego liczbę kroków wykonywanych przez każdą mrówkę w każdej
-            iteracji algorytmu.
+            Kolejnym parametrem, który postanowiono zbadać, jest rodzaj systemu mrówkowego oraz związane z nim
+            parametry. Ponieważ problem rozwiązywany przez mrówki nie jest równoważny z problemem komiwojażera,
+            konieczne jest również ustalenie parametru $S$ określającego liczbę kroków wykonywanych przez każdą mrówkę w
+            każdej iteracji algorytmu.
 
             Wygenerowane macierze maskujące przedstawia rysunek \ref{fig:exp-vertex-pher}. Na ich podstawie można
             wyciągnąć kilka interesujących wniosków. System mrowiskowy (\textit{Ant-Colony}) oraz system
             \textit{Max-min} nie odpowiadają charakterystyce zadanego zadania, które jest znacząco różne od klasycznego
             problemu \textit{TSP}. Przyczyn można doszukiwać się w silnej faworyzacji najlepszego rozwiązania, czyli
             najkrótszej obranej ścieżki kosztem pozostałych ścieżek. Można wnioskować, że w przedstawionym problemie
-            znalezienie najkrótszej ścieżki łączącej $S + 1$ pikseli spośród $w \times h$ pikseli nie przyczynia się do
-            ogólnego wyznaczenia obszarów obrazu.
+            znalezienie najkrótszej ścieżki łączącej $S + 1$ pikseli spośród pikseli obrazu o wymiarach $w \times h$ nie
+            przyczynia się do ogólnego wyznaczenia obszarów obrazu.
 
-            Na dodatkową uwagę zasługuje system z cykliczną reguła aktualizacji śladu feromonowego, gdyż za jego pomocą
+            Na dodatkową uwagę zasługuje system z cykliczną regułą aktualizacji śladu feromonowego, gdyż za jego pomocą
             udało się wyraźnie wyodrębnić jednorodny obszar nieba oraz pewne homogeniczne elementy budynku. Kolejną
             obserwacją płynącą z powyższego eksperymentu jest istotność doboru liczby mrówek $A$ oraz współczynnika
             związanego z odparowaniem śladu $\rho$. Macierze lepiej odzwierciedlające faktyczne segmenty obrazów
@@ -372,14 +385,14 @@
                 }
 
                 \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
-                {Macierze maskujące wygenerowane przy pomocy różnych systemów mrówkowych.}
+                {Macierze maskujące wygenerowane za pomocą różnych systemów mrówkowych}
                 \label{fig:exp-vertex-pher}
             \end{figure}
 
             % METODA WIERZCHOŁKÓW - SKALOWANIE OBRAZU
             Ponieważ pozostałe obrazy z zbioru \textit{USC} mają rozmiary $512 \times 512$, zdecydowano się również
             zbadać wpływ skalowania obrazu podczas tworzenia grafu oraz macierzy maskującej. Wykorzystano system oparty
-            o model cykliczny o parametrach $A=10000$, $S=100$, $\alpha=\beta=1$, $\rho=0.8$, i starano się umieścić
+            na modelu cyklicznym o parametrach $A=10000$, $S=100$, $\alpha=\beta=1$, $\rho=0.8$, i starano się umieścić
             $250kB$ danych. Na rysunku \ref{fig:exp-vertex-scale} zamieszczono macierze maskujące powstałe przy $s_0 \in
             \{0.25, 0.5, 0.75, 1.0\}$. Tabela \ref{tab:exp-vertex-scale-errors} zawiera porównanie miar jakości
             steganogramów.
@@ -430,12 +443,13 @@
                 }
 
                 \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
-                {Macierze maskujące oraz steganogramy wygenerowane dla różnych wartości skali $s_0$.}
+                {Macierze maskujące oraz steganogramy wygenerowane dla różnych wartości skali $s_0$}
                 \label{fig:exp-vertex-scale}
             \end{figure}
 
             \begin{table}
                 \centering
+                \caption{Miary jakości steganogramów w zależności od współczynnika $s_0$. W tabeli pogrubiono wartości poszczególnych miar wskazujące na najniższy spadek jakości}
                 \begin{tabular}{ |c|c c c| }
                     \hline
                     Współczynnik skalujący \newline $s_0$ & $MSE$ & $PSNR$ & $SSIM$ \\
@@ -446,17 +460,17 @@
                     1.0 & \textbf{6.61124} & \textbf{39.9619dB} & 0.948736 \\
                     \hline
                 \end{tabular}
-                \caption{Miary jakości steganogramów w zależności od współczynnika $s_0$.}
                 \label{tab:exp-vertex-scale-errors}
             \end{table}
 
             % METODA WIERZCHOŁKÓW - FINAL SHOWDOWN
             Ostatecznie, postanowiono zbadać wyniki uzyskane na pozostałych obrazach testowych. Uzyskane rezultaty
-            zawiera tabela \ref{tab:exp-vertex-results} a steganogramy rysunek \ref{fig:exp-vertex-results}. Parametry
+            zawiera tabela \ref{tab:exp-vertex-results}, a steganogramy rysunek \ref{fig:exp-vertex-results}. Parametry
             algorytmu zachowano z poprzedniego eksperymentu.
 
             \begin{table}
                 \centering
+                \caption{Wyniki uzyskane metodą opartą na wierzchołkach}
                 \begin{tabular}{ |l|c|c c c| }
                     \hline
                     Obraz & objętość danych & $MSE$ & $PSNR$ & $SSIM$ \\
@@ -472,7 +486,6 @@
                     Peppers {\footnotesize $512 \times 512$}  & 500 000B (63.57\%) & 292.99 & 23.4962dB & 0.502009 \\
                     \hline
                 \end{tabular}
-                \caption{Wyniki uzyskane metodą opartą na wierzchołkach.}
                 \label{tab:exp-vertex-results}
             \end{table}
 
@@ -519,7 +532,7 @@
                 }
 
                 \caption[Porównanie rezultatów]
-                {Porównanie uzyskanych steganogramów przy zadanej objętości ukrytej informacji.}
+                {Porównanie uzyskanych steganogramów przy zadanej objętości ukrytej informacji}
                 \label{fig:exp-vertex-results}
             \end{figure}
         }
@@ -530,8 +543,8 @@
             Następnym krokiem eksperymentów było zbadanie metod opartych na budowanie grafu z wyznaczonych krawędzi. W
             przypadku tej metody, obraz jest dzielony na zadaną liczbę segmentów, które odpowiadają krawędziom
             tworzonego grafu pełnego. W związku z koniecznością budowy grafu pełnego, istotnym ograniczeniem metody jest
-            konieczność takiego doboru liczby segmentów aby spełniała one równanie wyrażające liczbę krawędzi $|E|$ w
-            grafie pełnym o $|V|$ wierzchołkach $|E| = \frac{|V| \times (|V| - 1)}{2}$. Problem komiwojażera osadzony na
+            konieczność takiego doboru liczby segmentów, aby spełniała one równanie wyrażające liczbę krawędzi $|E|$ w
+            grafie pełnym o $|V|$ wierzchołkach $|E| = \frac{|V| \cdot (|V| - 1)}{2}$. Problem komiwojażera osadzony na
             tak utworzonym grafie można interpretować jako problem znalezienia $n$ segmentów obrazu tworzących
             najkrótszy cykl. Długości krawędzi tak powstałego grafu są zależne od różnicy wariancji łączących przez nie
             segmenty.
@@ -543,25 +556,26 @@
 
             Rysunek \ref{fig:exp-edge} przedstawia wizualizację utworzonego grafu oraz uzyskane ślady feromonowe.
             Porównywane obrazy zostały podzielone metodą superpikseli na $190$ segmentów ($|V| = 20$). Na podstawie
-            uzyskanych steganogramów możemy zauważyć gołym okiem mankament wariantu w którym długość grafu jest
+            uzyskanych steganogramów można łatwo zauważyć mankament wariantu, w którym długość krawędzi grafu jest
             odwrotnie proporcjonalna do różnicy wariancji segmentów (obrazy \ref{fig:exp-edge-conv},
             \ref{fig:exp-edge-pher}, \ref{fig:exp-edge-steg}).
 
             W przypadku rozwiązywania problemu \textit{TSP} ostatecznym wynikiem jest wybranie jedynie $|V|$ spośród
-            wszystkich krawędzi których jest $\frac{|V| \times (|V| - 1)}{2}$. Oznacza to, że gdy system mrówkowy
-            osiągnie zbieżność ślad feromonowy na wszystkich krawędziach poza tymi należącymi do najkrótszej ścieżki
-            będzie bliski zeru. W takim przypadku, do ukrycia zadanej informacji zostanie wykorzystana jedynie znikoma
-            część obrazu nośnego, co negatywnie wpływa na pojemność steganogramu. Wykres \ref{fig:exp-edge-v-vs-e}
+            wszystkich krawędzi, których jest $\frac{|V| \cdot (|V| - 1)}{2}$. Oznacza to, że gdy system mrówkowy
+            osiągnie zbieżność ślad feromonowy na wszystkich krawędziach, poza należącymi do najkrótszej ścieżki, będzie
+            bliski zeru. W takim przypadku, do ukrycia zadanej informacji zostanie wykorzystana jedynie znikoma część
+            obrazu nośnego, co negatywnie wpływa na pojemność steganogramu. Wykres z rysunku \ref{fig:exp-edge-v-vs-e}
             przedstawia stosunek liczby $|V|$ do liczby krawędzi grafu w zależności od liczby jego wierzchołków.
 
             Powyższy problem można rozwiązać na co najmniej dwa sposoby. Pierwszym jest odpowiedni dobór parametrów
             systemu mrówkowego, który będzie wymuszał na mrówkach częstszą eksplorację (na przykład wybór dużej wartości
-            $\alpha$). Dzięki temu, większa liczba krawędzi będzie odwiedzana, lecz wnosi to również ryzyko otrzymywania
-            nieoptymalnych cykli. Alternatywą jest odwrócenie problemu reprezentowanego przez graf. Jeśli długości
-            krawędzi będą proporcjonalne do różnic wariancji łączonych segmentów, mrówki będą dążyć do znalezienia $V$
-            krawędzi w których nie należy umieszczać informacji, gdyż nie są wystarczająco złożone. W ten sposób,
-            uzyskany ślad feromonowy wskaże $|V| - \frac{|V| \times (|V| - 1)}{2}$ segmentów w których powinno zostać
-            ukryte najwięcej informacji.
+            $q_0$) lub częstszy wybór ścieżek w zachłanny sposób (przez dobór parametru $\alpha$). Dzięki temu, większa
+            liczba krawędzi będzie odwiedzana, lecz wnosi to również ryzyko otrzymywania nieoptymalnych cykli.
+            Alternatywą jest odwrócenie problemu reprezentowanego przez graf. Jeśli długości krawędzi będą
+            proporcjonalne do różnic wariancji łączonych segmentów, mrówki będą dążyć do znalezienia $V$ krawędzi, w
+            których nie należy umieszczać informacji, gdyż nie są wystarczająco złożone. W ten sposób, uzyskany ślad
+            feromonowy wskaże $|V| - \frac{|V| \cdot (|V| - 1)}{2}$ segmentów, w których powinno zostać ukryte najwięcej
+            informacji.
 
             \begin{figure}
                 \centering
@@ -600,7 +614,7 @@
                     \subref{fig:exp-edge-inv-pher}, \subref{fig:exp-edge-inv-steg}) długości są proporcjonalne do
                     różnicy wariancji. Pierwsza kolumna przedstawia wizualizacje procesu konwersji bitmapy na graf,
                     druga przestawia uzyskane macierze maskujące, trzecia zawiera uzyskane steganogramy zawierające
-                    $50kB$ informacji.}
+                    $50kB$ informacji}
                 \label{fig:exp-edge}
             \end{figure}
 
@@ -609,32 +623,30 @@
                 \includegraphics[width=8cm]{experiments/edgebased/normal-vs-inverted/V_vs_E.png}
                 \caption
                 {Wykres przedstawia stosunek liczby krawędzi należących do cyklu Hamiltona grafu pełnego o $V$
-                    wierzchołkach i $E$ krawędziach w zależności od liczby wierzchołków.}
+                    wierzchołkach i $E$ krawędziach w zależności od liczby wierzchołków}
                 \label{fig:exp-edge-v-vs-e}
             \end{figure}
 
             % O PARAMETRACH
             Ponieważ rozwiązywany problem był analogiczny do problemu komiwojażera, w trakcie eksperymentów wykorzystano
-            optymalne parametry dla każdego z rodzajów systemu wyznaczone podczas testowania poprawności działania
-            systemu mrówkowego. Metodę ich wyznaczenia można znaleźć w rozdziale \ref{chap:implementation}.
+            optymalne wartości parametry dla każdego z rodzajów systemu wyznaczone podczas testowania poprawności
+            działania systemu mrówkowego. Metodę ich wyznaczenia można znaleźć w rozdziale \ref{chap:implementation}.
 
             % WYNIKI - METODA-KRAWĘDZI - ILOŚĆ SEGMENTÓW
             Ważnym aspektem metody wykorzystującą segmentację obrazu jest dobór docelowej liczby grup pikseli. Wartość
             zbyt niska może powodować powstanie segmentów łączących obszary jednorodne i złożone, co przełoży się na
-            zakodowanie nieoptymalnej liczby bitów w wszystkich pikselach segmentu. Zbyt wysoka liczba, oprócz większej
-            złożoności obliczeniowej, może przełożyć się na stworzenie segmentów zbyt małych, których wariancja nie
+            zakodowanie nieoptymalnej liczby bitów w wszystkich pikselach segmentu. Zbyt duża liczba, oprócz większej
+            liczby obliczeń, może przełożyć się na stworzenie segmentów zbyt małych, których wariancja nie
             będzie wiernie oddawać złożoności całego obszaru.
 
             Rysunek \ref{fig:exp-edge-method} przedstawia segmentację każdego z obrazów nośnych na zadane liczby
             segmentów z naniesionym śladem feromonowym. W tabeli \ref{tab:exp-edge-results} zawarto wartości miar
             uzyskanych steganogramów dla zadanej pojemności $25kB$ oraz obrazu nośnego o wymiarach $512 \times 512$.
 
-            Każdą z metod podziału obrazu osiągnięto zbliżone rezultaty, lecz warto zwrócić uwagę na fakt, że metody
-            podziału na prostokąty oraz superpiksele wymagają przekroczenia pewnej wartości granicznej powyżej której
-            osiągane są dobre wyniki.
-
-            W związku z porównywalnymi wynikami poszczególnych metod podziału obrazu, dalej zdecydowano się korzystać z
-            podziału na $20$ superpikseli.
+            Dla każdej z metod podziału obrazu osiągnięto zbliżone rezultaty, lecz warto zwrócić uwagę na fakt, że
+            metody podziału na prostokąty oraz superpiksele wymagają przekroczenia pewnej wartości granicznej, powyżej
+            której osiągane są dobre wyniki. W związku z porównywalnymi wynikami poszczególnych metod podziału obrazu,
+            dalej zdecydowano się korzystać z podziału na $20$ superpikseli.
 
             \begin{figure}
                 \centering
@@ -678,21 +690,19 @@
                 }
 
                 \caption[Macierze maskujące.]
-                {
-
-                    Macierze maskujące uzyskane przy podziale obrazu na nienachodzące prostokąty
+                {Macierze maskujące uzyskane przy podziale obrazu na nienachodzące prostokąty
                     (\subref{fig:exp-edge-method-window1}, \subref{fig:exp-edge-method-window2},
                     \subref{fig:exp-edge-method-window3}), superpiksele (\subref{fig:exp-edge-method-superpixel1},
                     \subref{fig:exp-edge-method-superpixel2}, \subref{fig:exp-edge-method-superpixel3}) i zbiory
-                    wyznaczone metodą k-średnich (\subref{fig:exp-edge-method-kmeans1},
-                    \subref{fig:exp-edge-method-kmeans2}, \subref{fig:exp-edge-method-kmeans3}).
-
+                    wyznaczone metodą \textit{k}-średnich (\subref{fig:exp-edge-method-kmeans1},
+                    \subref{fig:exp-edge-method-kmeans2}, \subref{fig:exp-edge-method-kmeans3})
                 }
                 \label{fig:exp-edge-method}
             \end{figure}
 
             \begin{table}
                 \centering
+                \caption{Miary jakości w zależności od metody segmentacji obrazu. W tabeli pogrubiono wartości poszczególnych miar wskazujące na najniższy spadek jakości}
                 \begin{tabular}{ |l|c|c c c| }
                     \hline
                     Metoda segmentacji & liczba segmentów & $MSE$ & $PSNR$ & $SSIM$ \\
@@ -711,7 +721,7 @@
                                         & 595  ($V=35$) & 6.90553 & 39.7728dB & 0.946333 \\
                                         & 1225 ($V=50$) & \textbf{6.77511} & \textbf{39.8556dB} & 0.945946 \\
                     \hline
-                    Grupowanie k-średnich & 10   ($V=5$)  & 7.89710 & 39.1901dB & 0.940743 \\
+                    Grupowanie \textit{k}-średnich & 10   ($V=5$)  & 7.89710 & 39.1901dB & 0.940743 \\
                                         & 21   ($V=7$)  & 7.63390 & 39.3373dB & 0.94536 \\
                                         & 45   ($V=10$) & 7.30898 & 39.5262dB & 0.948244 \\
                                         & 190  ($V=20$) & 6.90061 & 39.7759dB & 0.948481 \\
@@ -719,7 +729,6 @@
                                         & 1225 ($V=50$) & - & - & - \\
                     \hline
                 \end{tabular}
-                \caption{Miary jakości w zależności od metody segmentacji obrazu.}
                 \label{tab:exp-edge-results}
             \end{table}
 
@@ -730,6 +739,7 @@
 
             \begin{table}
                 \centering
+                \caption{Wyniki uzyskane metodą opartą na wierzchołkach}
                 \begin{tabular}{ |l|c|c c c| }
                     \hline
                     Obraz & objętość danych & $MSE$ & $PSNR$ & $SSIM$ \\
@@ -745,7 +755,6 @@
                     Peppers {\footnotesize $512 \times 512$}  & 500 000B (63.57\%) & 411.621 & 22.0198dB & 0.47874 \\
                     \hline
                 \end{tabular}
-                \caption{Wyniki uzyskane metodą opartą na wierzchołkach.}
                 \label{tab:exp-edge-results}
             \end{table}
 
@@ -796,7 +805,7 @@
                 }
 
                 \caption[Porównanie rezultatów]
-                {Porównanie uzyskanych steganogramów przy zadanej objętości ukrytej informacji.}
+                {Porównanie uzyskanych steganogramów przy zadanej objętości ukrytej informacji}
                 \label{fig:exp-edge-results}
             \end{figure}
         }
@@ -810,7 +819,7 @@
         widoczne gdy spróbowano ukryć $500kB$, czyli blisko $64\%$ objętości. W przypadku metody opartej na podziale
         obrazu na grupy pikseli, były one bardziej widoczne, gdyż występowały krawędzie pomiędzy superpikselami lub
         prostokątami dzielącymi obraz. Metoda budowania grafu na podstawie wierzchołków gwarantowała płynniejsze
-        przejścia pomiędzy obszarami w których wykorzystano większą liczbę bitów pikseli.
+        przejścia pomiędzy obszarami, w których wykorzystano większą liczbę bitów pikseli.
 
         Warto również podkreślić zgodność subiektywnych odczuć z wartościami przedstawionych miar jakości. Dodatkowo,
         przytoczony zakres szczytowego stosunku sygnału do szumu, $30dB - 50dB$, pokrywa się z doznaniami empirycznymi.
@@ -818,17 +827,17 @@
         W przypadku wykorzystania $\sim 64\%$ bitów obrazu, wartość $PSNR$ spadła do nieakceptowalnego poziomu bliskiemu
         $20dB$.
 
-        Kolejną interesująca obserwacja płynie z porównania efektów ukrywania informacji w obrazie \textit{Baboon} i
+        Kolejna interesująca obserwacja płynie z porównania efektów ukrywania informacji w obrazie \textit{Baboon} i
         \textit{Airplane}. Nawet w przypadku ukrycia blisko $500kB$ danych, były one ewidentnie bardziej widoczne w
         obrazie \textit{Airplane}. Może to być tłumaczone dużo większym zróżnicowaniem obrazu \textit{Baboon}, oraz
-        większą ilością szczegółów i tekstur.
+        większą liczbą szczegółów i tekstur.
     }
 
     % PORÓWNANIE Z INNYMI METODAMI
     \section{Porównanie wyników z innymi metodami}
     {
         Ostatnim krokiem związanym z badaniem efektywności zaproponowanych metod było porównanie uzyskanych wyników do
-        powiązanych prac z dziedziny. Udostępnione wyniki badań pozwoliły na utworzenia porównującego zestawienia z
+        powiązanych prac z dziedziny. Udostępnione wyniki badań pozwoliły na utworzenie porównującego zestawienia z
         metodą \textit{Least Significant Bit} \cite{Solak2018LSBSA}, \textit{Pixel Value
         Differencing} \cite{Solak2018LSBSA}, \textit{Particle Swarm Optimization-Integer Wavelet
         Transform} \cite{Muhuri2020ANI} oraz metodą opartą na wykrywaniu złożonego regionu obrazu za pomocą systemu
@@ -837,15 +846,17 @@
         W związku z tym, że w powyższych artykułach przedstawione wyniki zostały podane dla różnych objętości ukrywanych
         informacji, zdecydowano się umieścić poszczególne porównania w osobnych tabelach. Format zapisu wyników był
         niejednolity, część prac wyrażała uzyskaną pojemność w postaci udziału procentowego bitów obrazu nośnego, liczby
-        bitów w przeliczeniu na piksel (\textit{bpp}) lub bezwzględnej liczby bajtów. Ponieważ obrazy na których
+        bitów w przeliczeniu na piksel (\textit{bpp}) lub bezwzględnej liczby bajtów. Ponieważ obrazy, na których
         wykonywano eksperymenty są znane, możliwe było ustandaryzowanie przytoczonych wartości.
 
         Zestawienia z poszczególnymi pracami zawierają tabele \ref{tab:exp-comparison-lsb},
-        \ref{tab:exp-comparison-pvd}, \ref{tab:exp-comparison-pso-iwt} oraz \ref{tab:exp-comparison-aco}.
+        \ref{tab:exp-comparison-pvd}, \ref{tab:exp-comparison-pso-iwt} oraz \ref{tab:exp-comparison-aco}. W kolumnach
+        zawierających wartości miar pogrubiono wartości wskazujące na najniższą degradację obrazu.
 
         \begin{table}
             \footnotesize
             \centering
+            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{LSB} w pracy \cite{Solak2018LSBSA}}
             \resizebox{\textwidth}{!}
             {
             \begin{tabular}{ |l|c c c|c c c|c c c|c c c| }
@@ -875,14 +886,13 @@
                 \hline
             \end{tabular}
             }
-            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{LSB} w pracy ,,LSB Substitution and PVD
-            performance analysis for image steganography''}
             \label{tab:exp-comparison-lsb}
         \end{table}
 
         \begin{table}
             \footnotesize
             \centering
+            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PVD} w pracy \cite{Solak2018LSBSA}}
             \resizebox{\textwidth}{!}
             {
             \begin{tabular}{ |l|c c c|c c c|c c c|c c c| }
@@ -910,14 +920,13 @@
                 \hline
             \end{tabular}
             }
-            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PVD} w pracy ,,LSB Substitution and PVD
-            performance analysis for image steganography''}
             \label{tab:exp-comparison-pvd}
         \end{table}
 
         \begin{table}
             \footnotesize
             \centering
+            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PSO-IWT} w pracy \cite{Muhuri2020ANI}}
             \resizebox{\textwidth}{!}
             {
             \begin{tabular}{ |l|c|c c c|c c c|c c c| }
@@ -941,13 +950,13 @@
                 \hline
             \end{tabular}
             }
-            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PSO-IWT} w pracy ,,A Novel Image Steganographic Method based on Integer Wavelet Transformation and Particle Swarm Optimization''}
             \label{tab:exp-comparison-pso-iwt}
         \end{table}
 
         \begin{table}
             \footnotesize
             \centering
+            \caption{Porównanie miar jakości z uzyskanymi metodą \textit{ACO} w pracy \cite{Khan2018AntCO}}
             \resizebox{\textwidth}{!}
             {
             \begin{tabular}{ |l|c c|c c c|c c c|c c c| }
@@ -970,8 +979,7 @@
                     & \textbf{0.1150} & \textbf{57.56dB} & 0.9991 \\
                 \hline
             \end{tabular}
-            } \caption{Porównanie miar jakości z uzyskanymi metodą \textit{ACO} w pracy ,,Ant Colony Optimization
-            (ACO) based Data Hiding in Image Complex Region''}
+            }
             \label{tab:exp-comparison-aco}
         \end{table}
     }
