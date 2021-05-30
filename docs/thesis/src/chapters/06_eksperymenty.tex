@@ -1032,41 +1032,32 @@
 
         Parametrem, posiadającym najbardziej znaczący wpływ na uzyskiwane rezultaty, była relacja długości krawędzi
         grafu do różnic między pikselami lub ich grupami. Badania wykazały znaczącą wyższość podejścia w którym
-        odległości są proporcjonalne do różnic pikseli lub wariancji wewnątrz ich grupy. Taka decyzja spowodowała na
-        intensywniejsze odkładanie się śladu feromonowego w mało zróżnicowanych obszarach obrazu i wymusiła stosowanie
-        odwrotności macierzy maskującej podczas etapu ukrywania danych. Można doszukiwać się wielu przyczyn takiego
-        stanu rzeczy. Przykładowo, jednym z jego powodów może być względna mniejsza ilość złożonych obszarów obrazów do
-        obszarów o niskiej złożoności. Alternatywnie, obszary złożone obrazów mogą być częściej oddzielone od siebie
-        obszarami mniej złożonymi. Obydwa przypadki utrudniają mrówkom swobodne poruszanie się bo całej przestrzeni
-        obrazu, co prowadzi do zbyt skupionego odkładania się śladu, czego przykładem może być rysunek
+        odległości są proporcjonalne do różnic pikseli lub wariancji wewnątrz ich grupy. Realizacja takiego podejścia
+        powoduje intensywniejsze odkładanie się śladu feromonowego w mało zróżnicowanych obszarach obrazu i wymusza
+        stosowanie odwrotności macierzy maskującej podczas etapu ukrywania danych. Można doszukiwać się wielu przyczyn
+        takiego stanu rzeczy. Przykładowo, jednym z jego powodów może być względna mniejsza ilość złożonych obszarów
+        obrazów do obszarów o niskiej złożoności. Alternatywnie, obszary złożone obrazów mogą być częściej oddzielone od
+        siebie obszarami mniej złożonymi. Obydwa przypadki utrudniają mrówkom swobodne poruszanie się bo całej
+        przestrzeni obrazu, co prowadzi do zbyt skupionego odkładania się śladu, czego przykładem może być rysunek
         \ref{fig:exp-edge-steg}.
+
+        Interesującym elementem rozróżniającym obydwie zaproponowane metody, jest charakter problemu reprezentowany
+        przez graf. W przypadku metody opartej na budowie grafu poczynając od wierzchołków, problem stawiony przed
+        wirtualnymi mrówkami nie był analogiczny do problemu komiwojażera, i wymagał pewnych adaptacji opisanych w
+        podrozdziale \ref{subsec:vertex-method}. Znacząco utrudniło to przeprowadzanie badań i ocenę algorytmu, ponieważ
+        heurystyki doboru parametrów systemów mrówkowych okazywały się nieskuteczne. Ponadto, powyższa metoda jest
+        bardzo czuła na wybrany rodzaj systemu mrówkowego, i okazała się zupełnie nieskuteczna dla systemu mrowiskowego
+        i systemu max-min \ref{fig:exp-vertex-pher}. Taki stan rzeczy można próbować tłumaczyć ich silną faworyzacją
+        jedynie najkrótszej znalezionej ścieżki, co okazuje się nie odpowiadać charakterowi tego zadania. Metody oparte
+        na konstrukcji grafu poczynając od krawędzi były pozbawione powyższych wad. Reprezentowany problem był
+        analogiczny do problemu komiwojażera, przez co możliwe było wykorzystanie wskazówek oraz wyznaczonych
+        doświadczalnie heurystyk doboru parametrów systemu.
 
         Ponieważ obydwie metody gwarantują zbliżone rezultaty, możliwe jest wybranie metody o niższym zapotrzebowaniu na
         zasoby procesora. Podczas przeprowadzanych eksperymentów, najmniej obciążające były metody oparte na podziale
         obrazu na superpiksele oraz nienachodzące prostokąty. Z względu na regularne krawędzie oddzielające grupy
-        pikseli w których ukryto te same liczby bitów, które występują przy segmentacji na prostokąty, zalecane jest
+        pikseli w których ukryto te same liczby bitów, które występują przy segmentacji na prostokąty, wskazane jest
         korzystanie z segmentacji na superpiksele.
-
-        Istotnym elementem badań, który nie należał do celów tej pracy, jest analiza wrażliwości uzyskanych
-        steganogramów na zniekształcenia i manipulacje oraz podatność na ataki steganograficzne. Uzupełnienie
-        powyższych eksperymentów o rzeczoną analizę, pozwoliłoby na pełniejsze porównanie i odniesienie
-        do pozostałych metod.
-
-        % a co gdyby pozbyć się mrówek?
-        Kolejnym aspektem który mógłby być rozwinięciem poniższej pracy, jest zastosowanie innych lub większej ilości
-        metod obróbki wstępnej obrazu. Eksperymenty związane z metodą opartą na wierzchołkach wykazały, że
-        przeskalowanie obrazu wejściowego podczas etapu wyznaczania grafu nie ma kluczowego znaczenia przy ocenie
-        jakości steganogramu, a pozwala znacząco skrócić czas obliczeń. Nie jest wykluczone, że istnieją inne, bardziej
-        wyrafinowane przekształcenia, które pozwalają polepszyć parametry omawianej metody.
-
-        Inną kwestią wartą dodatkowej uwagi, byłoby porównanie uzyskanych wyników z metodami opartymi o te same
-        założenia (wyznaczanie złożonych obszarów obrazów), lecz nie korzystającymi z heurystyk oraz procesów
-        stochastycznych. Przykładowo, interesującym eksperymentem byłoby podzielenie obrazu na wskazaną ilość segmentów,
-        deterministyczne wybranie zadanej ilości segmentów o najwyższej wariancji i umieszczenie w nich największej
-        ilości danych. Gdyby w taki sposób osiągnięto zbliżone rezultaty, powyższe rozwiązanie miałoby zalety w postaci
-        prostszej implementacji i mniejszej złożoności. Mankamentem takiego rozwiązania mogłaby być utrata
-        stochastycznego charakteru procesu, a co za tym idzie spadek bezpieczeństwa steganogramu, jak omówiono w
-        rozdziale \ref{sec:heuristics-ants}.
         %
     }
     %
