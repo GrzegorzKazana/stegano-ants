@@ -64,9 +64,10 @@
             zdjęć, które bardziej odzwierciedlają praktyczne zastosowaniom steganografii. W ich doborze kierowano się
             głównie liczbą odniesień w powiązanych pracach oraz bieżącymi tendencjami w kwestii wykorzystywania
             publicznych zbiorów obrazów \cite{NoteOnLena1, NoteOnLena2}. Ostatecznie, zdecydowano się skupić na obrazach
-            \textit{Mandrill} (znany także jako \textit{Baboon)}, \textit{Airplane (F-16) (a.k.a Jet)}, \textit{House}
-            oraz \textit{Peppers}, które są udostępniane przez \textit{Uniwersytet Południowej Kalifornii
-            \textnormal{(}USC\textnormal{)}} \cite{USCDatabase}. Przedstawione są na rysunku \ref{fig:exp-images}.
+            \textit{Mandrill} (znany także jako \textit{Baboon)}, \textit{Airplane} (znany także jako \textit{F-16} lub
+            \textit{Jet}, \textit{House} oraz \textit{Peppers}, które są udostępniane przez \textit{Uniwersytet
+            Południowej Kalifornii \textnormal{(}USC\textnormal{)}} \cite{USCDatabase}. Przedstawione są na rysunku
+            \ref{fig:exp-images}.
 
             \begin{figure}
                 \footnotesize
@@ -160,7 +161,7 @@
     }
 
     % WYKORZYSTANE MIARY JAKOŚCI
-    \section{Miary jakości}
+    \section{Miary jakości}\label{sec:measures}
     {
         W celu umożliwienia porównywania jakości steganogramów, zdecydowano się skorzystać z metryk służących do
         porównawczej analizy obrazów. Zastosowane metryki można podzielić na dwie kategorie, obiektywne i subiektywne.
@@ -853,7 +854,9 @@
         \ref{tab:exp-comparison-pvd}, \ref{tab:exp-comparison-pso-iwt} oraz \ref{tab:exp-comparison-aco}. W kolumnach
         zawierających wartości miar pogrubiono wartości wskazujące na najniższą degradację obrazu.
 
-        \begin{table}
+        % pod każdą tabelą pojawiła się krótka interpretacja jej zawartości (z konkretami)
+
+        \begin{table}[H]
             \footnotesize
             \centering
             \caption{Porównanie miar jakości z uzyskanymi metodą \textit{LSB} w pracy \cite{Solak2018LSBSA}}
@@ -889,7 +892,17 @@
             \label{tab:exp-comparison-lsb}
         \end{table}
 
-        \begin{table}
+        Na podstawie tabeli \ref{tab:exp-comparison-lsb}, porównującej wyniki uzyskane techniką \textit{LSB} oraz
+        metodami zaproponowanymi w niniejszej pracy, trudno rozstrzygnąć wyższość jednego podejścia nad drugim. Dla
+        każdego z testowych obrazów, wartości miary \textit{SSIM} były korzystniejsze dla steganogramów uzyskanych
+        metodą \textit{LSB}. Wartości szczytowego stosunku sygnału do szumu (\textit{PSNR}) były zbliżone dla wszystkich
+        podejść.
+
+        Taki wynik można próbować tłumaczyć charakterystyką miary \textit{SSIM}, która kładzie znaczący nacisk na zmiany
+        struktury obrazu. Metoda \textit{LSB} z punktu widzenia obrazu wprowadza jednorodny szum na stałym poziomie, co
+        w małym stopniu wpływa na jego strukturę i w rezultacie powoduje mniejszy spadek wartości miary.
+
+        \begin{table}[H]
             \footnotesize
             \centering
             \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PVD} w pracy \cite{Solak2018LSBSA}}
@@ -923,7 +936,13 @@
             \label{tab:exp-comparison-pvd}
         \end{table}
 
-        \begin{table}
+        Porównanie opracowanych metod z wynikami uzyskanymi metodą \textit{PVD} (tabela \ref{tab:exp-comparison-pvd})
+        wypada na zdecydowaną korzyść metody opartej na budowie grafu poczynając od wierzchołków. Uzyskane wartości
+        \textit{PSNR} znacząco przewyższały rezultaty przedstawione w pracy \cite{Solak2018LSBSA}. Wartości
+        \textit{SSIM} były bardzo zbliżone, lecz w dwóch z trzech obrazów były one korzystniejsze dla zaproponowanej
+        metody.
+
+        \begin{table}[H]
             \footnotesize
             \centering
             \caption{Porównanie miar jakości z uzyskanymi metodą \textit{PSO-IWT} w pracy \cite{Muhuri2020ANI}}
@@ -953,7 +972,11 @@
             \label{tab:exp-comparison-pso-iwt}
         \end{table}
 
-        \begin{table}
+        Wyniki zestawienia z metodą \textit{PSO-IWT} opisaną w pracy \cite{Muhuri2020ANI} również wypadają pozytywnie
+        (tabela \ref{tab:exp-comparison-pso-iwt}). Z powodu braku referencyjnych wartości miary \textit{SSIM}, możliwe
+        jest jedynie odniesienie się do miary \textit{PSNR}, której wartości są wyższe o blisko rząd wielkości.
+
+        \begin{table}[H]
             \footnotesize
             \centering
             \caption{Porównanie miar jakości z uzyskanymi metodą \textit{ACO} w pracy \cite{Khan2018AntCO}}
@@ -982,6 +1005,69 @@
             }
             \label{tab:exp-comparison-aco}
         \end{table}
+
+        Podobnie do poprzednich zestawień, tabela \ref{tab:exp-comparison-aco} ukazuje porównanie wyników uzyskanych
+        opracowanymi metodami oraz metodą im najbliższą, gdyż również wykorzystującą system mrówkowy do wyszczególnienia
+        złożonych obszarów obrazu. Wartości miar \textit{PSNR} oraz \textit{SSIM} wskazują na wyższość zaproponowanej
+        metody w aspekcie stosunku utraty jakości do pojemności steganogramu. W przeciwieństwie do poprzednich
+        zestawień, minimalnie lepsze rezultaty uzyskano metodą opartą na krawędziach.
+        %
+    }
+
+    \section{Podsumowanie wyników eksperymentów}
+    {
+        % omówienie wyników wszystkich eksperymentów, bez konkretnych liczb, ale za to ich interpretacja i dyskusja
+        Przeprowadzone eksperymenty pozwalają na wyciągnięcie wielu interesujących wniosków. Po pierwsze, obydwie
+        zaproponowane metody - budująca graf poczynając od wierzchołków lub od krawędzi - są poprawne, i pozwalają na
+        sterowanie procesem ukrywania danych w obrazach. Głównym kryterium, które posłużyło do oceny metod był ich wpływ
+        na degradację obrazu w zależności od objętości ukrywanych danych. Na jego podstawie, po odpowiednim dobraniu
+        parametrów procesu, możliwe jest osiągnięcie wyników zbliżonych, lub nawet lepszych względem prac opisujących
+        obecny stan techniki \cite{Solak2018LSBSA, Muhuri2020ANI, Khan2018AntCO}.
+
+        Obydwie zaproponowane w niniejszej pracy metody łączą założenia oraz ogólny mechanizm działania. Ich różnice,
+        związane z metodą konstrukcji grafu na podstawie bitmapy są ewidentne, lecz mimo tego, uzyskiwane za ich pomocą
+        rezultaty były zbliżone pod kątem przytoczonych miar jakości w podrozdziale \ref{sec:measures}. Fakt ten, można
+        interpretować jako pozytywną weryfikację założeń, m.in. o słuszności wykorzystania złożonych obszarów obrazów,
+        szczegółowo opisanych w rozdziale \ref{sec:assumptions}.
+
+        Parametrem, posiadającym najbardziej znaczący wpływ na uzyskiwane rezultaty, była relacja długości krawędzi
+        grafu do różnic między pikselami lub ich grupami. Badania wykazały znaczącą wyższość podejścia w którym
+        odległości są proporcjonalne do różnic pikseli lub wariancji wewnątrz ich grupy. Taka decyzja spowodowała na
+        intensywniejsze odkładanie się śladu feromonowego w mało zróżnicowanych obszarach obrazu i wymusiła stosowanie
+        odwrotności macierzy maskującej podczas etapu ukrywania danych. Można doszukiwać się wielu przyczyn takiego
+        stanu rzeczy. Przykładowo, jednym z jego powodów może być względna mniejsza ilość złożonych obszarów obrazów do
+        obszarów o niskiej złożoności. Alternatywnie, obszary złożone obrazów mogą być częściej oddzielone od siebie
+        obszarami mniej złożonymi. Obydwa przypadki utrudniają mrówkom swobodne poruszanie się bo całej przestrzeni
+        obrazu, co prowadzi do zbyt skupionego odkładania się śladu, czego przykładem może być rysunek
+        \ref{fig:exp-edge-steg}.
+
+        Ponieważ obydwie metody gwarantują zbliżone rezultaty, możliwe jest wybranie metody o niższym zapotrzebowaniu na
+        zasoby procesora. Podczas przeprowadzanych eksperymentów, najmniej obciążające były metody oparte na podziale
+        obrazu na superpiksele oraz nienachodzące prostokąty. Z względu na regularne krawędzie oddzielające grupy
+        pikseli w których ukryto te same liczby bitów, które występują przy segmentacji na prostokąty, zalecane jest
+        korzystanie z segmentacji na superpiksele.
+
+        Istotnym elementem badań, który nie należał do celów tej pracy, jest analiza wrażliwości uzyskanych
+        steganogramów na zniekształcenia i manipulacje oraz podatność na ataki steganograficzne. Uzupełnienie
+        powyższych eksperymentów o rzeczoną analizę, pozwoliłoby na pełniejsze porównanie i odniesienie
+        do pozostałych metod.
+
+        % a co gdyby pozbyć się mrówek?
+        Kolejnym aspektem który mógłby być rozwinięciem poniższej pracy, jest zastosowanie innych lub większej ilości
+        metod obróbki wstępnej obrazu. Eksperymenty związane z metodą opartą na wierzchołkach wykazały, że
+        przeskalowanie obrazu wejściowego podczas etapu wyznaczania grafu nie ma kluczowego znaczenia przy ocenie
+        jakości steganogramu, a pozwala znacząco skrócić czas obliczeń. Nie jest wykluczone, że istnieją inne, bardziej
+        wyrafinowane przekształcenia, które pozwalają polepszyć parametry omawianej metody.
+
+        Inną kwestią wartą dodatkowej uwagi, byłoby porównanie uzyskanych wyników z metodami opartymi o te same
+        założenia (wyznaczanie złożonych obszarów obrazów), lecz nie korzystającymi z heurystyk oraz procesów
+        stochastycznych. Przykładowo, interesującym eksperymentem byłoby podzielenie obrazu na wskazaną ilość segmentów,
+        deterministyczne wybranie zadanej ilości segmentów o najwyższej wariancji i umieszczenie w nich największej
+        ilości danych. Gdyby w taki sposób osiągnięto zbliżone rezultaty, powyższe rozwiązanie miałoby zalety w postaci
+        prostszej implementacji i mniejszej złożoności. Mankamentem takiego rozwiązania mogłaby być utrata
+        stochastycznego charakteru procesu, a co za tym idzie spadek bezpieczeństwa steganogramu, jak omówiono w
+        rozdziale \ref{sec:heuristics-ants}.
+        %
     }
     %
 }
