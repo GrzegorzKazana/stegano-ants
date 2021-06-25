@@ -1,55 +1,40 @@
 \pagestyle{empty}
 {
-    \newgeometry{top=2.5cm,%
-        bottom=2.5cm,%
-        left=3cm,
-        right=2.5cm}
-    \sffamily
-    \rule{0cm}{0cm}
-
     \begin{center}
-        % \includegraphics[width=29mm]{assets/images/eps/polsl}
-    \end{center}
-    \vspace{1cm}
-    \begin{center}
-        \headerfont \unisl
+        \Large \unisl
     \end{center}
     \begin{center}
-        \headerfont \wydzial
+        \Large \wydzial
     \end{center}
     \vfill
     \begin{center}
-        \titlefont Praca dyplomowa magisterska
+        \Large \autor
+    \end{center}
+    \begin{center}
+        \large Nr albumu: \albumnum
+    \end{center}
+    \vfill
+    \begin{center}
+        \Large \tytul\par
     \end{center}
     \vfill
 
     \begin{center}
-        \otherfont \tytul\par
+        \Large Praca dyplomowa magisterska
     \end{center}
 
     \vfill
 
     \vfill
 
-    \noindent\vbox
+    \vbox
     {
-        \hbox{\otherfont autor: \autor}
-        \vspace{12pt}
-        \hbox{\otherfont kierujący pracą: \promotor}
-        % \vspace{12pt}  % zakomentuj, jezeli nie ma konsultanta
-        % \hbox{\otherfont konsultant: \konsultant} % zakomentuj, jezeli nie ma konsultanta
+        \Large \hfill  \promotor
     }
     \vfill
 
     \begin{center}
-        \otherfont Sosnowiec,  \miesiac\ \the\year
+        \Large  Katowice 2021
     \end{center}
     \restoregeometry
 }
-
-
-\cleardoublepage
-
-
-\rmfamily
-\normalfont
