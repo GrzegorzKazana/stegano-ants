@@ -1,7 +1,9 @@
 
 \chapter*{Podsumowanie}\label{chap:summary}\addcontentsline{toc}{chapter}{Podsumowanie}
 {
-    % w podsumowaniu pracy z kolei powinien się pojawić jeszcze krótszy opis wyników - same wnioski
+    %
+    Celem pracy była analiza możliwości wykorzystania optymalizacji mrowiskowej w celach steganograficznych,
+    zaproponowanie metod jej użycia oraz ocenienie ich efektywności.
 
     W pracy omówiono dwie metody pozwalające na wykorzystanie systemów mrówkowych w celach steganograficznych.
     Szczególną uwagę zwrócono na aspekt degradacji obrazu pod wpływem objętości ukrywanych danych, mający kluczowe
@@ -9,25 +11,25 @@
 
     Cel pracy został osiągnięty. Zaproponowane i zaimplementowane metody okazały się skuteczne i pozwalają na ukrycie
     dużej ilości danych przy względnie niskim negatywnym wpływie na jakość obrazu. Przestudiowano wpływ doboru
-    parametrów systemów mrówkowych oraz przeprowadzono eksperymenty których celem była ocena efektywności metody.
+    parametrów systemów mrówkowych oraz przeprowadzono eksperymenty, których celem była ocena efektywności metody.
     Przytoczone wyniki badań zawierają zarówno element oceny subiektywnej, jak i wartości miar pozwalających na
     obiektywne porównania. Uzyskane na referencyjnych obrazach wyniki odniesiono do powiązanych prac, i stwierdzono
     konkurencyjność przytoczonych metod.
 
-    % % a co gdyby pozbyć się mrówek?
-    Tematem który mógłby być rozwinięciem poniższej pracy, jest zastosowanie innych bądź większej ilości
+    % a co gdyby zrezygnować z mrówek?
+    Tematem który mógłby być rozwinięciem poniższej pracy, jest zastosowanie innych bądź większej liczby
     metod wstępnej obróbki obrazu. Eksperymenty związane z metodą opartą na wierzchołkach wykazały, że
     przeskalowanie obrazu wejściowego podczas etapu wyznaczania grafu nie ma kluczowego znaczenia przy ocenie
     jakości steganogramu, a pozwala znacząco skrócić czas obliczeń. Nie jest wykluczone, że istnieją inne, bardziej
     wyrafinowane przekształcenia, które pozwalają polepszyć cechy omawianych metod.
 
-    Inną kwestią wartą dodatkowej uwagi, byłoby porównanie uzyskanych wyników z metodami opartymi o te same założenia,
-    lecz nie korzystającymi z heurystyk oraz procesów stochastycznych. Interesującym eksperymentem byłoby podzielenie
-    obrazu na wskazaną ilość segmentów, deterministyczne wybranie zadanej ilości segmentów o najwyższej wariancji i
-    umieszczenie w nich największej ilości danych. Gdyby w taki sposób osiągnięto zbliżone rezultaty, powyższe
-    rozwiązanie miałoby zalety w postaci prostszej implementacji i mniejszej złożoności. Mankamentem takiego rozwiązania
-    mogłaby być utrata stochastycznego charakteru procesu, a co za tym idzie spadek bezpieczeństwa steganogramu, jak
-    omówiono w rozdziale \ref{sec:heuristics-ants}.
+    Inną kwestią, wartą dodatkowej uwagi, byłoby porównanie uzyskanych wyników z metodami opartymi na tych samych
+    założeniach, lecz nie korzystającymi z heurystyk oraz procesów stochastycznych. Interesującym eksperymentem byłoby
+    podzielenie obrazu na wskazaną liczbę segmentów, deterministyczne wybranie zadanej liczby segmentów o najwyższej
+    wariancji i umieszczenie w nich największej liczby danych. Gdyby w taki sposób osiągnięto zbliżone rezultaty,
+    powyższe rozwiązanie miałoby zalety w postaci prostszej implementacji i mniejszej złożoności. Mankamentem takiego
+    rozwiązania mogłaby jadnak być utrata stochastycznego charakteru procesu, a co za tym idzie spadek bezpieczeństwa
+    steganogramu, jak omówiono w rozdziale \ref{sec:heuristics-ants}.
 
     Kolejnym istotnym tematem badań wartym eksploracji, który nie należał do celów tej pracy, jest analiza wrażliwości
     uzyskanych steganogramów na zniekształcenia i manipulacje oraz podatność na ataki steganograficzne. Uzupełnienie

@@ -178,7 +178,7 @@
         Pierwszym etapem algorytmu jest umieszczenie mrówek na mapie oraz inicjalizacja struktury reprezentującej ślad
         feromonowy. Mrówki są przydzielane do miast w losowy sposób, a ślad jest inicjowany wartością $\tau_0$. Każda z
         mrówek inicjalizuje strukturę służącą do przechowywania informacji o uprzednio odwiedzonych miastach. Zostaje do
-        niej swoje miasto początkowe. Następnie każda mrówka wybiera drogę prowadzącą z bieżącego miasta $i$ do
+        niej dodane miasto początkowe. Następnie każda mrówka wybiera drogę prowadzącą z bieżącego miasta $i$ do
         kolejnego miasta $j$, pod warunkiem że miasto $j$ nie zostało już odwiedzone. Prawdopodobieństwo każdego
         przejścia w kroku $t$ jest określone funkcją $P_{ij}(t)$. Po wykonaniu pojedynczego kroku przez każdą mrówkę,
         następuje proces nakładania śladu feromonowego. Natężenie nakładanego śladu jest określone za pomocą funkcji

@@ -185,7 +185,7 @@
 
             gdzie:
             \begin{description}
-                \item $n$ - ilość obserwacji
+                \item $n$ - liczba obserwacji
                 \item $X_i$ - wartość sygnału
                 \item $\overline{X}$ - średnia wartość sygnału
             \end{description}
@@ -464,7 +464,7 @@
                 \label{tab:exp-vertex-scale-errors}
             \end{table}
 
-            % METODA WIERZCHOŁKÓW - FINAL SHOWDOWN
+            % METODA WIERZCHOŁKÓW - OSTATECZNE PORÓWNANIE
             Ostatecznie, postanowiono zbadać wyniki uzyskane na pozostałych obrazach testowych. Uzyskane rezultaty
             zawiera tabela \ref{tab:exp-vertex-results}, a steganogramy rysunek \ref{fig:exp-vertex-results}. Parametry
             algorytmu zachowano z poprzedniego eksperymentu.
@@ -571,7 +571,7 @@
             Powyższy problem można rozwiązać na co najmniej dwa sposoby. Pierwszym jest odpowiedni dobór parametrów
             systemu mrówkowego, który będzie wymuszał na mrówkach częstszą eksplorację (na przykład wybór dużej wartości
             $q_0$) lub częstszy wybór ścieżek w zachłanny sposób (przez dobór parametru $\alpha$). Dzięki temu, większa
-            liczba krawędzi będzie odwiedzana, lecz wnosi to również ryzyko otrzymywania nieoptymalnych cykli.
+            liczba krawędzi będzie odwiedzana, lecz wnosi to również ryzyko otrzymywania nieoptymalnych rozwiązań.
             Alternatywą jest odwrócenie problemu reprezentowanego przez graf. Jeśli długości krawędzi będą
             proporcjonalne do różnic wariancji łączonych segmentów, mrówki będą dążyć do znalezienia $V$ krawędzi, w
             których nie należy umieszczać informacji, gdyż nie są wystarczająco złożone. W ten sposób, uzyskany ślad
@@ -634,7 +634,7 @@
             działania systemu mrówkowego. Metodę ich wyznaczenia można znaleźć w rozdziale \ref{chap:implementation}.
 
             % WYNIKI - METODA-KRAWĘDZI - ILOŚĆ SEGMENTÓW
-            Ważnym aspektem metody wykorzystującą segmentację obrazu jest dobór docelowej liczby grup pikseli. Wartość
+            Ważnym aspektem metody wykorzystującej segmentację obrazu jest dobór docelowej liczby grup pikseli. Wartość
             zbyt niska może powodować powstanie segmentów łączących obszary jednorodne i złożone, co przełoży się na
             zakodowanie nieoptymalnej liczby bitów w wszystkich pikselach segmentu. Zbyt duża liczba, oprócz większej
             liczby obliczeń, może przełożyć się na stworzenie segmentów zbyt małych, których wariancja nie
@@ -733,7 +733,7 @@
                 \label{tab:exp-edge-results}
             \end{table}
 
-            % METODA KRAWĘDZI - FINAL SHOWDOWN
+            % METODA KRAWĘDZI - OSTATECZNE PORÓWNANIE
             Ostatnim krokiem badań metody opartej na wierzchołkach, było porównanie uzyskanych wyników na pozostałych
             obrazach testowych. Uzyskane rezultaty zawiera tabela \ref{tab:exp-edge-results}, a steganogramy przedstawia
             rysunek \ref{fig:exp-edge-results}.
@@ -853,8 +853,6 @@
         Zestawienia z poszczególnymi pracami zawierają tabele \ref{tab:exp-comparison-lsb},
         \ref{tab:exp-comparison-pvd}, \ref{tab:exp-comparison-pso-iwt} oraz \ref{tab:exp-comparison-aco}. W kolumnach
         zawierających wartości miar pogrubiono wartości wskazujące na najniższą degradację obrazu.
-
-        % pod każdą tabelą pojawiła się krótka interpretacja jej zawartości (z konkretami)
 
         \begin{table}[H]
             \footnotesize
@@ -1006,7 +1004,7 @@
             \label{tab:exp-comparison-aco}
         \end{table}
 
-        Podobnie do poprzednich zestawień, tabela \ref{tab:exp-comparison-aco} ukazuje porównanie wyników uzyskanych
+        Podobnie do poprzednich zestawień, tabela \ref{tab:exp-comparison-aco} pokazuje porównanie wyników uzyskanych
         opracowanymi metodami oraz metodą im najbliższą, gdyż również wykorzystującą system mrówkowy do wyszczególnienia
         złożonych obszarów obrazu. Wartości miar \textit{PSNR} oraz \textit{SSIM} wskazują na wyższość zaproponowanej
         metody w aspekcie stosunku utraty jakości do pojemności steganogramu. W przeciwieństwie do poprzednich
@@ -1016,26 +1014,25 @@
 
     \section{Podsumowanie wyników eksperymentów}
     {
-        % omówienie wyników wszystkich eksperymentów, bez konkretnych liczb, ale za to ich interpretacja i dyskusja
+        %
         Przeprowadzone eksperymenty pozwalają na wyciągnięcie wielu interesujących wniosków. Po pierwsze, obydwie
         zaproponowane metody - budująca graf poczynając od wierzchołków lub od krawędzi - są poprawne, i pozwalają na
         sterowanie procesem ukrywania danych w obrazach. Głównym kryterium, które posłużyło do oceny metod był ich wpływ
         na degradację obrazu w zależności od objętości ukrywanych danych. Na jego podstawie, po odpowiednim dobraniu
-        parametrów procesu, możliwe jest osiągnięcie wyników zbliżonych, lub nawet lepszych względem prac opisujących
-        obecny stan techniki \cite{Solak2018LSBSA, Muhuri2020ANI, Khan2018AntCO}.
+        parametrów procesu, możliwe jest osiągnięcie wyników zbliżonych, lub nawet lepszych względem prac \cite{Solak2018LSBSA, Muhuri2020ANI, Khan2018AntCO}.
 
         Obydwie zaproponowane w niniejszej pracy metody łączą założenia oraz ogólny mechanizm działania. Ich różnice,
         związane z metodą konstrukcji grafu na podstawie bitmapy są ewidentne, lecz mimo tego, uzyskiwane za ich pomocą
-        rezultaty były zbliżone pod kątem przytoczonych miar jakości w podrozdziale \ref{sec:measures}. Fakt ten, można
+        rezultaty były zbliżone pod kątem przytoczonych miar jakości w podrozdziale \ref{sec:measures}. Fakt ten można
         interpretować jako pozytywną weryfikację założeń, m.in. o słuszności wykorzystania złożonych obszarów obrazów,
         szczegółowo opisanych w rozdziale \ref{sec:assumptions}.
 
         Parametrem, posiadającym najbardziej znaczący wpływ na uzyskiwane rezultaty, była relacja długości krawędzi
-        grafu do różnic między pikselami lub ich grupami. Badania wykazały znaczącą wyższość podejścia w którym
+        grafu do różnic między pikselami lub ich grupami. Badania wykazały znaczącą wyższość podejścia, w którym
         odległości są proporcjonalne do różnic pikseli lub wariancji wewnątrz ich grupy. Realizacja takiego podejścia
         powoduje intensywniejsze odkładanie się śladu feromonowego w mało zróżnicowanych obszarach obrazu i wymusza
         stosowanie odwrotności macierzy maskującej podczas etapu ukrywania danych. Można doszukiwać się wielu przyczyn
-        takiego stanu rzeczy. Przykładowo, jednym z jego powodów może być względna mniejsza ilość złożonych obszarów
+        takiego stanu rzeczy. Przykładowo, jednym z jego powodów może być względna mniejsza liczba złożonych obszarów
         obrazów do obszarów o niskiej złożoności. Alternatywnie, obszary złożone obrazów mogą być częściej oddzielone od
         siebie obszarami mniej złożonymi. Obydwa przypadki utrudniają mrówkom swobodne poruszanie się bo całej
         przestrzeni obrazu, co prowadzi do zbyt skupionego odkładania się śladu, czego przykładem może być rysunek
@@ -1046,17 +1043,17 @@
         wirtualnymi mrówkami nie był analogiczny do problemu komiwojażera, i wymagał pewnych adaptacji opisanych w
         podrozdziale \ref{subsec:vertex-method}. Znacząco utrudniło to przeprowadzanie badań i ocenę algorytmu, ponieważ
         heurystyki doboru parametrów systemów mrówkowych okazywały się nieskuteczne. Ponadto, powyższa metoda jest
-        bardzo czuła na wybrany rodzaj systemu mrówkowego, i okazała się zupełnie nieskuteczna dla systemu mrowiskowego
-        i systemu max-min \ref{fig:exp-vertex-pher}. Taki stan rzeczy można próbować tłumaczyć ich silną faworyzacją
-        jedynie najkrótszej znalezionej ścieżki, co okazuje się nie odpowiadać charakterowi tego zadania. Metody oparte
-        na konstrukcji grafu poczynając od krawędzi były pozbawione powyższych wad. Reprezentowany problem był
-        analogiczny do problemu komiwojażera, przez co możliwe było wykorzystanie wskazówek oraz wyznaczonych
+        bardzo czuła na wybrany rodzaj systemu mrówkowego i okazała się zupełnie nieskuteczna dla systemu mrowiskowego
+        i systemu max-min (rysunek \ref{fig:exp-vertex-pher}). Taki stan rzeczy można próbować tłumaczyć ich silną
+        faworyzacją jedynie najkrótszej znalezionej ścieżki, co okazuje się nie odpowiadać charakterowi tego zadania.
+        Metody oparte na konstrukcji grafu poczynając od krawędzi były pozbawione powyższych wad. Reprezentowany problem
+        był analogiczny do problemu komiwojażera, przez co możliwe było wykorzystanie wskazówek oraz wyznaczonych
         doświadczalnie heurystyk doboru parametrów systemu.
 
         Ponieważ obydwie metody gwarantują zbliżone rezultaty, możliwe jest wybranie metody o niższym zapotrzebowaniu na
         zasoby procesora. Podczas przeprowadzanych eksperymentów, najmniej obciążające były metody oparte na podziale
         obrazu na superpiksele oraz nienachodzące prostokąty. Z względu na regularne krawędzie oddzielające grupy
-        pikseli w których ukryto te same liczby bitów, które występują przy segmentacji na prostokąty, wskazane jest
+        pikseli, w których ukryto te same liczby bitów, które występują przy segmentacji na prostokąty, wskazane jest
         korzystanie z segmentacji na superpiksele.
         %
     }

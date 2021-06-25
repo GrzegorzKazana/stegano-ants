@@ -1,11 +1,5 @@
 \chapter{Aplikacja steganograficzna wykorzystująca systemy mrówkowe}\label{chap:implementation}
 {
-    % wykorzystane narzędzia
-    %   - co to jest X
-    %   - zalety/wady
-    %       - rust
-    %           - kilka cech (iteratory, typy, zarządzanie pamięcią, obsługa błędów, null-safety, brak dziedziczenia)
-    %
     % specyfikacja zewnętrzna
     %   - uruchamianie
     %   - parametry
@@ -23,39 +17,14 @@
     %       - unity
     %       - property based testy
     %   - kompilacja jako walidacja (memory & type safety)
+    Celem utworzonej aplikacji jest implementacja metod opisanych w poprzednim rozdziale \ref{sec:method} oraz
+    umożliwienie porównywanie uzyskanych rezultatów dla różnych parametrów wejściowych.
 
-    % WYKORZYSTANE NARZĘDZIA
-    Do implementacji aplikacji umożliwiającej ukrywanie danych w obrazach cyfrowych za pomocą przedstawionych metod
-    wykorzystano język \textit{Rust}. \textit{Rust} jest kompilowanym językiem niskiego poziomu, którego kod wynikowy
-    nie jest uruchamiany za pomocą maszyny wirtualnej. Nie posiada również mechanizmu odśmiecania pamięci, (ang.
-    \textit{garbage collection}) ani automatycznego zliczania referencji. W przeciwieństwie do języków \textit{C} oraz
-    \textit{C++} obowiązek zarządzania pamięcią i gwarantowania bezpieczeństwa jej użycia jest w dużej mierze
-    przeniesiony z dewelopera na rygorystyczny kompilator \cite{Cosmin2019RustT, Matsakis2014TheRL, RustHomePage}.
-
-    Głównymi celami realizowanymi przez język \textit{Rust} jest umożliwienie pisania aplikacji wymagających dużej
-    wydajności, współbieżności oraz bezpieczeństwa przy wykorzystaniu nowoczesnych praktyk programistycznych. Kolejnym
-    atutem tego języka jest wbudowany mechanizm zarządzania pakietami \textit{Cargo} umożliwiający bezproblemowe
-    korzystanie z bogatego wachlarza otwartoźródłowych bibliotek.
-
-    \textit{Rust} jest językiem wieloparadygmatowym, lecz wiele cech będących fundamentem jego popularności oraz
-    bezpieczeństwa czerpie z języków funkcyjnych. Umożliwia pisanie wydajnego deklaratywnego kodu dzięki rozbudowanym
-    iteratorom, analogicznym do przetwarzania strumieniowego z języka \textit{Java}, oraz algebraicznym typom danych.
-    Ważną decyzją podjętą podczas projektowania języka było zdecydowanie się na wykorzystanie monad \textit{Option} oraz
-    \textit{Result}, co pozwoliło na rezygnację z mechanizmu wyjątków, zapewnienie bezpieczeństwa odwołań pod kątem
-    pustych referencji (ang. \textit{null safety}) oraz umożliwienie kompilatorowi wychwycenia znacznej części
-    najczęściej popełnianych błędów.
-
-    Ekspresywny system typów pozwala na pisanie rozszerzalnego i generycznego kodu. Język \textit{Rust} pozbawiony jest
-    mechanizmu dziedziczenia, które nadużywane może być źródłem nieoczekiwanych zachowań oraz błędów związanych z
-    dzieleniem stanu pomiędzy poszczególnymi klasami bazowymi oraz konfliktami identyfikatorów. Alternatywnym
-    rozwiązaniem pozwalającym na wilokrotne wykorzystywanie zachowań są cechy (ang. \textit{trait}). Cechy umożliwiają
-    jedynie współdzielenie interfejsu oraz domyślnych implementacji funkcji związanych z typem danych, lecz nie
-    pozwalają na współdzielenie stanu. Są mechanizmem zbliżonym do klas typów (ang. \textit{typeclasses}) znanych z
-    funkcyjnego języka \textit{Haskell}.
-
+    Do dodatkowych zadań utworzonego programu należy między innymi wczytywanie plików graficznych z dysku, uruchomienie
+    wskazanego rodzaju systemu mrówkowego oraz wykorzystanie uzyskanego śladu feromonowego do utworzenia macierzy
+    maskującej, która posłuży do ukrycia wskazanych danych w bitmapie.
 
     % SPECYFIKACJA ZEWNĘTRZNA
-    % zdecydować się na konsolę vs ui
     \section{Dokumentacja użytkowa}
     {
         %
@@ -64,6 +33,49 @@
         użytkownika, takie rozwiązanie ma również swoje zalety. Umożliwia automatyczne uruchamianie aplikacji dla
         różnych zestawów danych za pomocą zewnętrznych skryptów i programów, co okazało się bardzo wartościowe podczas
         ewaluacji rezultatów dla dużej liczby różnych parametrów uruchomieniowych.
+
+        % HELP
+        Użytkownik może się zapoznać z całym wachlarzem opcji uruchomieniowych poprzez uruchomienie
+        programu z flagą \textit{--help} (listing \ref{code:help}). Dokładny opis każdego z parametrów zamieszczono w
+        kolejnym podrozdziale.
+
+        \begin{lstlisting}[basicstyle=\tiny, caption=Pomoc programu, label=code:help]
+USAGE:
+stegano-ants [FLAGS] [OPTIONS] --dispatcher <dispatcher> --updater <updater> <SUBCOMMAND>
+
+FLAGS:
+-h, --help             Prints help information
+-q, --quiet
+    --verbose-files    verbose filenames of output files
+-V, --version          Prints version information
+
+OPTIONS:
+-a, --ants <ants>                          amount of ants, by default number of nodes
+    --converter <converter>
+        converter type in format <type>:<args> [default: i:spatial]
+
+-c, --cycles <cycles>                      number of traning cycles
+-d, --dispatcher <dispatcher>              dispatcher definition in format <type>:<args>
+    --mask-width <mask-width>
+        dimension of the pheromone mask, directly affects graph size, height is calculated
+        automatically
+
+    --seed <seed>                          rng seed [default: 42]
+-s, --steps <steps>
+        number of ant steps in single cycle, by default number of nodes
+
+    --stop-after <stop-after>
+        train until number of cycles does not provide improvement
+
+    --target-capacity <target-capacity>    target capacity
+-u, --updater <updater>                    updater type in format <type>:<args>
+
+SUBCOMMANDS:
+embed
+extract
+help       Prints this message or the help of the given subcommand(s)
+tsp
+        \end{lstlisting}
 
         \subsection{Opis parametrów programu}
         {
@@ -146,49 +158,6 @@
 
                     Rezultatem pracy tego trybu jest długość najkrótszej ścieżki oraz kolejność odwiedzanych wierzchołków.
             \end{enumerate}
-
-
-            % HELP
-            Ponadto, użytkownik może się zapoznać z całym wachlarzem opcji uruchomieniowych poprzez uruchomienie
-            programu z flagą \textit{--help} (listing \ref{code:help}).
-
-            \begin{lstlisting}[basicstyle=\tiny, caption=Pomoc programu, label=code:help]
-USAGE:
-    stegano-ants [FLAGS] [OPTIONS] --dispatcher <dispatcher> --updater <updater> <SUBCOMMAND>
-
-FLAGS:
-    -h, --help             Prints help information
-    -q, --quiet
-        --verbose-files    verbose filenames of output files
-    -V, --version          Prints version information
-
-OPTIONS:
-    -a, --ants <ants>                          amount of ants, by default number of nodes
-        --converter <converter>
-            converter type in format <type>:<args> [default: i:spatial]
-
-    -c, --cycles <cycles>                      number of traning cycles
-    -d, --dispatcher <dispatcher>              dispatcher definition in format <type>:<args>
-        --mask-width <mask-width>
-            dimension of the pheromone mask, directly affects graph size, height is calculated
-            automatically
-
-        --seed <seed>                          rng seed [default: 42]
-    -s, --steps <steps>
-            number of ant steps in single cycle, by default number of nodes
-
-        --stop-after <stop-after>
-            train until number of cycles does not provide improvement
-
-        --target-capacity <target-capacity>    target capacity
-    -u, --updater <updater>                    updater type in format <type>:<args>
-
-SUBCOMMANDS:
-    embed
-    extract
-    help       Prints this message or the help of the given subcommand(s)
-    tsp
-            \end{lstlisting}
             %
         }
 
@@ -277,6 +246,36 @@ SUBCOMMANDS:
     % SPECYFIKACJA WEWNĘTRZNA
     \section{Dokumentacja programowa}
     {
+        % WYKORZYSTANE NARZĘDZIA
+        Do implementacji aplikacji umożliwiającej ukrywanie danych w obrazach cyfrowych za pomocą przedstawionych metod
+        wykorzystano język \textit{Rust}. \textit{Rust} jest kompilowanym językiem niskiego poziomu, którego kod
+        wynikowy nie jest uruchamiany za pomocą maszyny wirtualnej. Nie posiada również mechanizmu odśmiecania pamięci,
+        (ang. \textit{garbage collection}) ani automatycznego zliczania referencji. W przeciwieństwie do języków
+        \textit{C} oraz \textit{C++} obowiązek zarządzania pamięcią i gwarantowania bezpieczeństwa jej użycia jest w
+        dużej mierze przeniesiony z dewelopera na rygorystyczny kompilator \cite{Cosmin2019RustT, Matsakis2014TheRL,
+        RustHomePage}.
+
+        Głównymi celami realizowanymi przez język \textit{Rust} jest umożliwienie pisania aplikacji wymagających dużej
+        wydajności, współbieżności oraz bezpieczeństwa przy wykorzystaniu nowoczesnych praktyk programistycznych.
+        Kolejnym atutem tego języka jest wbudowany mechanizm zarządzania pakietami \textit{Cargo} umożliwiający
+        bezproblemowe korzystanie z bogatego wachlarza otwartoźródłowych bibliotek.
+
+        \textit{Rust} jest językiem wieloparadygmatowym, lecz wiele cech będących fundamentem jego popularności oraz
+        bezpieczeństwa czerpie z języków funkcyjnych. Umożliwia pisanie wydajnego deklaratywnego kodu dzięki
+        rozbudowanym iteratorom, analogicznym do przetwarzania strumieniowego z języka \textit{Java}, oraz algebraicznym
+        typom danych. Ważną decyzją podjętą podczas projektowania języka było zdecydowanie się na wykorzystanie monad
+        \textit{Option} oraz \textit{Result}, co pozwoliło na rezygnację z mechanizmu wyjątków, zapewnienie
+        bezpieczeństwa odwołań pod kątem pustych referencji (ang. \textit{null safety}) oraz umożliwienie kompilatorowi
+        wychwycenia znacznej części najczęściej popełnianych błędów.
+
+        Ekspresywny system typów pozwala na pisanie rozszerzalnego i generycznego kodu. Język \textit{Rust} pozbawiony
+        jest mechanizmu dziedziczenia, które nadużywane może być źródłem nieoczekiwanych zachowań oraz błędów związanych
+        z dzieleniem stanu pomiędzy poszczególnymi klasami bazowymi oraz konfliktami identyfikatorów. Alternatywnym
+        rozwiązaniem pozwalającym na wielokrotne wykorzystywanie zachowań są cechy (ang. \textit{trait}). Cechy
+        umożliwiają jedynie współdzielenie interfejsu oraz domyślnych implementacji funkcji związanych z typem danych,
+        lecz nie pozwalają na współdzielenie stanu. Są mechanizmem zbliżonym do klas typów (ang. \textit{typeclasses})
+        znanych z funkcyjnego języka \textit{Haskell}.
+
         Kod źródłowy aplikacji został podzielony w taki sposób, że odzwierciedla poruszane domeny. Powstały trzy główne
         moduły aplikacji: moduł systemu mrówkowego (\textit{ant\_colony}), moduł przetwarzania obrazów (\textit{images})
         i moduł steganograficzny (\textit{steganography}).

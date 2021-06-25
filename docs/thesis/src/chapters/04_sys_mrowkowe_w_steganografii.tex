@@ -79,7 +79,7 @@
             pozostawia szerszą możliwość interpretacji wyników. Dodatkowo, charakterystyka uzyskiwanego śladu
             feromonowego jest bardziej podatna na zmiany rodzaju systemu mrówkowego oraz jego parametry.
 
-            % PRZYKŁD - CZĘSTOTLIWOŚCIOWO
+            % PRZYKŁAD - CZĘSTOTLIWOŚCIOWO
             Systemy mrowiskowe mogą zostać wykorzystane zarówno w steganografii za pomocą obrazów cyfrowych w dziedzinie
             przestrzennej  \cite{ZghaerACOStegEN, Khan2018AntCO}, jak i częstotliwościowej \cite{Priya2018HIGHCA}. W
             artykule \cite{Priya2018HIGHCA}, zaproponowano metodę opartą na przytoczonej metodzie całkowitoliczbowej
@@ -87,7 +87,7 @@
             sekretnej informacji w współczynnikach dziedziny transformaty. Przeprowadzone eksperymenty wykazały wysoką
             skuteczność metody \cite{Priya2018HIGHCA}.
 
-            % PRZYKŁD - PRZESTRZENNIE
+            % PRZYKŁAD - PRZESTRZENNIE
             Pomimo że pozostałe przytoczone prace oparte są na analizie obrazu w technice przestrzennej, sposób
             reprezentacji problemu i interpretacji wyników jest zdecydowanie odmienny. W pracy ,,Ant Colony
             Optimization To Enhance Image Steganography'' \cite{ZghaerACOStegEN}, obrazy zostały podzielone na bloki o
@@ -97,7 +97,7 @@
             należy umieścić informację aby uzyskać najmniejszy wpływ na różnicę między obrazem nośnym a
             stganogramem \cite{ZghaerACOStegEN}.
 
-            % PRZYKŁD - PRZESTRZENNIE 2
+            % PRZYKŁAD - PRZESTRZENNIE 2
             Przykładem pracy wykorzystującej wartości śladu feromonowego naniesionego przez mrówki jest ,,Ant Colony
             Optimization (ACO) based Data Hiding in Image Complex Region'' \cite{Khan2018AntCO}. W powyższej pracy,
             mrówki poruszają się po grafie zbudowanym na podstawie bitmapy nośnej. Jego wierzchołkami są piksele, a
@@ -110,6 +110,7 @@
             piksele pozostają niezmienione. Za pomocą wyników eksperymentów udało się dowieźć że jest to skuteczna
             metoda. Jej dodatkową zaletą jest możliwość parametryzacji i zmiany sposobu wyznaczania granicznej wartości
             feromonu, co pozwala na sterowanie pojemnością steganogramu kosztem jakości \cite{Khan2018AntCO}.
+            %
         }
     }
     % wady/zalety powyższych podejść, czego nie zbadały lub co można było ulepszyć 
@@ -371,7 +372,7 @@
                 \end{figure}
 
                 \item Segmentację obrazu można również przeprowadzić wykorzystując algorytmy grupujące. Jednym z nich
-                jest \textit{k-średnich}. Jego zastosowanie pozwala na podzielenie danych wejściowych na zadaną liczbę
+                jest \textit{k}-średnich. Jego zastosowanie pozwala na podzielenie danych wejściowych na zadaną liczbę
                 $k$ group elementów w sposób minimalizujący odległości pomiędzy elementami należącymi do tej samej grupy
                 \cite{MacQueen1967SomeMF}. Algorytm pozwala na grupowanie obserwacji wielowymiarowych, lecz w tym
                 przypadku zdecydowano się opisać każdy z pikseli tylko jednym atrybutem -- wariancją jego ośmiu
@@ -382,7 +383,7 @@
                 \begin{figure}
                     \centering
                     \includegraphics{method/kmeans_conv.png}
-                    \caption{Wizualizacja grafu tworzonego metodą opartą na podziale obrazu przy użyciu algorytmu k-średnich}
+                    \caption{Wizualizacja grafu tworzonego metodą opartą na podziale obrazu przy użyciu algorytmu \textit{k}-średnich}
                     \label{fig:method-vis-kmeans}
                 \end{figure}
 
