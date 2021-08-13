@@ -302,7 +302,7 @@
             konieczne jest również ustalenie parametru $S$ określającego liczbę kroków wykonywanych przez każdą mrówkę w
             każdej iteracji algorytmu.
 
-            Wygenerowane macierze maskujące przedstawia rysunek \ref{fig:exp-vertex-pher}. Na ich podstawie można
+            Wygenerowane macierze maskujące przedstawia rysunek \ref{fig:exp-vertex-masks}. Na ich podstawie można
             wyciągnąć kilka interesujących wniosków. System mrowiskowy (\textit{Ant-Colony}) oraz system
             \textit{Max-min} nie odpowiadają charakterystyce zadanego zadania, które jest znacząco różne od klasycznego
             problemu \textit{TSP}. Przyczyn można doszukiwać się w silnej faworyzacji najlepszego rozwiązania, czyli
@@ -387,7 +387,7 @@
 
                 \caption[Porównania wizualizacji konwersji oraz macierzy maskujących.]
                 {Macierze maskujące wygenerowane za pomocą różnych systemów mrówkowych}
-                \label{fig:exp-vertex-pher}
+                \label{fig:exp-vertex-masks}
             \end{figure}
 
             % METODA WIERZCHOŁKÓW - SKALOWANIE OBRAZU
@@ -735,8 +735,8 @@
 
             % METODA KRAWĘDZI - OSTATECZNE PORÓWNANIE
             Ostatnim krokiem badań metody opartej na wierzchołkach, było porównanie uzyskanych wyników na pozostałych
-            obrazach testowych. Uzyskane rezultaty zawiera tabela \ref{tab:exp-edge-results}, a steganogramy przedstawia
-            rysunek \ref{fig:exp-edge-results}.
+            obrazach testowych. Uzyskane rezultaty zawiera tabela \ref{fig:exp-edge-img-comparison}, a steganogramy
+            przedstawia rysunek \ref{fig:exp-edge-img-comparison}.
 
             \begin{table}
                 \centering
@@ -756,7 +756,7 @@
                     Peppers {\footnotesize $512 \times 512$}  & 500 000B (63.57\%) & 411.621 & 22.0198dB & 0.47874 \\
                     \hline
                 \end{tabular}
-                \label{tab:exp-edge-results}
+                \label{fig:exp-edge-img-comparison}
             \end{table}
 
             \begin{figure}
@@ -1044,7 +1044,7 @@
         podrozdziale \ref{subsec:vertex-method}. Znacząco utrudniło to przeprowadzanie badań i ocenę algorytmu, ponieważ
         heurystyki doboru parametrów systemów mrówkowych okazywały się nieskuteczne. Ponadto, powyższa metoda jest
         bardzo czuła na wybrany rodzaj systemu mrówkowego i okazała się zupełnie nieskuteczna dla systemu mrowiskowego
-        i systemu max-min (rysunek \ref{fig:exp-vertex-pher}). Taki stan rzeczy można próbować tłumaczyć ich silną
+        i systemu max-min (rysunek \ref{fig:exp-vertex-masks}). Taki stan rzeczy można próbować tłumaczyć ich silną
         faworyzacją jedynie najkrótszej znalezionej ścieżki, co okazuje się nie odpowiadać charakterowi tego zadania.
         Metody oparte na konstrukcji grafu poczynając od krawędzi były pozbawione powyższych wad. Reprezentowany problem
         był analogiczny do problemu komiwojażera, przez co możliwe było wykorzystanie wskazówek oraz wyznaczonych
