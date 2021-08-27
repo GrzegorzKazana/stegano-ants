@@ -235,8 +235,8 @@
 
         Ogólną zasadę śladu feromonowego aktualizacji wyraża wzór \ref{eqt:pheromone_update}. Współczynnik $\rho$ jest
         odpowiedzialny za wyparowywanie śladu, co chroni przez nieskończoną jego akumulacją. Istotne jest, aby jego
-        wartość była dodatnia, lecz mniejsza niż jeden $0 < \rho < 1$. Wartość $1 - \rho$ mianuje się współczynnikiem
-        wyparowania.
+        wartość była dodatnia, lecz mniejsza niż jeden: $0 < \rho < 1$. Wartość $1 - \rho$ mianuje się współczynnikiem
+        pozostałości śladu.
 
         \begin{equation}\label{eqt:pheromone_update}
             \Delta\tau_{ij}(t + 1) = \rho\tau_{ij}(t) + \Delta\tau_{ij}(t, t + 1)
@@ -315,10 +315,9 @@
             jednocześnie uwagę na istotność procesu doboru parametrów algorytmu, takich jak liczba mrówek i współczynnik
             wyparowania śladu feromonowego. Zaobserwowano, że dla większości rozwiązywanych problemów osiągano najlepsze
             rezultaty gdy liczba mrówek $m$ jest zbliżona do liczby wierzchołków $n$ grafu reprezentującego problem. Dla
-            wariantu algorytmu z feromonem cyklicznym, najlepsze rezultaty osiągano dla współczynnika odparowania $(1 -
-            \rho)$ bliskiemu $0.5$, i wartości $\alpha$ i $\beta$ będących w stosunku $\frac{\beta}{\alpha}$ zbliżonym
-            do zakresu $[2.5, 5]$  \cite{Dorigo1991AntSA}.
-        }
+            wariantu algorytmu z feromonem cyklicznym, najlepsze rezultaty osiągano dla współczynnika odparowania $\rho$
+            bliskiemu $0.5$, i wartości $\alpha$ i $\beta$ będących w stosunku $\frac{\beta}{\alpha}$ zbliżonym do
+            zakresu $[2.5, 5]$  \cite{Dorigo1991AntSA}.}
 
         % SYS MROWISKOWY
         \subsection{System mrowiskowy}
@@ -337,7 +336,7 @@
                 i eksploatację. Wybór pomiędzy trybem działania jest czyniony na podstawie wartości zmiennej losowej $q$
                 przyjmującej wartości z zakresu $[0, 1]$. Jeśli jej wartość jest mniejsza bądź równa wartości parametru
                 algorytmu $q_0$, mrówka wybierze krawędź maksymalizującą wartość iloczynu widoczności i natężenia śladu
-                feromonowego -- jest to strategia eksploatacji. W przeciwnym razie, kolejne miasto $s$ zostanie wybrana
+                feromonowego -- jest to strategia eksploatacji. W przeciwnym razie, kolejne miasto $s$ zostanie wybrane
                 zgodnie z funkcją prawdopodobieństwa zbliżoną do zaproponowanej w systemie mrówkowym. Wzór opisujący
                 wybór kolejnego miasta określa wzór \ref{eqt:ant_colony_dispatch}.
 
@@ -354,7 +353,7 @@
                 wzmacnianych metod uczenia maszynowego \textit{Q-learning} \cite{Watkins1989LearningFD}. Równie dobre
                 rezultaty osiągnięto stosując prostszą obliczeniowo regułę opisaną wzorem
                 \ref{eqt:ant_colony_local_update_1} oraz \ref{eqt:ant_colony_local_update_2}. Wartość $\rho$ jest
-                współczynnikiem wyparowania niezależnym od $\alpha$, a $V_k$ oznacza krawędź wybraną przez mrówkę $k$.
+                współczynnikiem wyparowania niezależnym od $\alpha$, a $V_k$ oznacza krawędź wybraną przez mrówkę $k$:
             \end{itemize}
 
             \begin{equation}\label{eqt:ant_colony_dispatch}
@@ -404,7 +403,7 @@
         \subsection{System mrówkowy Max-Min}
         {
             Alternatywnym ulepszeniem klasycznego algorytmu mrówkowego, jest system mrówkowy max-min (\textit{Max-Min
-            Ant System - MMAS}) \cite{Sttzle2000MAXMINAS}. Podobnie jak w przypadku pracy \textit{Ant colony system: a
+            Ant System -- MMAS}) \cite{Sttzle2000MAXMINAS}. Podobnie jak w przypadku pracy \textit{Ant colony system: a
             cooperative learning approach to the traveling salesman problem} \cite{Dorigo1997AntCS}, głównym celem
             autorów było zaproponowanie wariantu algorytmu mrówkowego który gwarantuje lepsze wyniki dla grafów
             większych rozmiarów.
