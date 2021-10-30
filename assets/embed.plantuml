@@ -1,0 +1,36 @@
+@startuml
+skinparam defaultTextAlignment center
+split
+    -[hidden]->
+    :transport image/
+
+    partition "generate masking matrix" {
+        partition "convert bitmap to graph" {
+            :establish graph nodes and edges;
+            :calculate edge lengths
+            based on pixels;
+        }
+
+        :run ant colony optimization
+        on generated graph;
+
+        :collect pheromone trail;
+
+        :convert pheromone intensity
+        to masking matrix;
+    }
+split again
+    -[hidden]->
+    :input data/
+end split
+
+partition "embed data in input image" {
+  repeat :for each pixel of input image;
+  :read number of bits to replace
+  based on masking matrix;
+  :replace //n// least significant bits;
+  repeat while (all pixels processed?) is (no)
+}
+
+:output steganogram/
+@enduml

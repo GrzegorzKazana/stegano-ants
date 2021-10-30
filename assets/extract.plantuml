@@ -1,0 +1,36 @@
+@startuml
+skinparam defaultTextAlignment center
+split
+    -[hidden]->
+    :transport image/
+
+    partition "generate masking matrix" {
+        partition "convert bitmap to graph" {
+            :establish graph nodes and edges;
+            :calculate edge lengths
+            based on pixels;
+        }
+
+        :run ant colony optimization
+        on generated graph;
+
+        :collect pheromone trail;
+
+        :convert pheromone intensity
+        to masking matrix;
+    }
+split again
+    -[hidden]->
+    :stego image/
+end split
+
+partition "extract data from stego image" {
+  repeat :for each pixel of stego image;
+  :read number of bits to extract
+  based on masking matrix;
+  :read //n// least significant bits;
+  repeat while (all pixels processed?) is (no)
+}
+
+:embedded data/
+@enduml
