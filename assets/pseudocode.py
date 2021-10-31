@@ -1,4 +1,6 @@
-# high level embedding process description
+# ###
+# Section 1: high level embedding and extraction process description
+# ###
 def embed(transport_image, data):
     '''
     arguments
@@ -26,7 +28,6 @@ def embed(transport_image, data):
     return steganogram
 
 
-# high level extraction process description
 def extract(transport_image, steganogram):
     '''
     arguments:
@@ -75,12 +76,24 @@ def generate_masking_matrix(transport_image):
     return convert_pheromone_to_masking_matrix(pheromone)
 
 
+# ###
+# Section 1 end
+# ###
+
+
+# empty implementations, to be replaced by specific vertex/edge based methods:
+# `convert_image_to_graph_vertex_based` or `convert_image_to_graph_edge_based`
 def convert_image_to_graph(transport_image):
     pass
 
+# `convert_pheromone_to_masking_matrix_vertex_based` or `convert_pheromone_to_masking_matrix_edge_based`
 def convert_pheromone_to_masking_matrix(pheromone):
     pass
 
+
+# ###
+# Section 2: details of `generate_masking_matrix` for the vertex based method
+# ###
 def convert_image_to_graph_vertex_based(transport_image):
     '''
     arguments:
@@ -103,6 +116,7 @@ def convert_image_to_graph_vertex_based(transport_image):
             adjacency_matrix[pixel.index][neighbour.index] = pixel_difference(pixel, neighbour)
 
     return adjacency_matrix
+
 
 def convert_pheromone_to_masking_matrix_vertex_based(transport_image, pheromone):
     '''
@@ -133,7 +147,13 @@ def convert_pheromone_to_masking_matrix_vertex_based(transport_image, pheromone)
 
     return masking_matrix
 
+# ###
+# Section 2 end
+# ###
 
+# ###
+# Section 3: details of `generate_masking_matrix` for the edge based method
+# ###
 def convert_image_to_graph_edge_based(transport_image, number_of_vertices):
     '''
     arguments:
@@ -194,18 +214,26 @@ def convert_pheromone_to_masking_matrix_edge_based(transport_image, pheromone):
 
     return masking_matrix
 
+# ###
+# Section 3 end
+# ###
 
+# empty implementations,
+# either to be removed or implemented if more detailed pseudocode is required
 def apply_ant_colony(graph):
     pass
+
 
 def substitute_n_least_significant_bits():
     pass
 
+
 def get_n_least_significant_bits():
     pass
 
-class Matrix:
-    pass
 
 def pixel_difference():
+    pass
+
+class Matrix:
     pass

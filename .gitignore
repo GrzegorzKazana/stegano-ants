@@ -7,6 +7,7 @@
 assets/images/**/*_steg*
 assets/images/**/*_pher*
 assets/images/**/*_conv*
+assets/*.png
 
 /docs/thesis/*.*
 /docs/thesis/assets/**/*.bmp
