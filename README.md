@@ -1,4 +1,6 @@
-# Ant system based steganography (work in progress)
+# Ant system based steganography 
+
+Code in this repository is the implementation of my master's thesis on the use of ant colony optimization in image steganography. It is written in Rust.
 
 ## How to run
 
